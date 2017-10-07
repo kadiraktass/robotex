@@ -10,7 +10,7 @@
 #define MOTOR_ENCA(n) MOTOR ## n ## _ENCA
 #define MOTOR_ENCB(n) MOTOR ## n ## _ENCB
 
-//da crazy magic this is? Just to confuse the hell out of us poor sods.
+//da crazy sorcery this is? Just to confuse the hell out of us poor sods.
 //instead of keeping everything in single class, stuff dealing with motors is thrown all over the place. WHY??
 
 

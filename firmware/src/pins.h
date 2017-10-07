@@ -12,6 +12,8 @@ or i could hack it... Hmm... No luck, suggested trick with externs plainly did n
 */
 
 
+
+
 //Brushless motor. No way to change direction. Well, with a additional relay actually could...
 PwmOut THROW_PWM(P2_4);
 
