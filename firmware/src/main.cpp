@@ -1,3 +1,4 @@
+
 #include "mbed.h"
 #include "rtos.h"
 //Note: NEVER believe simple examples from web. There are thousands library invariants out there.
@@ -22,6 +23,7 @@ And programming seems kinda slow. And fails.
 
 typedef void (*VoidArray) ();
 
+//lets test motors an bt first, because i have a hunch, that pwm clock is still shared.
 Thrower thrower( &THROW_PWM, &IR_SENSOR, &LEDB);
 
 //USBSerial pc;
@@ -122,11 +124,13 @@ void warmup() {
 
 int main() {
 
-      warmup();
+
+      //warmup();
       pc.attach( &serialInterrupt ); //now serialintterupt is ticking its merry way and gathering data quietly
       pc.printf("Ready? Start your engines!\n");
 
       hb_thread.start( heartbeat_loop );
+
       bt_thread.start( bluetooth_loop );
 
       //hb_thread.set_priority( osPriorityBelowNormal );
@@ -214,7 +218,7 @@ void serialInterrupt(){
 void parseCommand (char *command) {
 
    pc.printf("gotsmthng");
-/*
+
    char *searcha = command;
    char *a;
    int indexa;
@@ -333,7 +337,7 @@ void parseCommand (char *command) {
        motors[0].getPIDGain(gain);
        pc.printf("%s\n", gain);
    }
-*/
+
 }
 
 //later will be removed.
@@ -349,15 +353,15 @@ void bluetooth_loop(){
   char lastCommand;
   char bluetoothCommand;
 
-  uint8_t spd = 0;
-  LEDG = 1;
+  int spd = 0;
+  LEDG.write(1);
 
 
   while (true) {
 
         if (bluetoothSerial.readable()) {
            bluetoothCommand = bluetoothSerial.getc();
-           pc.printf( "%c", bluetoothCommand );
+           pc.printf( "BT:%c", bluetoothCommand );
         }
 
         if (bluetoothCommand == lastCommand)
@@ -372,12 +376,12 @@ void bluetooth_loop(){
 
         //i expect motors to be connected clockwise, 0, 1, 2., where 1 is at six.
         if(bluetoothCommand == 'F') {  //FORWARD
-            motors[0].setSpeed(spd);
-            motors[2].setSpeed(-spd);
+            motors[0].setSpeed(-spd);
+            motors[2].setSpeed(spd);
         }
         if(bluetoothCommand == 'B') {  //BACK
-          motors[0].setSpeed(-spd);
-          motors[2].setSpeed(spd);
+          motors[0].setSpeed(spd);
+          motors[2].setSpeed(-spd);
         }
 
         if(bluetoothCommand == 'S') {  //STOP
@@ -387,50 +391,60 @@ void bluetooth_loop(){
         }
 
         //turn in spot.
-        //todo:crab-motion? But this reuires some maths...
+        //todo:crab-motion? But this requires some maths...
         if(bluetoothCommand == 'L') {  //LEFT
-          motors[0].setSpeed(30);
-          motors[1].setSpeed(30);
-          motors[2].setSpeed(30);
+          motors[0].setSpeed(-100);
+          motors[1].setSpeed(-100);
+          motors[2].setSpeed(-100);
         }
 
         if(bluetoothCommand == 'R') {  //RIGHT
-          motors[0].setSpeed(-30);
-          motors[1].setSpeed(-30);
-          motors[2].setSpeed(-30);
+          motors[0].setSpeed(100);
+          motors[1].setSpeed(100);
+          motors[2].setSpeed(100);
         }
 
 
         //SET MOTORS SPEED
         if(bluetoothCommand == '0') {
-          spd = 10;
+          spd = 20;
+          thrower.setSpeed(0);
         }
         if(bluetoothCommand == '1') {
-          spd = 30;
+          spd = 50;
+          thrower.setSpeed(20);
         }
         if(bluetoothCommand == '2') {
-          spd = 50;
+          spd = 80;
+          thrower.setSpeed(30);
         }
         if(bluetoothCommand == '3') {
-          spd = 70;
+          spd = 100;
+          thrower.setSpeed(40);
         }
         if(bluetoothCommand == '4') {
-          spd = 90;
+          spd = 120;
+          thrower.setSpeed(50);
         }
         if(bluetoothCommand == '5') {
-          spd = 110;
+          spd = 150;
+          thrower.setSpeed(60);
         }
         if(bluetoothCommand == '6') {
-          spd = 130;
+          spd = 200;
+          thrower.setSpeed(70);
         }
         if(bluetoothCommand == '7') {
-          spd = 150;
+          spd = 300;
+          thrower.setSpeed(80);
         }
         if(bluetoothCommand == '8') {
-          spd = 170;
+          spd = 400;
+          thrower.setSpeed(90);
         }
         if(bluetoothCommand == '9') {
-          spd = 200;
+          spd = 500;
+          thrower.setSpeed(100);
         }
     /**/
 

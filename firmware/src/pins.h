@@ -15,7 +15,9 @@ or i could hack it... Hmm... No luck, suggested trick with externs plainly did n
 
 
 //Brushless motor. No way to change direction. Well, with a additional relay actually could...
-PwmOut THROW_PWM(P2_4);
+//PwmOut THROW_PWM(P2_4);
+DigitalOut THROW_PWM(P2_4);
+DigitalOut TESTPIN (P1_24);
 
 //Infrared ball sensor. High level means blocked path. Sensor already has some hysteresis, lets hope it's enough.
 InterruptIn IR_SENSOR(P2_11);
