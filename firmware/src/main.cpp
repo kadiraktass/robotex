@@ -1,10 +1,16 @@
 
 #include "mbed.h"
-#include "rtos.h"
+//#include "mbed_events.h" //do we have mbed ver 3? Anyway, cannot get events to work.
+#include "rtos.h"  //threads
 //Note: NEVER believe simple examples from web. There are thousands library invariants out there.
 //RTOS can be forced to work in web-compiler, but here it proves to be challenging.
 // platformio.ini needed: build_flags = -DPIO_FRAMEWORK_MBED_RTOS_PRESENT
 //- After adding library into lib Atom needs to be restarted.
+
+//TODO: something takes few seconds to initialize at boot. usbserial?
+// how does usbserial handle random disconnects?
+
+//TODO: implement safety shutoff after loss of guidance? Eg shut off motors 5sec after last setspeed? Especially thrower.
 
 #include "definitions.h"
 #include "pins.h"
@@ -13,36 +19,33 @@
 #include <thrower.h>
 
 //TODO: <> and "" here in includes do not seem right. But Atom doesn't care much, it seems.
-
-/*
-I detect some kind of anomaly - programmer does not want to work, but works after pulling USB serial, and resetting mainboard...
-automount fails kindof often too.
-And programming seems kinda slow. And fails.
-*/
-
+//TODO: i have strong suspicion that motor.cpp can be used much more nicely. (here are lots of ancient artefacts)
 
 typedef void (*VoidArray) ();
 
-//lets test motors an bt first, because i have a hunch, that pwm clock is still shared.
+//thrower is implemented without changing PWM, therefore it should not
 Thrower thrower( &THROW_PWM, &IR_SENSOR, &LEDB);
 
 //USBSerial pc;
 USBSerial pc (0x1f00, 0x2012, 0x0001,    false);
 //This last one is for connect_blocking, which i currently do not like. Look at USBSerial.h.
-//Theroretically, if unexpected disconnect happens, this should throw an exception in python, wich can be trapped and reconnected after a while.
+//Theroretically, if unexpected disconnect happens, this should throw an exception in python,
+//wich can be trapped and reconnected after a while.
 
 
-const unsigned int SERIAL_BUFFER_SIZE = 16;
 
+const unsigned int SERIAL_BUFFER_SIZE = 30; //resized and repaired bug in previous bugfix which did'nt take it into account
 char buf[SERIAL_BUFFER_SIZE];
-bool serialData = false;
+volatile bool serialData = false;
 unsigned int serialCount = 0;
 void serialInterrupt();
-void parseCommand(char *command);
+void parseCommand_loop();
 
 
 // why isn't ticking etc implemented in motor.cpp?
 // Here i should have only 3 instances of motor and thats kinda it.
+//TODO: I strongly feel that those are messed up.
+//TODO: study maximum speed.
 
 Ticker motorPidTicker[NUMBER_OF_MOTORS];
 volatile int16_t motorTicks[NUMBER_OF_MOTORS];
@@ -83,7 +86,7 @@ Thread hb_thread;
 void heartbeat_loop() {
     while (1) {
       LED2G.write(0.5);
-      Thread::wait(80);
+      Thread::wait(80); //allows to switch processes or sleep inbetween
       LED2G.write(0.98);
       Thread::wait(80);
       LED2G.write(0.5);
@@ -94,9 +97,12 @@ void heartbeat_loop() {
 }
 
 
+//EventQueue queue;
+//Ticker parseTicker; //oy, ticker is implemented by ISR, and this is allergic to blocking calls (pc.print)
 
-/* I think that for debugging it might be useful to visually detect unexpected
-    reboot - therefore this unneeded intro wasting ~2 seconds.
+Thread pc_thread;
+
+/*
     PWMout.write takes float, wich represents percentage between 0..1.
     Leds are connected in active-low configuration, so
     0 means fully on,
@@ -108,30 +114,31 @@ void heartbeat_loop() {
 */
 
 void warmup() {
-    for (int i=20; i<100; i++) {
-      LED2G.write((float) i / 100);
-      wait_ms(30);
-    }
-    for (int i=100; i>50; i--) {
-      LED2G.write((float) i / 100);
-      wait_ms(30);
-    }
-    wait_ms(300);
+  LEDB = 0; //reversed it was
+  wait_ms(100);
+  LEDB = 1;
 }
 
 
 
 
 int main() {
+      warmup();
 
+      // create a thread that'll keeps running the event queue's dispatch function
+      //Thread eventThread;
+      //eventThread.start(callback(&queue, &EventQueue::dispatch_forever));
+      // events are simple callbacks. Since dispatch_forever seems to be a hanging loop, then there is no use of it.
+      //queue.dispatch(1);
+      //parseTicker.attach( &parseCommand, 0.1); //10ms
 
-      //warmup();
       pc.attach( &serialInterrupt ); //now serialintterupt is ticking its merry way and gathering data quietly
       pc.printf("Ready? Start your engines!\n");
 
       hb_thread.start( heartbeat_loop );
-
       bt_thread.start( bluetooth_loop );
+      pc_thread.start( parseCommand_loop );
+
 
       //hb_thread.set_priority( osPriorityBelowNormal );
       //needs yielding (but not yield()) in main thread or it never fires.
@@ -170,25 +177,12 @@ int main() {
 /**/
 
 
-/*
-       motors[0].setSpeed(100);
-       motors[1].setSpeed(100);
-       motors[2].setSpeed(100);
-*/
        int count = 0;
        while(1) {
-           if (count % 20 == 0) {
+           if (count % 100 == 0) {
                for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
                    pc.printf("s%d:%d\n", i, motors[i].getSpeed());
                }
-           }
-
-           if (serialData) {
-               char temp[16];
-               memcpy(temp, buf, 16);
-               memset(buf, 0, 16);
-               serialData = false;
-               parseCommand(temp);
            }
 
            wait_ms(20);
@@ -197,15 +191,20 @@ int main() {
 } //end of main()
 
 
+
+//https://os.mbed.com/blog/entry/Simplify-your-code-with-mbed-events/
 void serialInterrupt(){
    while(pc.readable()) {
        buf[serialCount] = pc.getc();
        serialCount++;
-       if (serialCount >= SERIAL_BUFFER_SIZE) {
+       serialData = false;
+
+       if (serialCount >= SERIAL_BUFFER_SIZE) { //zeroes buffer and starts again. Therefore all commands must fit into SERIAL_BUFFER_SIZE or else...
            memset(buf, 0, SERIAL_BUFFER_SIZE);
            serialCount = 0;
        }
    }
+
    if (buf[serialCount - 1] == '\n') {
        serialData = true;
        serialCount = 0;
@@ -214,107 +213,59 @@ void serialInterrupt(){
 
 
 
-//TODO: redo.
-void parseCommand (char *command) {
+//TODO:
+// + timing issue
+// + thrower's speed.
+// - leds.
+// + single command for motors
 
-   pc.printf("gotsmthng");
+//during connection some noise is injected into buffer and first command is often ignored?
+//redone as a tighter loop in a separate thread - it is not strictly time-critical.
+void parseCommand_loop () {
+while(1)  {
 
-   char *searcha = command;
-   char *a;
-   int indexa;
-   a=strchr(searcha, 'a');
-   indexa = int(a - searcha);
-
-   char *searchb = command;
-   char *b;
-   int indexb;
-   b=strchr(searchb, 'b');
-   indexb = int(b - searchb);
-
-
-   char *searchc = command;
-   char *c;
-   int indexc;
-   c=strchr(searchc, 'c');
-   indexc = int(c - searchc);
-
-
-
-
-   char *searchd = command;
-   char *d;
-   int indexd;
-   d=strchr(searchd, 'd');
-   indexd = int(d - searchd);
-
-   int16_t speeda = atoi(command + (indexa+1));
-   motors[0].pid_on = 1;
-   motors[0].setSpeed(speeda);
-
-   int16_t speedb = atoi(command + (indexb+1));
-   motors[1].pid_on = 1;
-   motors[1].setSpeed(speedb);
-
-   int16_t speedc = atoi(command + (indexc+1));
-   motors[2].pid_on = 1;
-   motors[2].setSpeed(speedc);
-
-   if (command[0] == 's' && command[1] == 'd' && command[2] == '0') {
-       int16_t speed = atoi(command + 3);
-       motors[0].pid_on = 1;
-       motors[0].setSpeed(speed);
-   }
-   if (command[0] == 's' && command[1] == 'd' && command[2] == '1') {
-       int16_t speed = atoi(command + 3);
-       motors[1].pid_on = 1;
-       motors[1].setSpeed(speed);
-   }
-   if (command[0] == 's' && command[1] == 'd' && command[2] == '2') {
-       int16_t speed = atoi(command + 3);
-       motors[2].pid_on = 1;
-       motors[2].setSpeed(speed);
-   }
-   if (command[0] == 'f') {
-       int16_t speed = atoi(command + 1);
-       motors[0].pid_on = 1;
-       motors[0].setSpeed(-speed);
-       motors[2].pid_on = 1;
-       motors[2].setSpeed(speed);
-   }
-   if (command[0] == 'b' && command[1] == '1' && command[2] == '2') {
-       int16_t speed = atoi(command + 3);
-       motors[1].pid_on = 1;
-       motors[1].setSpeed(speed);
-       motors[2].pid_on = 1;
-       motors[2].setSpeed(speed);
+   if (!serialData) {
+      Thread::wait(5);
+      continue;
    }
 
-   if (command[0] == 'b' && command[1] == '0' && command[2] == '1') {
-       int16_t speed = atoi(command + 3);
-       motors[0].pid_on = 1;
-       motors[0].setSpeed(speed);
-       motors[1].pid_on = 1;
-       motors[1].setSpeed(speed);
-    }
-   if (command[0] == 'b' && command[1] == '0' && command[2] == '2') {
-       int16_t speed = atoi(command + 3);
-       motors[0].pid_on = 1;
-       motors[0].setSpeed(speed);
-       motors[2].pid_on = 1;
-       motors[2].setSpeed(speed);
-     }
-   if (command[0] == 'a') {
-       int16_t speed = atoi(command + 1);
-       motors[0].pid_on = 1;
-       motors[0].setSpeed(speed);
-       motors[1].pid_on = 1;
-       motors[1].setSpeed(speed);
-       motors[2].pid_on = 1;
-       motors[2].setSpeed(speed);
-   }
+   static char command[SERIAL_BUFFER_SIZE];
+   memcpy(command, buf, SERIAL_BUFFER_SIZE);
+   //buffer could still change during those few ticks? oh well.
 
+   pc.printf("gotcommand: %s", command); //hangs on "g"???
 
-   if (command[0] == 's') {
+   //a23|-2323|100 - set all motors' speed with one command
+   if (command[0] == 'a') { //"a" stands for "All motors"
+      int speed0, speed1, speed2;
+      if (sscanf(command, "a%d|%d|%d%*s", &speed0, &speed1, &speed2) == 3) {
+        //some sanity check.
+        if (speed0 <= 1000 && speed0 >= -1000 &&
+            speed1 <= 1000 && speed1 >= -1000 &&
+            speed2 <= 1000 && speed2 >= -1000 )
+           {
+                motors[0].setSpeed(speed0);
+                motors[1].setSpeed(speed1);
+                motors[2].setSpeed(speed2);
+           }
+        pc.printf("gotspeeds %d %d %d\n", speed0, speed1, speed2);
+
+      } else
+        pc.printf("didnt get you..");
+
+   //t255 - set thrower speed. "t" stands for "Thrower" of course.
+   } else if (command[0] == 't') {
+     int speed;
+     if (sscanf(command, "t%d%*s", &speed) == 1)
+        thrower.setSpeed( speed );
+
+   //todo: led indication (a set of messages instead of direct control?), status reports...
+
+   } else //couldn't understand
+       pc.printf("..ignored: %s\n", command);
+
+   /*
+   if (command[0] == 's') { //get speed
        for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
            pc.printf("s%d:%d\n", i, motors[i].getSpeed());
        }
@@ -337,7 +288,8 @@ void parseCommand (char *command) {
        motors[0].getPIDGain(gain);
        pc.printf("%s\n", gain);
    }
-
+   */
+}
 }
 
 //later will be removed.
@@ -393,9 +345,9 @@ void bluetooth_loop(){
         //turn in spot.
         //todo:crab-motion? But this requires some maths...
         if(bluetoothCommand == 'L') {  //LEFT
-          motors[0].setSpeed(-100);
+          motors[0].setSpeed(-50);
           motors[1].setSpeed(-100);
-          motors[2].setSpeed(-100);
+          motors[2].setSpeed(-150);
         }
 
         if(bluetoothCommand == 'R') {  //RIGHT
@@ -454,7 +406,7 @@ void bluetooth_loop(){
 
 
 
-   //here be dragons
+   //here be dragons (which i need to kill)
    MOTOR_ENC_TICK(0)
    MOTOR_ENC_TICK(1)
    MOTOR_ENC_TICK(2)
