@@ -85,6 +85,7 @@ void Motor::pid2(int16_t encTicks) {
     }
 }
 
+/*
 void Motor::pid(int16_t encTicks) {
     speed = encTicks;
     encTicks = 0;
@@ -170,7 +171,7 @@ void Motor::pid(int16_t encTicks) {
         forward(0);
     }
 }
-
+*/
 void Motor::reset_pid() {
     err = 0;
     err_prev = 0;

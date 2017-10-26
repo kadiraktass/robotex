@@ -19,7 +19,7 @@ public:
     /*
      * Run this to update speed
      */
-    void pid(int16_t encTicks);
+    //void pid(int16_t encTicks);
     void pid2(int16_t encTicks);
     void init();
     int16_t getSpeed();

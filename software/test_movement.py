@@ -1,6 +1,7 @@
 import serial
 import cv2
 import time
+
 def get_command(x, y, radius, fow,input):
 
     f1, f2, f3 = calculate_force(x, y, radius, fow,input)
@@ -64,38 +65,47 @@ def find_directions(x, y, radius, fow,input):
         ax = -1
         ay = 0
         angle = 0
+
     elif input == 's':
         ax = 0
         ay = -1
         angle = 0
+
     elif input == "d":
         ax = 1
         ay = 0
         angle = 0
+
     elif input == "w":
         ax = 0
         ay = 1
         angle = 0
+###########################
+
     elif input == "e":
         ax = 1
         ay = 1
         angle = 0
+
     elif input == "q":
         ax = -1
         ay = 1
         angle = 30
+
     elif input == "x":
         ax = 0
         ay = 0
-        angle = 360 
+        angle = 360
+
     else:
         ax = 0
         ay = 0
         angle = 0
-    
 
     return ax, ay, angle*3.14/180
-port = "COM3"
+
+
+port = "/dev/ttyACM0"  #under linux we have /dev/ttyACM0..3
 baud = 9600
  
 ser = serial.Serial(port, baud, timeout=1)
@@ -119,6 +129,8 @@ while 1:
 	#    command == "sd1000"
 	cmd = get_command(0,0,0,0,input)
 	ser.write(cmd + '\r\n')
+        print(cmd + '\n')
+
 	out = ''
 	# let's wait one second before reading output (let's give device time to answer)
 	#time.sleep(1)

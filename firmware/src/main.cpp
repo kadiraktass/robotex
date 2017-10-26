@@ -36,7 +36,7 @@ USBSerial pc (0x1f00, 0x2012, 0x0001,    false);
 
 const unsigned int SERIAL_BUFFER_SIZE = 30; //resized and repaired bug in previous bugfix which did'nt take it into account
 char buf[SERIAL_BUFFER_SIZE];
-volatile bool serialData = false;
+bool serialData = false;
 unsigned int serialCount = 0;
 void serialInterrupt();
 void parseCommand_loop();
@@ -49,11 +49,12 @@ void parseCommand_loop();
 
 Ticker motorPidTicker[NUMBER_OF_MOTORS];
 volatile int16_t motorTicks[NUMBER_OF_MOTORS];
-volatile uint8_t motorEncNow[NUMBER_OF_MOTORS];
+volatile uint8_t motorEncNow[NUMBER_OF_MOTORS]; //encoder 0..255
 volatile uint8_t motorEncLast[NUMBER_OF_MOTORS];
 
 Motor motors[NUMBER_OF_MOTORS];
 
+//here they are declared manually, and expanded with dragons from definitions.h
 void motor0EncTick();
 void motor1EncTick();
 void motor2EncTick();
@@ -137,8 +138,7 @@ int main() {
 
       hb_thread.start( heartbeat_loop );
       bt_thread.start( bluetooth_loop );
-      pc_thread.start( parseCommand_loop );
-
+      //pc_thread.start( parseCommand_loop );
 
       //hb_thread.set_priority( osPriorityBelowNormal );
       //needs yielding (but not yield()) in main thread or it never fires.
@@ -155,6 +155,7 @@ int main() {
            motor2PidTick
        };
 
+       //setup motors
        for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
            MotorEncA[i]->mode(PullNone);
            MotorEncB[i]->mode(PullNone);
@@ -165,12 +166,13 @@ int main() {
            motorEncNow[i] = 0;
            motorEncLast[i] = 0;
 
-           MotorEncA[i]->rise(encTicker[i]);
-           MotorEncA[i]->fall(encTicker[i]);
-           MotorEncB[i]->rise(encTicker[i]);
-           MotorEncB[i]->fall(encTicker[i]);
+           //encTicker is not ticker, but interrupt handler
+           MotorEncA[i]->rise( encTicker[i] );
+           MotorEncA[i]->fall( encTicker[i] );
+           MotorEncB[i]->rise( encTicker[i] );
+           MotorEncB[i]->fall( encTicker[i] );
 
-           motorPidTicker[i].attach(pidTicker[i], 0.1);
+           motorPidTicker[i].attach(pidTicker[i], 0.05); //0.1 seconds? Kinda slow?
 
            motors[i].init();
        }
@@ -179,20 +181,20 @@ int main() {
 
        int count = 0;
        while(1) {
-           if (count % 100 == 0) {
+           if (count % 300 == 0) {
                for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
                    pc.printf("s%d:%d\n", i, motors[i].getSpeed());
                }
            }
 
-           wait_ms(20);
+           parseCommand_loop();
+           wait_ms(10);
            count++;
        }
 } //end of main()
 
 
-
-//https://os.mbed.com/blog/entry/Simplify-your-code-with-mbed-events/
+//todo: should be in usbserial too.
 void serialInterrupt(){
    while(pc.readable()) {
        buf[serialCount] = pc.getc();
@@ -212,23 +214,25 @@ void serialInterrupt(){
 }
 
 
-
 //TODO:
 // + timing issue
 // + thrower's speed.
-// - leds.
 // + single command for motors
+// - leds.
 
 //during connection some noise is injected into buffer and first command is often ignored?
 //redone as a tighter loop in a separate thread - it is not strictly time-critical.
+//Threading did'nt work. Probably because i do not understand sharing resources.
 void parseCommand_loop () {
-while(1)  {
+//while(1)  {
 
    if (!serialData) {
-      Thread::wait(5);
-      continue;
+      return;
+      //Thread::wait(5);
+      //continue;
    }
 
+   serialData = false;
    static char command[SERIAL_BUFFER_SIZE];
    memcpy(command, buf, SERIAL_BUFFER_SIZE);
    //buffer could still change during those few ticks? oh well.
@@ -289,7 +293,7 @@ while(1)  {
        pc.printf("%s\n", gain);
    }
    */
-}
+//}
 }
 
 //later will be removed.
@@ -407,6 +411,13 @@ void bluetooth_loop(){
 
 
    //here be dragons (which i need to kill)
+   //if i understand it correctly:
+   //those are 3+3 functions
+   // motor0..2EncTick which reads encoder and updates motorTicks
+   // and motor0..2Pidtick which calls motor.pid2() and resets motorTicks.
+   // EncTicker is called upon rise or fall interrupt,
+   // pidticker is called by timer
+
    MOTOR_ENC_TICK(0)
    MOTOR_ENC_TICK(1)
    MOTOR_ENC_TICK(2)
