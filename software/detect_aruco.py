@@ -17,7 +17,7 @@
 # opencv-contrib seems to be only release of opencv with aruco support built in.
 # I saw some variants of selfcompiling the source and wrappers, but who wants to do that?
 
-#fuuuuu.... k. Official pip package does not have ffmpg support, eg. no video for you.
+#fuuuuu.... k. Official pip package does not have ffmpg support, eg. no video for you. Me.
 # No other choice left, but to recompile.
 # https://www.pyimagesearch.com/2016/10/24/ubuntu-16-04-how-to-install-opencv/
 # I'll do it for python 2.7 (and 3.4(!) - guide uses 3.5)
@@ -42,12 +42,11 @@ print( "We have OpenCV version " + cv2.__version__ )    #i have 3.3.0
 #help( cv2.aruco )
 #possible interests:
 #calibrateCameraAruco()
-#
 
 
 
 
-#ubuntu might have problems with videocapture. Something about ffmpeg support.
+#ubuntu has problems with videocapture. Something about ffmpeg support.
 #cap = cv2.VideoCapture(0)
 #cap = skvideo.io.VideoCapture( 0 )
 cap = cv2.VideoCapture(0)

@@ -9,6 +9,8 @@ Motor::Motor(USBSerial *pc, PwmOut *pwm, DigitalOut *dir1, DigitalOut *dir2, Dig
     _dir2 = dir2;
     _fault = fault;
 
+    MOTORS_ENABLED = true;
+
     enc_last = 0;
 
     pid_on = 1;
@@ -219,12 +221,27 @@ int16_t Motor::getSpeed() {
 }
 
 void Motor::setSpeed(int16_t speed) {
-    sp_pid = speed;
-    pidSetpoint = speed;
-    if (sp_pid == 0) reset_pid();
-    fail_counter = 0;
+    if (MOTORS_ENABLED) { //half-assed hack
+        sp_pid = speed;
+        pidSetpoint = speed;
+        if (sp_pid == 0) reset_pid();
+        fail_counter = 0;
+    }
 }
 
 void Motor::getPIDGain(char *gain) {
     sprintf(gain, "PID:%d,%d,%d", pgain, igain, dgain);
 }
+
+void Motor::referee_stop(){
+  forward(0);
+  pidError0 = 0;
+  pidError1 = 0;
+  pidError2 = 0;
+  pidSpeed0 = 0;
+  pidSpeed1 = 0;
+  MOTORS_ENABLED = false;
+};
+void Motor::referee_start(){
+  MOTORS_ENABLED = true;
+};

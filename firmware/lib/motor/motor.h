@@ -28,6 +28,10 @@ public:
     void forward(float pwm);
     void backward(float pwm);
 
+    //set a flag and effectively shut off motors.
+    void referee_stop(); //currently needs to be called for every motor. Kinda stupid.
+    void referee_start();
+
 private:
     static const uint PWM_PERIOD_US = 1000;
 
@@ -41,6 +45,7 @@ private:
         unsigned int value;
         unsigned char bytes[2];
     };
+    bool MOTORS_ENABLED; //referee_start/stop setrs
 
     uint8_t enc_dir;
     uint8_t enc_last;

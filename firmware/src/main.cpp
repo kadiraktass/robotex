@@ -21,6 +21,15 @@
 //TODO: <> and "" here in includes do not seem right. But Atom doesn't care much, it seems.
 //TODO: i have strong suspicion that motor.cpp can be used much more nicely. (here are lots of ancient artefacts)
 
+
+//NB! Must be easily changeable - possibly should get from parentprogram over pc serial
+//first char is field [AB], second char robot [ABCD]
+//XX is broadcast to all.
+char FIELD_ID = 'A';
+char ROBOT_ID = 'Z';
+
+
+
 typedef void (*VoidArray) ();
 
 //thrower is implemented without changing PWM, therefore it should not
@@ -31,15 +40,20 @@ USBSerial pc (0x1f00, 0x2012, 0x0001,    false);
 //This last one is for connect_blocking, which i currently do not like. Look at USBSerial.h.
 //Theroretically, if unexpected disconnect happens, this should throw an exception in python,
 //wich can be trapped and reconnected after a while.
-
-
-
 const unsigned int SERIAL_BUFFER_SIZE = 30; //resized and repaired bug in previous bugfix which did'nt take it into account
 char buf[SERIAL_BUFFER_SIZE];
 bool serialData = false;
 unsigned int serialCount = 0;
 void serialInterrupt();
 void parseCommand_loop();
+
+//and all the same for xbee.... not nice. Really not nice.
+Serial xb (P0_0, P0_1);
+char xbuf[SERIAL_BUFFER_SIZE];
+bool xserialData = false;
+unsigned int xserialCount = 0;
+void xbeeInterrupt();
+void xbee_loop();
 
 
 // why isn't ticking etc implemented in motor.cpp?
@@ -80,8 +94,6 @@ void motor2PidTick();
 // Tried like 5 different variants. Only ticker+timeout worked.
 // And yet another way: RTOS threading. Seems simple enough. Wont be picky IRS but somekind of queueing.
 // .. which might be just perfect for diagnosing starve-out issues.
-Thread bt_thread;
-void bluetooth_loop();
 
 Thread hb_thread;
 void heartbeat_loop() {
@@ -134,10 +146,10 @@ int main() {
       //parseTicker.attach( &parseCommand, 0.1); //10ms
 
       pc.attach( &serialInterrupt ); //now serialintterupt is ticking its merry way and gathering data quietly
-      pc.printf("Ready? Start your engines!\n");
+      xb.attach( &xbeeInterrupt );
 
       hb_thread.start( heartbeat_loop );
-      bt_thread.start( bluetooth_loop );
+
       //pc_thread.start( parseCommand_loop );
 
       //hb_thread.set_priority( osPriorityBelowNormal );
@@ -181,20 +193,21 @@ int main() {
 
        int count = 0;
        while(1) {
-           if (count % 300 == 0) {
+           if (count % 10000 == 0) {
                for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
                    pc.printf("s%d:%d\n", i, motors[i].getSpeed());
                }
            }
 
            parseCommand_loop();
-           wait_ms(10);
+           xbee_loop();
+           wait_ms(1);
            count++;
        }
 } //end of main()
 
 
-//todo: should be in usbserial too.
+//todo: should be in usbserial too. As i need two serials, therefore it gets very ugly very quickly
 void serialInterrupt(){
    while(pc.readable()) {
        buf[serialCount] = pc.getc();
@@ -214,6 +227,30 @@ void serialInterrupt(){
 }
 
 
+//quick hack - just copypastarenamemodify
+void xbeeInterrupt(){
+   while( xb.readable() ) {
+       xbuf[xserialCount] = xb.getc();
+       xserialCount++;
+       xserialData = false;
+
+       if (xserialCount >= SERIAL_BUFFER_SIZE) { //zeroes buffer and starts again. Therefore all commands must fit into SERIAL_BUFFER_SIZE or else...
+           memset(xbuf, 0, SERIAL_BUFFER_SIZE);
+           xserialCount = 0;
+       }
+   }
+
+   //command starts with 'a' and is 12 bytes long, padded with '-'. I believe, hope, that '-' does not occur before end.
+   if (xbuf[0] == 'a' && (xbuf[xserialCount-1] == '-' || xserialCount == 13) ) {
+       xserialData = true;
+       xserialCount = 0;
+       xbuf[xserialCount] = '\0';
+   }
+}
+
+
+
+
 //TODO:
 // + timing issue
 // + thrower's speed.
@@ -224,7 +261,6 @@ void serialInterrupt(){
 //redone as a tighter loop in a separate thread - it is not strictly time-critical.
 //Threading did'nt work. Probably because i do not understand sharing resources.
 void parseCommand_loop () {
-//while(1)  {
 
    if (!serialData) {
       return;
@@ -264,20 +300,8 @@ void parseCommand_loop () {
         thrower.setSpeed( speed );
 
    //todo: led indication (a set of messages instead of direct control?), status reports...
-
-   } else //couldn't understand
-       pc.printf("..ignored: %s\n", command);
-
-   /*
-   if (command[0] == 's') { //get speed
-       for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
-           pc.printf("s%d:%d\n", i, motors[i].getSpeed());
-       }
-   } else if (command[0] == 'w' && command[1] == 'l') {
-       int16_t speed = atoi(command + 2);
-       motors[0].pid_on = 0;
-       if (speed < 0) motors[0].backward(-1*speed/255.0);
-       else motors[0].forward(speed/255.0);
+   /**/
+   //for debugging PID only
    } else if (command[0] == 'p' && command[1] == 'p') {
        uint8_t pGain = atoi(command + 2);
        motors[0].pgain = pGain;
@@ -291,121 +315,53 @@ void parseCommand_loop () {
        char gain[20];
        motors[0].getPIDGain(gain);
        pc.printf("%s\n", gain);
-   }
-   */
+   /**/
+   } else //couldn't understand
+     pc.printf("..ignored: %s\n", command);
 //}
 }
 
-//later will be removed.
-//temporarily try to steer robot by bluetooth - just to show off.
-//put it into Thread, and should be just fine.
-void bluetooth_loop(){
+//Listen for referee commands over XBEE
+//packet protocol: 12chars, filled with dash (-).
+// START|2BYTE ID|9BYTE DATA.
+//START STOP PING, send ACK
 
-  //Bluetooth module TX pin only
-  //COM socket - Gnd, Vcc, Tx, Rx
-  Serial bluetoothSerial(P0_0, P0_1);
-  bluetoothSerial.baud(38400); //OBDII pin 1234
+void xbee_loop(){
+  if (!xserialData)
+    return;
 
-  char lastCommand;
-  char bluetoothCommand;
+  xserialData = false;
+  static char packet[SERIAL_BUFFER_SIZE];
+  memcpy(packet, xbuf, SERIAL_BUFFER_SIZE);
 
-  int spd = 0;
-  LEDG.write(1);
+  pc.printf("xbee reports: %s\n", packet);
 
+  //try to act on command.
+  if (packet[0]=='a' && packet[1] == FIELD_ID) { //meant for this field
+     //oh, but what is the command?
+     if ( strstr(packet, "PING") && packet[2] == ROBOT_ID ){  //ping this robot
+        //TODO: consult with NUC, whether we really are ready?
+        xb.printf("a%c%cACK------");
+     } else
+     if ( strstr(packet, "STOP") ){
+        if (packet[2] == ROBOT_ID) xb.printf("a%c%cACK------", FIELD_ID, ROBOT_ID); //meant for us
+        //TODO: EMERGENCY BRAKE!!!
+        motors[0].referee_stop();
+        motors[1].referee_stop();
+        motors[2].referee_stop();
+        thrower.setSpeed(0);
+     } else
+     if ( strstr(packet, "START") ){
+        if (packet[2] == ROBOT_ID) xb.printf("a%c%cACK------", FIELD_ID, ROBOT_ID);
+        motors[0].referee_start();
+        motors[1].referee_start();
+        motors[2].referee_start();
+        thrower.setSpeed(20);
+     }
 
-  while (true) {
-
-        if (bluetoothSerial.readable()) {
-           bluetoothCommand = bluetoothSerial.getc();
-           pc.printf( "BT:%c", bluetoothCommand );
-        }
-
-        if (bluetoothCommand == lastCommand)
-            continue;
-        //else...
-
-        if (bluetoothCommand == 'X') {
-          pc.printf( "EXIT" );
-          LEDG = 0;
-          return;
-        }
-
-        //i expect motors to be connected clockwise, 0, 1, 2., where 1 is at six.
-        if(bluetoothCommand == 'F') {  //FORWARD
-            motors[0].setSpeed(-spd);
-            motors[2].setSpeed(spd);
-        }
-        if(bluetoothCommand == 'B') {  //BACK
-          motors[0].setSpeed(spd);
-          motors[2].setSpeed(-spd);
-        }
-
-        if(bluetoothCommand == 'S') {  //STOP
-          motors[0].setSpeed(0);
-          motors[1].setSpeed(0);
-          motors[2].setSpeed(0);
-        }
-
-        //turn in spot.
-        //todo:crab-motion? But this requires some maths...
-        if(bluetoothCommand == 'L') {  //LEFT
-          motors[0].setSpeed(-50);
-          motors[1].setSpeed(-100);
-          motors[2].setSpeed(-150);
-        }
-
-        if(bluetoothCommand == 'R') {  //RIGHT
-          motors[0].setSpeed(100);
-          motors[1].setSpeed(100);
-          motors[2].setSpeed(100);
-        }
-
-
-        //SET MOTORS SPEED
-        if(bluetoothCommand == '0') {
-          spd = 20;
-          thrower.setSpeed(0);
-        }
-        if(bluetoothCommand == '1') {
-          spd = 50;
-          thrower.setSpeed(20);
-        }
-        if(bluetoothCommand == '2') {
-          spd = 80;
-          thrower.setSpeed(30);
-        }
-        if(bluetoothCommand == '3') {
-          spd = 100;
-          thrower.setSpeed(40);
-        }
-        if(bluetoothCommand == '4') {
-          spd = 120;
-          thrower.setSpeed(50);
-        }
-        if(bluetoothCommand == '5') {
-          spd = 150;
-          thrower.setSpeed(60);
-        }
-        if(bluetoothCommand == '6') {
-          spd = 200;
-          thrower.setSpeed(70);
-        }
-        if(bluetoothCommand == '7') {
-          spd = 300;
-          thrower.setSpeed(80);
-        }
-        if(bluetoothCommand == '8') {
-          spd = 400;
-          thrower.setSpeed(90);
-        }
-        if(bluetoothCommand == '9') {
-          spd = 500;
-          thrower.setSpeed(100);
-        }
-    /**/
-
-        lastCommand = bluetoothCommand;
-  }
+  } else
+      //TODO: comment out in action
+      pc.printf("xbee ignored: %s\n", packet);
 }
 
 
