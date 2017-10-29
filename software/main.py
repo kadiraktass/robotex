@@ -1,3 +1,21 @@
+#!/usr/bin/python2.7 
+#
+#   MAIN.PY IS AUTOMATICALLY STARTED ON REBOOT
+#
+#   Problem - on different platforms there are serial ports and probably some other things differently defined, or in different locations.
+#   I dont know a perfect solution, am only proposing to detect computer name, and define config variables accordingly?
+#   eg:
+
+#import platform
+#if platform.node() == 'riiul-nuc':
+#	serialport = "/dev/ttyACM0" 
+#	cameranum = 0
+#else:
+#	serialport = "COM3"
+#	cameranum = 1
+	
+#gets messy. Stack it away somewhere.
+from config import *
 
 
 import cv2
@@ -24,10 +42,8 @@ redUpper = (255, 255, 255)
 
 fow = 75
 
-camera = cv2.VideoCapture(1)
-port = "COM3"
 baud = 9600 
-ser = serial.Serial(port, baud, timeout=1)
+ser = serial.Serial(serialport, baud, timeout=1)
 
 
 while 1:
