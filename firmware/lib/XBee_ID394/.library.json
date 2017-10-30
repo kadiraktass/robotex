@@ -1,0 +1,49 @@
+{
+    "name": "XBee", 
+    "repository": {
+        "url": "https://developer.mbed.org/users/okini3939/code/XBee/", 
+        "type": "hg"
+    }, 
+    "platforms": [
+        "freescalekinetis", 
+        "teensy", 
+        "nxplpc", 
+        "nordicnrf51", 
+        "ststm32"
+    ], 
+    "frameworks": [
+        "mbed"
+    ], 
+    "version": "b36422ef86", 
+    "examples": [
+        "https://developer.mbed.org/users/recotana/code/device_server_udp/", 
+        "https://developer.mbed.org/users/recotana/code/led_sender_post/", 
+        "https://developer.mbed.org/users/takashiyamanoue/code/XBee_API_ex1/", 
+        "https://developer.mbed.org/users/takashiyamanoue/code/XBee_API_ex2/", 
+        "https://developer.mbed.org/users/takashiyamanoue/code/XBee_API_ex3/", 
+        "https://developer.mbed.org/users/okini3939/code/XBee_wifi_sample/", 
+        "https://developer.mbed.org/users/okini3939/code/XBee_sample/", 
+        "https://developer.mbed.org/teams/aigamozu/code/program1/", 
+        "https://developer.mbed.org/users/kityann/code/agz_base_ver2/", 
+        "https://developer.mbed.org/teams/aigamozu/code/agz_base_ver2/"
+    ], 
+    "authors": [
+        {
+            "url": "https://developer.mbed.org/users/okini3939/", 
+            "maintainer": false, 
+            "email": null, 
+            "name": "Suga koubou"
+        }
+    ], 
+    "keywords": [
+        "xbee", 
+        "zigbee", 
+        "series", 
+        "digimesh", 
+        "1", 
+        "2", 
+        "wi-fi"
+    ], 
+    "id": 394, 
+    "description": "XBee-mbed library"
+}

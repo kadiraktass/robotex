@@ -17,10 +17,10 @@
 #include <motor.h>
 #include <USBSerial.h>
 #include <thrower.h>
+#include "XBee.h"
 
 //TODO: <> and "" here in includes do not seem right. But Atom doesn't care much, it seems.
 //TODO: i have strong suspicion that motor.cpp can be used much more nicely. (here are lots of ancient artefacts)
-
 
 //NB! Must be easily changeable - possibly should get from parentprogram over pc serial
 //first char is field [AB], second char robot [ABCD]
@@ -29,31 +29,36 @@ char FIELD_ID = 'A';
 char ROBOT_ID = 'Z';
 
 
-
 typedef void (*VoidArray) ();
 
 //thrower is implemented without changing PWM, therefore it should not
 Thrower thrower( &THROW_PWM, &IR_SENSOR, &LEDB);
 
-//USBSerial pc;
-USBSerial pc (0x1f00, 0x2012, 0x0001,    false);
+USBSerial pc;
+//USBSerial pc (0x1f00, 0x2012, 0x0001,    false);
 //This last one is for connect_blocking, which i currently do not like. Look at USBSerial.h.
 //Theroretically, if unexpected disconnect happens, this should throw an exception in python,
 //wich can be trapped and reconnected after a while.
 const unsigned int SERIAL_BUFFER_SIZE = 30; //resized and repaired bug in previous bugfix which did'nt take it into account
-char buf[SERIAL_BUFFER_SIZE];
+char buf[SERIAL_BUFFER_SIZE] = { 0 };
 bool serialData = false;
 unsigned int serialCount = 0;
 void serialInterrupt();
 void parseCommand_loop();
 
 //and all the same for xbee.... not nice. Really not nice.
-Serial xb (P0_0, P0_1);
-char xbuf[SERIAL_BUFFER_SIZE];
+//Serial xb (P0_0, P0_1);
+char xbuf[SERIAL_BUFFER_SIZE] = { 0 };
 bool xserialData = false;
 unsigned int xserialCount = 0;
 void xbeeInterrupt();
 void xbee_loop();
+//simple serial wont work well. Porbably lack of reading.
+
+XBee xbee(P0_0, P0_1);
+
+
+
 
 
 // why isn't ticking etc implemented in motor.cpp?
@@ -138,6 +143,7 @@ void warmup() {
 int main() {
       warmup();
 
+
       // create a thread that'll keeps running the event queue's dispatch function
       //Thread eventThread;
       //eventThread.start(callback(&queue, &EventQueue::dispatch_forever));
@@ -146,14 +152,10 @@ int main() {
       //parseTicker.attach( &parseCommand, 0.1); //10ms
 
       pc.attach( &serialInterrupt ); //now serialintterupt is ticking its merry way and gathering data quietly
-      xb.attach( &xbeeInterrupt );
+      //xb.attach( &xbeeInterrupt );
+      xbee.begin(9600);
 
       hb_thread.start( heartbeat_loop );
-
-      //pc_thread.start( parseCommand_loop );
-
-      //hb_thread.set_priority( osPriorityBelowNormal );
-      //needs yielding (but not yield()) in main thread or it never fires.
 
        void (*encTicker[])()  = {
            motor0EncTick,
@@ -190,17 +192,17 @@ int main() {
        }
 /**/
 
-
        int count = 0;
        while(1) {
-           if (count % 10000 == 0) {
+           if (count >= 5000) {
                for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
                    pc.printf("s%d:%d\n", i, motors[i].getSpeed());
+                   count = 0;
                }
            }
 
            parseCommand_loop();
-           xbee_loop();
+           //xbee_loop();
            wait_ms(1);
            count++;
        }
@@ -222,29 +224,8 @@ void serialInterrupt(){
 
    if (buf[serialCount - 1] == '\n') {
        serialData = true;
+       buf[serialCount - 1] = '\0';
        serialCount = 0;
-   }
-}
-
-
-//quick hack - just copypastarenamemodify
-void xbeeInterrupt(){
-   while( xb.readable() ) {
-       xbuf[xserialCount] = xb.getc();
-       xserialCount++;
-       xserialData = false;
-
-       if (xserialCount >= SERIAL_BUFFER_SIZE) { //zeroes buffer and starts again. Therefore all commands must fit into SERIAL_BUFFER_SIZE or else...
-           memset(xbuf, 0, SERIAL_BUFFER_SIZE);
-           xserialCount = 0;
-       }
-   }
-
-   //command starts with 'a' and is 12 bytes long, padded with '-'. I believe, hope, that '-' does not occur before end.
-   if (xbuf[0] == 'a' && (xbuf[xserialCount-1] == '-' || xserialCount == 13) ) {
-       xserialData = true;
-       xserialCount = 0;
-       xbuf[xserialCount] = '\0';
    }
 }
 
@@ -264,16 +245,14 @@ void parseCommand_loop () {
 
    if (!serialData) {
       return;
-      //Thread::wait(5);
-      //continue;
    }
 
    serialData = false;
-   static char command[SERIAL_BUFFER_SIZE];
+   static char command[SERIAL_BUFFER_SIZE] = { 0 };
    memcpy(command, buf, SERIAL_BUFFER_SIZE);
    //buffer could still change during those few ticks? oh well.
 
-   pc.printf("gotcommand: %s", command); //hangs on "g"???
+   pc.printf("gotcommand: %s\n", command); //hangs on "g"???
 
    //a23|-2323|100 - set all motors' speed with one command
    if (command[0] == 'a') { //"a" stands for "All motors"
@@ -292,34 +271,83 @@ void parseCommand_loop () {
 
       } else
         pc.printf("didnt get you..");
+   }
 
    //t255 - set thrower speed. "t" stands for "Thrower" of course.
-   } else if (command[0] == 't') {
+   else if (command[0] == 't') {
      int speed;
      if (sscanf(command, "t%d%*s", &speed) == 1)
         thrower.setSpeed( speed );
 
+   // idBZ - set robot id to field B, robot Z.
+   }
+   else if (command[0] == 'i' && command[1] == 'd') {
+              FIELD_ID = command[2];
+              ROBOT_ID = command[3];
+   }
    //todo: led indication (a set of messages instead of direct control?), status reports...
    /**/
    //for debugging PID only
-   } else if (command[0] == 'p' && command[1] == 'p') {
+   else if (command[0] == 'p' && command[1] == 'p') {
        uint8_t pGain = atoi(command + 2);
        motors[0].pgain = pGain;
-   } else if (command[0] == 'p' && command[1] == 'i') {
+   }
+   else if (command[0] == 'p' && command[1] == 'i') {
        uint8_t iGain = atoi(command + 2);
        motors[0].igain = iGain;
-   } else if (command[0] == 'p' && command[1] == 'd') {
+   }
+   else if (command[0] == 'p' && command[1] == 'd') {
        uint8_t dGain = atoi(command + 2);
        motors[0].dgain = dGain;
-   } else if (command[0] == 'p') {
+   }
+   else if (command[0] == 'p') {
        char gain[20];
        motors[0].getPIDGain(gain);
        pc.printf("%s\n", gain);
    /**/
-   } else //couldn't understand
-     pc.printf("..ignored: %s\n", command);
-//}
+   }
+    else //couldn't understand
+        pc.printf("..ignored: %s\n", command);
 }
+
+
+
+
+
+/*
+//quick hack - just copypastarenamemodify
+void xbeeInterrupt(){
+   static char got;
+
+   while( xb.readable() ) {
+       got = xb.getc();
+       if (got == 'a') { // 'a' must start new command
+           memset(xbuf, 0, SERIAL_BUFFER_SIZE);
+           xserialCount = 0;
+           xserialData = false;
+           xbuf[xserialCount] = got;
+
+       } else {
+          xbuf[xserialCount] = got;
+          xserialCount++;
+          xserialData = false;
+       }
+
+       if (xserialCount >= SERIAL_BUFFER_SIZE) { //zeroes buffer and starts again. Therefore all commands must fit into SERIAL_BUFFER_SIZE or else...
+           memset(xbuf, 0, SERIAL_BUFFER_SIZE);
+           xserialCount = 0;
+       }
+   }
+
+   //command starts with 'a' and is 12 bytes long, padded with '-'. I believe, hope, that '-' does not occur before end.
+   if (xbuf[0] == 'a' && (xbuf[xserialCount-1] == '-' || xserialCount == 12) ) {
+       xbuf[xserialCount+1] = '\0';
+       xserialData = true;
+       xserialCount = 0;
+   }
+}
+/**/
+
 
 //Listen for referee commands over XBEE
 //packet protocol: 12chars, filled with dash (-).
@@ -327,12 +355,25 @@ void parseCommand_loop () {
 //START STOP PING, send ACK
 
 void xbee_loop(){
-  if (!xserialData)
+  /*if (!xserialData)
     return;
 
   xserialData = false;
   static char packet[SERIAL_BUFFER_SIZE];
   memcpy(packet, xbuf, SERIAL_BUFFER_SIZE);
+  */
+  static char packet[SERIAL_BUFFER_SIZE];
+  pc.printf("xbl\n");
+
+  if ( !xbee.readPacket(5) ) //note: it resets response
+      return;
+
+if (xbee.getResponse().isAvailable()){
+  XBeeResponse resp = xbee.getResponse();
+
+  //send(XBeeRequest &request)
+  memcpy(packet, resp.getFrameData(), resp.getPacketLength());
+
 
   pc.printf("xbee reports: %s\n", packet);
 
@@ -341,10 +382,10 @@ void xbee_loop(){
      //oh, but what is the command?
      if ( strstr(packet, "PING") && packet[2] == ROBOT_ID ){  //ping this robot
         //TODO: consult with NUC, whether we really are ready?
-        xb.printf("a%c%cACK------");
+//        xb.printf("a%c%cACK------");
      } else
      if ( strstr(packet, "STOP") ){
-        if (packet[2] == ROBOT_ID) xb.printf("a%c%cACK------", FIELD_ID, ROBOT_ID); //meant for us
+//        if (packet[2] == ROBOT_ID) xb.printf("a%c%cACK------", FIELD_ID, ROBOT_ID); //meant for us
         //TODO: EMERGENCY BRAKE!!!
         motors[0].referee_stop();
         motors[1].referee_stop();
@@ -352,7 +393,7 @@ void xbee_loop(){
         thrower.setSpeed(0);
      } else
      if ( strstr(packet, "START") ){
-        if (packet[2] == ROBOT_ID) xb.printf("a%c%cACK------", FIELD_ID, ROBOT_ID);
+//        if (packet[2] == ROBOT_ID) xb.printf("a%c%cACK------", FIELD_ID, ROBOT_ID);
         motors[0].referee_start();
         motors[1].referee_start();
         motors[2].referee_start();
@@ -363,7 +404,8 @@ void xbee_loop(){
       //TODO: comment out in action
       pc.printf("xbee ignored: %s\n", packet);
 }
-
+}
+/**/
 
 
    //here be dragons (which i need to kill)
