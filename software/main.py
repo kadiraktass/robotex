@@ -64,7 +64,7 @@ while 1:
     cmd = movement.get_command(x1, y1, radius1, fow)
     
     ser.write(cmd + '\r\n')
-    time.sleep(0.1)
+    #time.sleep(0.1)
     print(cmd)
     print(radius1)
     # if the 'q' key is pressed, stop the loop
