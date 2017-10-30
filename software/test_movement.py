@@ -37,7 +37,7 @@ def get_command(x, y, radius, fow,input):
     else:
         temp3 = '0' + temp3
     
-    cmd = 'a'+ temp1 + '|'+ temp3+ '|'+ temp2
+    cmd = 'sd'+':'+ temp1 + ':'+ temp3+ ':'+ temp2
     print(cmd)
     return cmd
     
@@ -62,7 +62,7 @@ def calculate_speed(x, y, radius, fow,input):
     
     return wheelLinearVelocity1, wheelLinearVelocity2, wheelLinearVelocity3
 
-port = "COM3"
+port = "/dev/ttyACM0"
 baud = 9600
  
 ser = serial.Serial(port, baud, timeout=1)
@@ -76,19 +76,13 @@ while 1:
 
 	#input = raw_input(">> ")
 	
-	#if input == 'a':
-	#    command = "sd00100"
-	#elif input == 's':
-	#    command = "sd10100"
-	#elif input == "d":
-	#    command = "sd20100"
-	#else:
-	#    command == "sd1000"
-	cmd = get_command(0,0,0,0,input)
+	#cmd = get_command(0,0,0,0,input)
+	cmd= "sd:6:6:6"
 	ser.write(cmd + '\r\n')
+	print(cmd)
 	out = ''
 	# let's wait one second before reading output (let's give device time to answer)
-	#time.sleep(1)
+	time.sleep(0.5)
 	#i = i + 1;
 
 

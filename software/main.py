@@ -73,8 +73,15 @@ while 1:
         print(cmd)
         print(radius1)
     #print( ser.readline() )
-    #time.sleep(.5)
+    time.sleep(0.5)
 
+#=======
+    
+    ser.write(cmd + '\r\n')
+    #time.sleep(0.1)
+    print(cmd)
+    print(radius1)
+#>>>>>>> 25060d1105aa173c4720042b388a30f73a361e7e
     # if the 'q' key is pressed, stop the loop
     key = cv2.waitKey(1) & 0xFF
     if key == ord("q"):
