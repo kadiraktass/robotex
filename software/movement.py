@@ -1,7 +1,8 @@
 
 
 import numpy as np
-
+import time
+import math
 
 # (0,0) -----------------------  (600,0)
 #   |                               |
@@ -10,83 +11,93 @@ import numpy as np
 
 def get_command(x, y, radius, fow):
 
-    f1, f2, f3 = calculate_force(x, y, radius, fow)
-    s = calculate_speed(radius)
+    wheelLinearVelocity1, wheelLinearVelocity2, wheelLinearVelocity3 = calculate_speed(x, y, radius, fow,input)
     
-    temp1 = str(abs(int(f1*s)))
+    wheelSpeedToMainboardUnits = 91         #TODO: Determine the exact value
+    
+    wheelAngularSpeedMainboardUnits1 = wheelLinearVelocity1 * wheelSpeedToMainboardUnits
+    wheelAngularSpeedMainboardUnits2 = wheelLinearVelocity2 * wheelSpeedToMainboardUnits
+    wheelAngularSpeedMainboardUnits3 = wheelLinearVelocity3 * wheelSpeedToMainboardUnits
+    
+    temp1 = str(abs(int(wheelAngularSpeedMainboardUnits1)))
     while len(temp1) < 3:
         temp1 = '0' + temp1
     
-    temp2 = str(abs(int(f2*s)))
+    temp2 = str(abs(int(wheelAngularSpeedMainboardUnits2)))
     while len(temp2) < 3:
         temp2 = '0' + temp2
     
-    temp3 = str(abs(int(f3*s)))
+    temp3 = str(abs(int(wheelAngularSpeedMainboardUnits3)))
     while len(temp3) < 3:
         temp3 = '0' + temp3
         
-    if f1 < 0:
+    if wheelAngularSpeedMainboardUnits1 < 0:
         temp1 = '-' + temp1
     else:
         temp1 = '0' + temp1
     
-    if f2 < 0:
+    if wheelAngularSpeedMainboardUnits2 < 0:
         temp2 = '-' + temp2
     else:
         temp2 = '0' + temp2
 
-    if  f3 < 0:
+    if  wheelAngularSpeedMainboardUnits3 < 0:
         temp3 = '-' + temp3
     else:
         temp3 = '0' + temp3
-        
-    cmd = 'a'+ temp3 + '|'+ temp2 + '|'+ temp1
+    
+    cmd = 'a'+ temp1 + '|'+ temp3+ '|'+ temp2
     return cmd
-    
-    
-def calculate_speed(radius):
 
-    if radius <10:
-        speed = 0
-    elif radius<50:
-        speed = 100
-    elif radius<300:
-        speed = 50
-    else:
-        speed = 10
-        
-    return speed
+def calculate_speed(x, y, radius, fow,input):
+
+    movement_angle, angular_v, desired_speed = find_directions(x, y, radius, fow)
+    robotDirectionAngle= movement_angle         #rad
+    robotAngularVelocity= angular_v
     
-def calculate_force(x, y, radius, fow):
-    ax, ay, w = find_directions(x, y, radius, fow)
+    wheelDistanceFromCenter= 0.126   #meter
+    robotSpeed= desired_speed                #m/s
+    wheelAngle1=-60*3.14/180                   #rad
+    wheelAngle2=60*3.14/180                    #rad
+    wheelAngle3=0                    #rad
+
+    wheelLinearVelocity1 = robotSpeed * math.cos(robotDirectionAngle - wheelAngle1) + wheelDistanceFromCenter * robotAngularVelocity
+    wheelLinearVelocity2 = robotSpeed * math.cos(robotDirectionAngle - wheelAngle2) + wheelDistanceFromCenter * robotAngularVelocity
+    wheelLinearVelocity3 = robotSpeed * math.cos(robotDirectionAngle - wheelAngle3) + wheelDistanceFromCenter * robotAngularVelocity   
     
-    f1 = 0.58*ax + (-0.33)*ay + 0.33*w
-    f2 = (-0.58)*ax + (-0.33)*ay + 0.33*w
-    f3 = 0*ax + 0.67*ay + 0.33*w
-    
-    return f1, f2, f3
+    return wheelLinearVelocity1, wheelLinearVelocity2, wheelLinearVelocity3
     
     
 def find_directions(x, y, radius, fow):
     
-    if x>299:
-        angle = ((x-300)/300)*fow/2
-        ax = -1
-    elif x>0:
-        angle = (x/300)*fow/2 
-        ax = 1
+    if x>310:               #TODO: Determine the exact value
+        #turn right until x 290 310
+        movement_angle = 0
+        desired_speed = 0
+        angular_v = 90        #TODO: Determine the exact value
+    elif 290>x>0:                   #TODO: Determine the exact value
+        #turn left until x 290 310
+        movement_angle = 0
+        desired_speed = 0
+        angular_v = -90        #TODO: Determine the exact value
+    elif 0>x:
+        #turn right until x is detected
+        movement_angle = 0
+        desired_speed = 0
+        angular_v = 90        #TODO: Determine the exact value
     else:
-        angle = 5
-        ax = 0
+        movement_angle = 90
+        if radius <10:  #TODO: Determine the exact value
+            desired_speed = 0   #TODO: Determine the exact value
+        elif radius<50: #TODO: Determine the exact value
+            desired_speed = 1 #TODO: Determine the exact value
+        elif radius<300:    #TODO: Determine the exact value
+            desired_speed = 1  #TODO: Determine the exact value
+        else:
+            desired_speed = 10  #TODO: Determine the exact value
+        angular_v = 0
         
-    if radius>100:
-        ay = 0
-    elif radius>0:
-        ay = 1
-    else:
-        ay = 0
-
-    return ax, ay, angle*3.14/180
+    return movement_angle*3.14/180, angular_v*3.14/180, desired_speed
     
     
 

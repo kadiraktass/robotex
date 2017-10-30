@@ -1,3 +1,4 @@
+
 #!/usr/bin/python2.7 
 #
 #   MAIN.PY IS AUTOMATICALLY STARTED ON REBOOT
@@ -15,14 +16,13 @@
 #	cameranum = 1
 	
 #gets messy. Stack it away somewhere.
-from config import *
-
 
 import cv2
 import numpy as np
 import detect_object
 import movement
 import serial
+import time 
 
 #hsv values for the object1
 orangeLower = (0, 136, 232)
@@ -42,8 +42,10 @@ redUpper = (255, 255, 255)
 
 fow = 75
 
+camera = cv2.VideoCapture(1)
+port = "COM3"
 baud = 9600 
-ser = serial.Serial(serialport, baud, timeout=1)
+ser = serial.Serial(port, baud, timeout=1)
 
 
 while 1:
@@ -62,7 +64,9 @@ while 1:
     cmd = movement.get_command(x1, y1, radius1, fow)
     
     ser.write(cmd + '\r\n')
-    
+    time.sleep(0.1)
+    print(cmd)
+    print(radius1)
     # if the 'q' key is pressed, stop the loop
     key = cv2.waitKey(1) & 0xFF
     if key == ord("q"):
