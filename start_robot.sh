@@ -18,7 +18,7 @@ echo "--- start"
 
 git pull
 
-python software/main.py
+sudo python software/main.py
 
 
 echo "--- finish"
