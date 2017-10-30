@@ -40,6 +40,10 @@ whiteUpper = (0, 0, 255)
 redLower = (79, 210, 72)
 redUpper = (255, 255, 255)
 
+#hsv values for the object4
+red2Lower = (0, 151, 143)
+red2Upper = (21, 255, 255)
+
 fow = 75
 
 camera = cv2.VideoCapture(0)
@@ -55,7 +59,7 @@ while 1:
 
     (grabbed, frame) = camera.read()
     
-    x1, y1, radius1, center1, mask = detect_object.track(camera, whiteLower, whiteUpper)
+    x1, y1, radius1, center1, mask = detect_object.track(camera, red2Lower, red2Upper)
     
     cv2.putText(frame, "dx: {}, dy: {}".format(x1, y1),
                     (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
@@ -73,14 +77,13 @@ while 1:
         print(cmd)
         print(radius1)
     #print( ser.readline() )
-    time.sleep(0.5)
+    #time.sleep(0.5)
 
 #=======
     
-    ser.write(cmd + '\r\n')
-    #time.sleep(0.1)
-    print(cmd)
-    print(radius1)
+    #ser.write(cmd + '\r\n')
+    #print(cmd)
+    #print(radius1)
 #>>>>>>> 25060d1105aa173c4720042b388a30f73a361e7e
     # if the 'q' key is pressed, stop the loop
     key = cv2.waitKey(1) & 0xFF
