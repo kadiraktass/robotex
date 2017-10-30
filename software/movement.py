@@ -74,17 +74,17 @@ def find_directions(x, y, radius, fow):
         #turn right until x 290 310
         movement_angle = 0
         desired_speed = 0
-        angular_v = 90        #TODO: Determine the exact value
+        angular_v = 130        #TODO: Determine the exact value
     elif 290>x>0:                   #TODO: Determine the exact value
         #turn left until x 290 310
         movement_angle = 0
         desired_speed = 0
-        angular_v = -90        #TODO: Determine the exact value
-    elif 0>x:
+        angular_v = -130        #TODO: Determine the exact value
+ #   elif 0>x:
         #turn right until x is detected
-        movement_angle = 0
-        desired_speed = 0
-        angular_v = 90        #TODO: Determine the exact value
+  #      movement_angle = 0
+    #    desired_speed = 0
+    #    angular_v = 90        #TODO: Determine the exact value
     else:
         movement_angle = 90
         if radius <10:  #TODO: Determine the exact value

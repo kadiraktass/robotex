@@ -42,10 +42,13 @@ redUpper = (255, 255, 255)
 
 fow = 75
 
-camera = cv2.VideoCapture(1)
-port = "COM3"
+camera = cv2.VideoCapture(0)
+port = "/dev/ttyACM0" 
+
 baud = 9600 
 ser = serial.Serial(port, baud, timeout=1)
+
+lastcommand = ""
 
 
 while 1:
@@ -63,10 +66,15 @@ while 1:
     cv2.imshow("mask", mask)
     cmd = movement.get_command(x1, y1, radius1, fow)
     
-    ser.write(cmd + '\r\n')
-    time.sleep(0.1)
-    print(cmd)
-    print(radius1)
+    if (cmd <> lastcommand):
+        ser.write(cmd + '\r\n')
+        lastcommand = cmd
+
+        print(cmd)
+        print(radius1)
+    #print( ser.readline() )
+    #time.sleep(.5)
+
     # if the 'q' key is pressed, stop the loop
     key = cv2.waitKey(1) & 0xFF
     if key == ord("q"):
