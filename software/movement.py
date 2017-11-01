@@ -46,7 +46,7 @@ def get_command(x, y, radius, fow):
     else:
         temp3 = '0' + temp3
     
-    cmd = 'a'+ temp1 + '|'+ temp3+ '|'+ temp2
+    cmd = 'sd'+ ':' + temp1 + ':'+ temp3+ ':'+ temp2
     return cmd
 
 def calculate_speed(x, y, radius, fow,input):
@@ -70,12 +70,13 @@ def calculate_speed(x, y, radius, fow,input):
     
 def find_directions(x, y, radius, fow):
     
-    if x>310:               #TODO: Determine the exact value
+    if x>350:               #TODO: Determine the exact value
         #turn right until x 290 310
         movement_angle = 0
         desired_speed = 0
-        angular_v = 90        #TODO: Determine the exact value
-    elif 290>x>0:                   #TODO: Determine the exact value
+#<<<<<<< HEAD
+        angular_v = 30        #TODO: Determine the exact valu
+    elif 250>x>0:                   #TODO: Determine the exact value
         #turn left until x 290 310
         movement_angle = 0
         desired_speed = 0
@@ -85,16 +86,17 @@ def find_directions(x, y, radius, fow):
         movement_angle = 0
         desired_speed = 0
         angular_v = 90        #TODO: Determine the exact value
+#>>>>>>> 25060d1105aa173c4720042b388a30f73a361e7e
     else:
         movement_angle = 90
         if radius <10:  #TODO: Determine the exact value
             desired_speed = 0   #TODO: Determine the exact value
         elif radius<50: #TODO: Determine the exact value
-            desired_speed = 1 #TODO: Determine the exact value
+            desired_speed = 0.4 #TODO: Determine the exact value
         elif radius<300:    #TODO: Determine the exact value
-            desired_speed = 1  #TODO: Determine the exact value
+            desired_speed = 0.4  #TODO: Determine the exact value
         else:
-            desired_speed = 10  #TODO: Determine the exact value
+            desired_speed = 0  #TODO: Determine the exact value
         angular_v = 0
         
     return movement_angle*3.14/180, angular_v*3.14/180, desired_speed
