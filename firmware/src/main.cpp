@@ -1,4 +1,3 @@
-
 #include "mbed.h"
 //#include "mbed_events.h" //do we have mbed ver 3? Anyway, cannot get events to work.
 #include "rtos.h"  //threads
@@ -17,7 +16,8 @@
 #include <motor.h>
 #include <USBSerial.h>
 #include <thrower.h>
-#include "XBee.h"
+//#include <XBee.h>
+#include <RFManager.h>
 
 //TODO: <> and "" here in includes do not seem right. But Atom doesn't care much, it seems.
 //TODO: i have strong suspicion that motor.cpp can be used much more nicely. (here are lots of ancient artefacts)
@@ -51,11 +51,13 @@ void parseCommand_loop();
 char xbuf[SERIAL_BUFFER_SIZE] = { 0 };
 bool xserialData = false;
 unsigned int xserialCount = 0;
-void xbeeInterrupt();
+//void xbeeInterrupt();
+
 void xbee_loop();
 //simple serial wont work well. Porbably lack of reading.
 
-XBee xbee(P0_0, P0_1);
+//XBee xbee(P0_0, P0_1); //TX, RX
+RFManager rfModule(P0_0, P0_1);
 
 
 
@@ -142,8 +144,6 @@ void warmup() {
 
 int main() {
       warmup();
-
-
       // create a thread that'll keeps running the event queue's dispatch function
       //Thread eventThread;
       //eventThread.start(callback(&queue, &EventQueue::dispatch_forever));
@@ -152,8 +152,9 @@ int main() {
       //parseTicker.attach( &parseCommand, 0.1); //10ms
 
       pc.attach( &serialInterrupt ); //now serialintterupt is ticking its merry way and gathering data quietly
-      //xb.attach( &xbeeInterrupt );
+
       xbee.begin(9600);
+      pc.printf("xbee starts");
 
       hb_thread.start( heartbeat_loop );
 
@@ -194,15 +195,15 @@ int main() {
 
        int count = 0;
        while(1) {
-           if (count >= 5000) {
+           if (count >= 1000) {
                for (int i = 0; i < NUMBER_OF_MOTORS; i++) {
                    pc.printf("s%d:%d\n", i, motors[i].getSpeed());
                    count = 0;
                }
            }
 
+           xbee_loop();
            parseCommand_loop();
-           //xbee_loop();
            wait_ms(1);
            count++;
        }
@@ -210,6 +211,7 @@ int main() {
 
 
 //todo: should be in usbserial too. As i need two serials, therefore it gets very ugly very quickly
+
 void serialInterrupt(){
    while(pc.readable()) {
        buf[serialCount] = pc.getc();
@@ -362,21 +364,28 @@ void xbee_loop(){
   static char packet[SERIAL_BUFFER_SIZE];
   memcpy(packet, xbuf, SERIAL_BUFFER_SIZE);
   */
-  static char packet[SERIAL_BUFFER_SIZE];
-  pc.printf("xbl\n");
+  //static char packet[SERIAL_BUFFER_SIZE];
 
-  if ( !xbee.readPacket(5) ) //note: it resets response
-      return;
+static XBeeResponse resp;
+//pc.printf("xbee");
 
-if (xbee.getResponse().isAvailable()){
-  XBeeResponse resp = xbee.getResponse();
+//xbee.readPacket();
+//if ( !xbee.readPacket() ) //note: it resets response buffer
 
+//pc.printf("xbee reports: %s\n", xbee.getResponse().getFrameData() );
+
+     while (rfModule.readable()) {
+        pc.printf("<ref:%s>\n", rfModule.read());
+     }
+
+    rfModule.update();
+
+return;
   //send(XBeeRequest &request)
-  memcpy(packet, resp.getFrameData(), resp.getPacketLength());
+  //memcpy(packet, resp.getFrameData(), resp.getPacketLength());
 
-
-  pc.printf("xbee reports: %s\n", packet);
-
+}
+/*
   //try to act on command.
   if (packet[0]=='a' && packet[1] == FIELD_ID) { //meant for this field
      //oh, but what is the command?
@@ -403,8 +412,9 @@ if (xbee.getResponse().isAvailable()){
   } else
       //TODO: comment out in action
       pc.printf("xbee ignored: %s\n", packet);
-}
-}
+
+} */
+//}
 /**/
 
 

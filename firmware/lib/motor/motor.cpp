@@ -203,7 +203,7 @@ void Motor::setup() {
 void Motor::init() {
     dir = 0;
     motor_polarity = 0;
-    pgain = 50;
+    pgain = 70;
     igain = 10;
     dgain = 0;
     pid_multi = 32;
