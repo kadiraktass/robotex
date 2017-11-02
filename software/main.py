@@ -18,11 +18,9 @@
 #gets messy. Stack it away somewhere.
 
 import cv2
-import numpy as np
 import detect_object
 import movement
 import serial
-import time 
 
 #hsv values for the object1
 orangeLower = (0, 136, 232)
@@ -40,56 +38,55 @@ whiteUpper = (0, 0, 255)
 redLower = (0, 86, 182)
 redUpper = (10, 255, 255)
 
-fow = 75
+#hsv values for the object5
+greenLower = (35, 126, 82)
+greenUpper = (77, 218, 255)
 
 camera = cv2.VideoCapture(0)
 port = "/dev/ttyACM0" 
 
 baud = 9600 
-ser = serial.Serial(port, baud, timeout=1)
+#ser = serial.Serial(port, baud, timeout=1)
 
 lastcommand = ""
 i=0
-
-#ser.write("fs0" + '\r\n')
 
 while 1:
 
     (grabbed, frame) = camera.read()
     
-    x1, y1, radius1, center1, mask = detect_object.track(camera, blueLower, blueUpper)
+    ball_x1, ball_y1, ball_radius1, ball_center1, ball_mask = detect_object.track(camera, greenLower, greenUpper)
+    basket_radius = -1
+    basket_x = -1
     
-    cv2.putText(frame, "dx: {}, dy: {}".format(x1, y1),
-                    (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
-                    0.35, (0, 0, 255), 1)
-    if radius1 > 10:
-        cv2.circle(frame, center1, 5, (0, 0, 255), -1)
-    cv2.imshow("Frame", frame)
-    cv2.imshow("mask", mask)
-    cmd = movement.get_command(x1, y1, radius1, fow)
+    #if ball_radius1 > 10:
+    #    cv2.circle(frame, ball_center1, 5, (0, 0, 255), -1)
+    
+    cv2.imshow("mask", ball_mask)
+    cmd = movement.get_command(ball_x1, ball_radius1, basket_x, basket_radius)
     
     if (cmd <> lastcommand):
-        ser.write(cmd + '\r\n')
+        #ser.write(cmd + '\r\n')
         lastcommand = cmd
- 	print(cmd)
-        print(lastcommand)
+        #print(cmd)
+        #print(lastcommand)
     else:
-  	i=i+1
-	print(i)
+        i=i+1
+        #print(i)
+        
     if i==120:
-        ser.write(cmd + '\r\n')
-	print(cmd)
+        #ser.write(cmd + '\r\n')
         i=0
-
-    #ser.write(cmd + '\r\n' )
-    #print(cmd)
-    #print( ser.readline() )
-    #time.sleep(0.5)
-
+        #print(cmd)
+    
+    cv2.putText(frame, "dx: {}, dy: {}, radius: {}".format(int(ball_x1), int(ball_y1), int(ball_radius1)),
+                    (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
+                    0.35, (0, 0, 255), 1)
+    cv2.imshow("Frame", frame)        
+    
     key = cv2.waitKey(1) & 0xFF
     if key == ord("q"):
         break
 
-# cleanup the camera and close any open windows
 camera.release()
 cv2.destroyAllWindows()
