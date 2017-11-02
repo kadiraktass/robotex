@@ -29,7 +29,7 @@ orangeLower = (0, 136, 232)
 orangeUpper = (255, 255, 255)
 
 #hsv values for the object2
-blueLower = (89, 224, 84)
+blueLower = (62, 160, 133)
 blueUpper = (255, 255, 255)
 
 #hsv values for the object3
@@ -37,8 +37,8 @@ whiteLower = (0, 0, 255)
 whiteUpper = (0, 0, 255)
 
 #hsv values for the object4
-redLower = (79, 210, 72)
-redUpper = (255, 255, 255)
+redLower = (0, 86, 182)
+redUpper = (10, 255, 255)
 
 fow = 75
 
@@ -57,7 +57,7 @@ while 1:
 
     (grabbed, frame) = camera.read()
     
-    x1, y1, radius1, center1, mask = detect_object.track(camera, whiteLower, whiteUpper)
+    x1, y1, radius1, center1, mask = detect_object.track(camera, blueLower, blueUpper)
     
     cv2.putText(frame, "dx: {}, dy: {}".format(x1, y1),
                     (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
