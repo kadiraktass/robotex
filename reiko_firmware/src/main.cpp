@@ -70,8 +70,8 @@ void pidTick() {
   if (failSafeEnabled) {
     ticksSinceCommand++;
   }
-
-  if (ticksSinceCommand == 60) {
+  //i upped it to 600
+  if (ticksSinceCommand == 600) {
     for (int i = 0; i < NUMBER_OF_MOTORS; ++i) {
       motors[i]->setSpeed(0);
     }
@@ -131,13 +131,11 @@ int main() {
         //referee_command( ref );
     }
     rfModule.update(); //looks if there is something
-    //why i dont get anything?
 
     if (serial.readable()) {
       buf[serialCount] = serial.getc();
-      if (buf[serialCount] == '\n') {
-        serial.printf("got %s<", buf);
 
+      if (buf[serialCount] == '\n') {
         parseCommand(buf);
         serialCount = 0;
         memset(buf, 0, 32);
@@ -157,15 +155,16 @@ int main() {
   }
 }
 
-
-
+//mainboard still hangs somewhere. communication stops.
+//why?
 void parseCommand(char *buffer) {
   ticksSinceCommand = 0;
+  serial.printf("ack comm: %s", buffer);
 
   char *cmd = strtok(buffer, ":");
 
-  // buffer == "sd:14:16:10:30"
-  if (strncmp(cmd, "sd", 2) == 0) {
+  // buffer == "sm:14:16:10:30"
+  if (strncmp(cmd, "sm", 2) == 0) {
     for (int i = 0; i < NUMBER_OF_MOTORS; ++i) {
       motors[i] -> setSpeed( (int16_t) atoi(strtok(NULL, ":")) );
     }
@@ -177,7 +176,8 @@ void parseCommand(char *buffer) {
     );
   }
 
-  if (strncmp(cmd, "d", 1) == 0) {
+  // d:100 - thrower speed.
+  if (strncmp(cmd, "st", 2) == 0) {
     /*if (command[1] == '0') {
       pwm1.pulsewidth_us(100);
     } else if (command[1] == '1') {
@@ -189,24 +189,8 @@ void parseCommand(char *buffer) {
     //serial.printf("sending %d\n", (int) atoi(command+1));
   }
 
-  if (strncmp(cmd, "gs", 2) == 0) {
-    serial.printf("<gs:%d:%d:%d>\n", motors[0]->getSpeed(), motors[1]->getSpeed(), motors[2]->getSpeed() );
-  }
-
   if (strncmp(cmd, "rf", 2) == 0) {
        rfModule.send(buffer + 3);
-  }
-
-  if (strncmp(cmd, "r", 1) == 0) {
-    led1.setRed(!led1.getRed());
-  }
-
-  if (strncmp(cmd, "g", 1) == 0) {
-    led1.setGreen(!led1.getGreen());
-  }
-
-  if (strncmp(cmd, "b", 1) == 0) {
-    led1.setBlue(!led1.getBlue());
   }
 
   if (strncmp(cmd, "gb", 2) == 0) {
@@ -215,5 +199,19 @@ void parseCommand(char *buffer) {
 
   if (strncmp(cmd, "fs", 1) == 0) {
     failSafeEnabled = buffer[3] != '0';
+  }
+
+
+  if (strncmp(cmd, "r", 1) == 0) {
+    //led1.setRed( !led1.getRed() );
+    led1.setRed( atoi(cmd + 1) )
+  }
+
+  if (strncmp(cmd, "g", 1) == 0) {
+    led1.setGreen(!led1.getGreen());
+  }
+
+  if (strncmp(cmd, "b", 1) == 0) {
+    led1.setBlue(!led1.getBlue());
   }
 }
