@@ -15,12 +15,15 @@
 # update_comms() (to be polled in main loop);
 # set_motors(); set_thrower()
 # and possibly send_soon()
+# And you can use it stand-alone.
 
+
+from __future__ import print_function
 import serial
 import time
 from config import *
-
-
+import serial.tools.list_ports
+import sys
 
 #should be private
 last_command = ''
@@ -28,7 +31,13 @@ pending_commands = []  #FIFO buffer. Add to the end, and pop from beginning.
 last_time = 0
 forced_delay = 50 #millis between sends
 
-ser = serial.Serial(serialport, 9600, timeout=0.2, write_timeout=0.1, dsrtr=True)
+
+_baud = 9600
+_timeout=0.2
+_write_timeout=0.1
+_dsrtr=True
+_tscts=True
+ser = serial.Serial()
 
 
 def set_motors(m1, m2, m3):
@@ -49,7 +58,6 @@ def send_now( message ):
     if ser.out_waiting() > 0:
         ser.flushOutput()  #whatewer there was, it wasnt important anyway
         ser.write('\n')
-
     return ser.write( message + '\n')
     #write() is blocking by default, unless write_timeout is set. Returns number of bytes written
 
@@ -59,21 +67,22 @@ def send_soon( message ):
     #if we already have same command in queue, then we will overwrite it.
     if len( pending_commands ) > 0 and pending_commands[-1].startswith( message[0:2] ):
         pending_commands[-1] = message
-    else
+    else:
         pending_commands.append( message )
     return True
 
 
 #call this in a main loop (or rewrite into separate Thread - would be nice)
 def update_comms():
-    now = millis()
-    if (now - last_time) >= forced_delay and len(pending_commands) > 0:
-        send_now( pending_commands.pop(0) )
-        last_time = now
+    if open_port():
+        now = millis()
+        if (now - last_time) >= forced_delay and len(pending_commands) > 0:
+            send_now( pending_commands.pop(0) )
+            last_time = now
 
-    #todo:see if there are something incoming from robot, read them all
-    if ser.in_waiting() > 0:
-        read_from_robot()
+        #todo:see if there are something incoming from robot, read them all
+        if ser.in_waiting() > 0:
+            read_from_robot()
 
     return True
 
@@ -96,7 +105,7 @@ def parse_incoming_message ( message ):
         if package[0] == 'a' and (len(package) >= 12 or package[-1] == '-'): #seems legit
             fid, rid, com = package[1], package[2], package[3: package.find('-') ]
             if com not in ['PING','START','STOP']:
-                print ' ..garbage\n'
+                print ('..garbage\n')
                 return False
 
             #else recognizable command
@@ -124,11 +133,76 @@ def millis():
     return int( time.clock() * 1000 )
 
 
+## try to reconnect if connection lost
+def open_port():
+    if not ser.isOpen():
+        ser.baud = _baud
+        ser.timeout = _timeout
+        ser.write_timeout = _write_timeout
+        ser.dsrtr = _dsrtr
+        ser.tscts = _tscts
+
+        try:
+            ser.open()
+            if ser.isOpen():
+                print('Serial port just opened.')
+            else:
+                if len(pending_commands) > 0:
+                    print('Not sent:' + pending_commands.pop(0) )
+
+        except (OSError, serial.SerialException):
+                if len(pending_commands) > 0:
+                    print('Not sent:' + pending_commands.pop(0) )
+
+    return ser.isOpen()
+
+#from: http://stackoverflow.com/questions/12090503/listing-available-com-ports-with-python
+def detect_serial_ports():
+    ports = serial.tools.list_ports.comports() #gives list of tuples
+    result = [p for p in ports if p[2] != 'n/a']
+    result.sort( key=lambda row: (row[2], row[1]) )
+
+    bestguess = [p for p in result if p[2].find('1f00:2012') > 0]
+    #yeah, id is one thing, name is another. Well do without.
+    print ("TODO: if guessing is reliable, auto-set config.serialport \n" + str(bestguess) + '\n')
+    return result
+
+
+
 #todo: when called as main program: provide serial monitoring and debugging interface
 if __name__ == "__main__":
-    print ('Lets see if we can communicate with robot.')
 
-    while True:
-        update_comms()
+    # try to open defined port
+    print ('Lets see if we can communicate with robot @ ' + serialport + '?')
+    for i in range(0,0):
+        open_port()
+        if ser.isOpen():
+            break
+        print('.', end='')
+        sys.stdout.flush()
+        time.sleep(1)
 
-    ser.close()
+    #Orif there is no success then list possible ports and die
+    if not ser.isOpen():
+        print ('Failed to establish connection. Is config.py correct? ')
+        print ('Available ports are:')
+        #print (detect_serial_ports() )
+        print ('\n'.join ( str(x) for x in detect_serial_ports() ))
+        sys.exit(0)
+
+    print ('Ctrl+C lets you write custom command, Ctrl+C twice exits.')
+    try:
+        while True:
+            try:
+                update_comms()
+            #please note that this is blocking!
+            except KeyboardInterrupt:
+                print("\n-------------------------------------------------------")
+                c = raw_input(">>> ")
+                if len(c) > 0:
+                    send_now( c )
+                print("-------------------------------------------------------")
+
+    except KeyboardInterrupt:
+        ser.close()
+        print( 'Bye.')
