@@ -46,7 +46,7 @@ camera = cv2.VideoCapture(0)
 port = "/dev/ttyACM0" 
 
 baud = 9600 
-#ser = serial.Serial(port, baud, timeout=1)
+ser = serial.Serial(port, baud, timeout=1)
 
 lastcommand = ""
 i=0
