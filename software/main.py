@@ -66,7 +66,7 @@ while 1:
     cmd = movement.get_command(ball_x1, ball_radius1, basket_x, basket_radius)
     
     if (cmd <> lastcommand):
-        #ser.write(cmd + '\r\n')
+        ser.write(cmd + '\r\n')
         lastcommand = cmd
         #print(cmd)
         #print(lastcommand)
@@ -75,7 +75,7 @@ while 1:
         #print(i)
         
     if i==120:
-        #ser.write(cmd + '\r\n')
+        ser.write(cmd + '\r\n')
         i=0
         #print(cmd)
     
