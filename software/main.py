@@ -52,6 +52,9 @@ port = "/dev/ttyACM0"
 lastcommand = ""
 i=0
 
+communication.send_soon("init")
+communication.set_thrower(60)
+
 while 1:
 
     (grabbed, frame) = camera.read()
@@ -66,29 +69,31 @@ while 1:
     cv2.imshow("mask", ball_mask)
     #cmd = movement.get_command(ball_x1, ball_radius1, basket_x, basket_radius)
     m1,m2,m3 = movement.get_command(ball_x1, ball_radius1, basket_x, basket_radius)
-    if (cmd <> lastcommand):
+    #if (cmd <> lastcommand):
         
         #ser.write(cmd + '\r\n')
-        communication.set_motors(m1,m2,m3)
-        lastcommand = cmd
+    communication.set_motors(m1,m2,m3)
+    #    lastcommand = cmd
         #print(cmd)
-        print(radius1)
+    print(ball_radius1)
         #print(lastcommand)
-    else:
-        i=i+1
+    #else:
+       # i=i+1
         #print(i)
         
-    if i==120:
+#    if i==120:
         #ser.write(cmd + '\r\n')
-        communication.set_motors(temp1,temp3,temp2)
-        i=0
+   #     communication.set_motors(temp1,temp3,temp2)
+      #  i=0
         #print(cmd)
     
     cv2.putText(frame, "dx: {}, dy: {}, radius: {}".format(int(ball_x1), int(ball_y1), int(ball_radius1)),
                     (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
                     0.35, (0, 0, 255), 1)
     cv2.imshow("Frame", frame)        
-    
+
+    communication.update_comms()
+
     key = cv2.waitKey(1) & 0xFF
     if key == ord("q"):
         break
