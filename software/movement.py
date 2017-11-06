@@ -57,7 +57,7 @@ def get_command(ball_x, ball_radius, basket_x, basket_diag):
     else:
         temp3 = '0' + temp3
     
-    cmd = 'sd'+ ':' + temp1 + ':'+ temp3+ ':'+ temp2        #add thrower speed thrower_speed
+    cmd = 'sm'+ ':' + temp1 + ':'+ temp3+ ':'+ temp2        #add thrower speed thrower_speed
     return cmd
 
 def calculate_speed(ball_x, ball_radius, basket_x, basket_diag):
