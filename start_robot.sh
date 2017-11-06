@@ -16,7 +16,10 @@ done
 
 echo "--- start"
 
-git pull
+#git pull
+git fetch --all
+git reset --hard origin/master
+
 
 sudo python software/main.py
 
