@@ -4,6 +4,7 @@ import numpy as np
 import time
 import math
 
+
 # (0,0) -----------------------  (600,0)
 #   |                               |
 #   |                               |
@@ -57,8 +58,9 @@ def get_command(ball_x, ball_radius, basket_x, basket_diag):
     else:
         temp3 = '0' + temp3
     
-    cmd = 'sm'+ ':' + temp1 + ':'+ temp3+ ':'+ temp2        #add thrower speed thrower_speed
-    return cmd
+    #cmd = 'sm'+ ':' + temp1 + ':'+ temp3+ ':'+ temp2        #add thrower speed thrower_speed
+    
+    return temp1, temp3, temp2
 
 def calculate_speed(ball_x, ball_radius, basket_x, basket_diag):
 

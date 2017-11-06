@@ -20,7 +20,8 @@
 import cv2
 import detect_object
 import movement
-import serial
+#import serial
+import communication
 
 #hsv values for the object1
 orangeLower = (0, 136, 232)
@@ -45,8 +46,8 @@ greenUpper = (77, 218, 255)
 camera = cv2.VideoCapture(0)
 port = "/dev/ttyACM0" 
 
-baud = 9600 
-ser = serial.Serial(port, baud, timeout=1)
+#baud = 9600 
+#ser = serial.Serial(port, baud, timeout=1)
 
 lastcommand = ""
 i=0
@@ -63,19 +64,23 @@ while 1:
     #    cv2.circle(frame, ball_center1, 5, (0, 0, 255), -1)
     
     cv2.imshow("mask", ball_mask)
-    cmd = movement.get_command(ball_x1, ball_radius1, basket_x, basket_radius)
-    
+    #cmd = movement.get_command(ball_x1, ball_radius1, basket_x, basket_radius)
+    m1,m2,m3 = movement.get_command(ball_x1, ball_radius1, basket_x, basket_radius)
     if (cmd <> lastcommand):
-        ser.write(cmd + '\r\n')
+        
+        #ser.write(cmd + '\r\n')
+        communication.set_motors(m1,m2,m3)
         lastcommand = cmd
         #print(cmd)
+        print(radius1)
         #print(lastcommand)
     else:
         i=i+1
         #print(i)
         
     if i==120:
-        ser.write(cmd + '\r\n')
+        #ser.write(cmd + '\r\n')
+        communication.set_motors(temp1,temp3,temp2)
         i=0
         #print(cmd)
     
