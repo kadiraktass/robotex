@@ -32,7 +32,7 @@ char ROBOT_ID = 'Z';
 typedef void (*VoidArray) ();
 
 //thrower is implemented without changing PWM, therefore it should not
-Thrower thrower( &THROW_PWM, &IR_SENSOR, &LEDB);
+
 
 USBSerial pc;
 //USBSerial pc (0x1f00, 0x2012, 0x0001,    false);

@@ -29,16 +29,12 @@
 #possibly heading (x-coordinate) and id of basket, nuthing more.
 #for debugging optionally modify, or return modified frame.
 
-
+from __future__ import print_function
 import cv2  #Seems there are big compatibility issues between versions. So we need to be on same lib.
 import cv2.aruco as aruco
 import numpy as np
+from config import ARUCOWIDTH, ARUCODISTANCE, BASKET
 
-#Important stuff:
-_ARUCOWIDTH = 138 #real-life width of aruco marker. Used to calculate distance.
-
-
-print( "We have OpenCV version " + cv2.__version__ )    #i have 3.3.0
 #help( cv2.aruco )
 #possible interests:
 #calibrateCameraAruco()
@@ -49,46 +45,62 @@ print( "We have OpenCV version " + cv2.__version__ )    #i have 3.3.0
 #ubuntu has problems with videocapture. Something about ffmpeg support.
 #cap = cv2.VideoCapture(0)
 #cap = skvideo.io.VideoCapture( 0 )
-cap = cv2.VideoCapture(0)
 #timeout error: https://stackoverflow.com/questions/12715209/select-timeout-error-in-ubuntu-opencv
 
 #cap.get and gap.set() for resolution
 
+#aruco_dict = aruco.CustomDictionary_generate(25, 5) #original does work.
+aruco_dict = aruco.Dictionary_get( aruco.DICT_ARUCO_ORIGINAL )
+parameters =  aruco.DetectorParameters_create()
+
+#"Corrupt JPEG data: premature end of data segment" with freezing is killing me. I need to recompile again??
+def detect_basket( frame ):
+    #lists of ids and the corners belonging to each id
+    corners = []
+    ids = []
+    found = []
+    corners, ids, rejectedImgPoints = aruco.detectMarkers(frame, aruco_dict, parameters=parameters)
+    #found something. Gives None or some numpy array.
+    corners = corners if type(corners) is None else []
+    ids = ids if type(ids) is None else []
+
+    for i in range(0, len(ids)):
+            if ids[i][0] in [ BASKET[0], BASKET[1] ]:
+                found.append( corners[i][0] )
+                print (corners[i])
+
+    if len(found) > 0:
+            print("det:" + found)
+            dist_between = max(found) - min(found)
+            print (dist_between)
+
+    return corners, ids
+    #gray = aruco.drawDetectedMarkers(gray, corners)
 
 
 
-while cap.isOpened():
-    # Capture frame-by-frame
+if __name__ == '__main__':
+    print( "We have OpenCV version " + cv2.__version__ )    #i have 3.3.0
+    cap = cv2.VideoCapture(0)
     ret, frame = cap.read()
-    #print(frame.shape) #480x640
+    print('Frame shape: ' + str(frame.shape)) #480x640
+    print('aruco params: ' + str(parameters))
+    print('searching for basket: ' + str(BASKET) )
 
-    # Our operations on the frame come here
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    aruco_dict = aruco.Dictionary_get( aruco.DICT_ARUCO_ORIGINAL )
-    #aruco_dict = aruco.CustomDictionary_generate(25, 5) #original does work.
-    parameters =  aruco.DetectorParameters_create()
 
-    #print(parameters)
+    while cap.isOpened():
+        # Capture frame-by-frame
+        ret, frame = cap.read()
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    '''    detectMarkers(...)
-        detectMarkers(image, dictionary[, corners[, ids[, parameters[, rejectedI
-        mgPoints]]]]) -> corners, ids, rejectedImgPoints
-    '''
-        #lists of ids and the corners beloning to each id
-    corners, ids, rejectedImgPoints = aruco.detectMarkers(gray, aruco_dict, parameters=parameters)
-    if len(corners) > 0:
-        print(corners)
-        print(ids)
+        corners, ids = detect_basket(gray)
 
-    gray = aruco.drawDetectedMarkers(gray, corners)
-    gray = aruco.drawDetectedMarkers(gray, rejectedImgPoints)
+        gray = aruco.drawDetectedMarkers(gray, corners)
 
-    #print(rejectedImgPoints)
-    # Display the resulting frame
-    cv2.imshow('frame',gray)
-    if cv2.waitKey(0) & 0xFF == ord('q'):
-        break
+        cv2.imshow('frame',gray)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
-# When everything done, release the capture
-cap.release()
-cv2.destroyAllWindows()
+    # When everything done, release the capture
+    cap.release()
+    cv2.destroyAllWindows()
