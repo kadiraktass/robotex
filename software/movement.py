@@ -125,7 +125,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_diag):
                     angular_v = 0
                 else:
                     desired_speed = 0.4         #TODO: Determine the exact value 
-                    movement_angle = 180        #TODO: Determine the exact value 
+                    movement_angle = 90        #TODO: Determine the exact value 
                     angular_v = 0
                     state = 1
                     j = j +1
