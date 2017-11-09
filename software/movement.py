@@ -113,22 +113,19 @@ def find_directions(ball_x, ball_radius, basket_x, basket_diag):
 
     else:
         if ball_radius > 30 :  #TODO: Determine the exact value    #reached to the ball, stop, set thrower speed, shoot
-            #print(state)
-            #print(thrower_speed)
             if(state == 1):
                 #print(j)
-                if(j>60):
                 #if(basket_diag>0 & 350>basket_x & basket_x>250):        #rotate around the ball until basket is found and it is in the same direction
-                    state = 2
-                    desired_speed = 0
-                    movement_angle = 0
-                    angular_v = 0
-                else:
-                    desired_speed = 0.4         #TODO: Determine the exact value 
-                    movement_angle = 90        #TODO: Determine the exact value 
-                    angular_v = 0
-                    state = 1
-                    j = j +1
+                #    state = 2
+                #    desired_speed = 0
+                #    movement_angle = 0
+                #    angular_v = 0
+                #else:
+                desired_speed = 0         #TODO: Determine the exact value 
+                movement_angle = 0        #TODO: Determine the exact value 
+                angular_v = 0
+                state = 1
+                #j = j +1
             elif(state == 2):          #set thrower speed
                 thrower_speed = set_thrower_speed(basket_diag)
                 movement_angle = 0
