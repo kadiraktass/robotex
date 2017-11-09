@@ -49,12 +49,12 @@ def calculate_speed(x, y, radius, fow,input):
     input3 = raw_input("angular_v=  ")
     print(int(input))
     wheelDistanceFromCenter= 0.126   #meter
-    robotSpeed= input2                  #m/s
+    robotSpeed= int(input2)                  #m/s
     robotDirectionAngle= int(input)*3.14/180 #1.57        #rad
     wheelAngle1=-60*3.14/180                   #rad
     wheelAngle2=60*3.14/180                    #rad
     wheelAngle3=0                    #rad
-    robotAngularVelocity= input3
+    robotAngularVelocity= int(input3)
 
     wheelLinearVelocity1 = robotSpeed * math.cos(robotDirectionAngle - wheelAngle1) + wheelDistanceFromCenter * robotAngularVelocity
     wheelLinearVelocity2 = robotSpeed * math.cos(robotDirectionAngle - wheelAngle2) + wheelDistanceFromCenter * robotAngularVelocity
@@ -64,29 +64,20 @@ def calculate_speed(x, y, radius, fow,input):
     
     return wheelLinearVelocity1, wheelLinearVelocity2, wheelLinearVelocity3
 
- #port = "/dev/ttyACM0"
- #baud = 9600
- 
- #ser = serial.Serial(port, baud, timeout=1)
-    #open the serial port
- #if ser.isOpen():
-      #print(ser.name + ' is open...')
- 
-#i=0;
 
 while 1:
     
-    m1,m2,m3 = movement.get_command(5, 5, 5, 5) 
-	communication.set_motors(m1,m2,m3)
+    m1,m2,m3 = get_command(5, 5, 5, 5) 
+    communication.set_motors(m1,m2,m3)
         
        
-	    key = cv2.waitKey(1) & 0xFF
-	    if key == ord("q"):
-	        break
+	key = cv2.waitKey(1) & 0xFF
+	if key == ord("q"):
+	    break
 
-except KeyboardInterrupt:
-	communication.set_motors(0,0,0)
-	communication.set_thrower(0)
+    except KeyboardInterrupt:
+        communication.set_motors(0,0,0)
+        communication.set_thrower(0)
     
 
 
