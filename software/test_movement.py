@@ -2,6 +2,8 @@ import serial
 import cv2
 import time
 import math
+import communication
+
 def get_command(x, y, radius, fow,input):
 
     wheelLinearVelocity1, wheelLinearVelocity2, wheelLinearVelocity3 = calculate_speed(x, y, radius, fow,input)
@@ -37,22 +39,22 @@ def get_command(x, y, radius, fow,input):
     else:
         temp3 = '0' + temp3
     
-    cmd = 'sd'+':'+ temp1 + ':'+ temp3+ ':'+ temp2
-    print(cmd)
-    return cmd
+    return temp1, temp3, temp2
     
 
 def calculate_speed(x, y, radius, fow,input):
     #ax, ay, w = find_directions(x, y, radius, fow,input)
-    input = raw_input(">> ")
+    input = raw_input("movement angle= ")
+    input2 = raw_input("speed=  ")
+    input3 = raw_input("angular_v=  ")
     print(int(input))
     wheelDistanceFromCenter= 0.126   #meter
-    robotSpeed= 0.5                  #m/s
+    robotSpeed= input2                  #m/s
     robotDirectionAngle= int(input)*3.14/180 #1.57        #rad
     wheelAngle1=-60*3.14/180                   #rad
     wheelAngle2=60*3.14/180                    #rad
     wheelAngle3=0                    #rad
-    robotAngularVelocity= 0
+    robotAngularVelocity= input3
 
     wheelLinearVelocity1 = robotSpeed * math.cos(robotDirectionAngle - wheelAngle1) + wheelDistanceFromCenter * robotAngularVelocity
     wheelLinearVelocity2 = robotSpeed * math.cos(robotDirectionAngle - wheelAngle2) + wheelDistanceFromCenter * robotAngularVelocity
@@ -62,32 +64,30 @@ def calculate_speed(x, y, radius, fow,input):
     
     return wheelLinearVelocity1, wheelLinearVelocity2, wheelLinearVelocity3
 
-port = "/dev/ttyACM0"
-baud = 9600
+ #port = "/dev/ttyACM0"
+ #baud = 9600
  
-ser = serial.Serial(port, baud, timeout=1)
+ #ser = serial.Serial(port, baud, timeout=1)
     #open the serial port
-if ser.isOpen():
-     print(ser.name + ' is open...')
+ #if ser.isOpen():
+      #print(ser.name + ' is open...')
  
 #i=0;
 
 while 1:
+    
+    m1,m2,m3 = movement.get_command(5, 5, 5, 5) 
+	communication.set_motors(m1,m2,m3)
+        
+       
+	    key = cv2.waitKey(1) & 0xFF
+	    if key == ord("q"):
+	        break
 
-	#input = raw_input(">> ")
-	
-	#cmd = get_command(0,0,0,0,input)
-	cmd= "sd:6:6:6"
-	ser.write(cmd + '\r\n')
-	print(cmd)
-	out = ''
-	# let's wait one second before reading output (let's give device time to answer)
-	time.sleep(0.5)
-	#i = i + 1;
-
-
-command = "sd000"
-ser.write(command + '\r\n')
+except KeyboardInterrupt:
+	communication.set_motors(0,0,0)
+	communication.set_thrower(0)
+    
 
 
 
