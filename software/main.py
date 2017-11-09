@@ -28,7 +28,7 @@ orangeLower = (0, 136, 232)
 orangeUpper = (255, 255, 255)
 
 #hsv values for the object2
-blueLower = (62, 160, 133)
+blueLower = (88, 160, 133)
 blueUpper = (255, 255, 255)
 
 #hsv values for the object3
@@ -60,7 +60,7 @@ try:
 
 	    (grabbed, frame) = camera.read()
 
-	    ball_x1, ball_y1, ball_radius1, ball_center1, ball_mask = detect_object.track(camera, greenLower, greenUpper)
+	    ball_x1, ball_y1, ball_radius1, ball_center1, ball_mask = detect_object.track(camera, blueLower, blueUpper)
 	    basket_radius = -1
 	    basket_x = -1
 

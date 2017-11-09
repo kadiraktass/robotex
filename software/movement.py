@@ -88,7 +88,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_diag):
     global j
     global i
     
-    if ball_x>305:               #TODO: Determine the exact value
+    if ball_x>350:               #TODO: Determine the exact value
         #turn right until x 290 310
         movement_angle = 0
         desired_speed = 0
@@ -96,7 +96,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_diag):
         thrower_speed = 0
         state = 1
         
-    elif 295>ball_x>0:                   #TODO: Determine the exact value
+    elif 250>ball_x>0:                   #TODO: Determine the exact value
         #turn left until x 290 310
         movement_angle = 0
         desired_speed = 0
