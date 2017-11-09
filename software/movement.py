@@ -88,7 +88,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_diag):
     global j
     global i
     
-    if ball_x>350:               #TODO: Determine the exact value
+    if ball_x>305:               #TODO: Determine the exact value
         #turn right until x 290 310
         movement_angle = 0
         desired_speed = 0
@@ -96,7 +96,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_diag):
         thrower_speed = 0
         state = 1
         
-    elif 250>ball_x>0:                   #TODO: Determine the exact value
+    elif 295>ball_x>0:                   #TODO: Determine the exact value
         #turn left until x 290 310
         movement_angle = 0
         desired_speed = 0
@@ -111,7 +111,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_diag):
         thrower_speed = 0
         state = 1
 
-    else:
+    else:       #350>x>250
         if ball_radius > 30 :  #TODO: Determine the exact value    #reached to the ball, stop, set thrower speed, shoot
             if(state == 1):
                 #print(j)
@@ -138,8 +138,8 @@ def find_directions(ball_x, ball_radius, basket_x, basket_diag):
                 else:
                     state = 2
             elif(state == 3):
-                desired_speed = 0.4     #TODO: Determine the exact value
-                movement_angle = 90
+                desired_speed = 0     #TODO: Determine the exact value
+                movement_angle = 0
                 angular_v = 0
                 i = i + 1
                 if(i > 20):             #TODO: Determine the exact value    #go forward until the ball is shooted
@@ -149,14 +149,14 @@ def find_directions(ball_x, ball_radius, basket_x, basket_diag):
                     state = 3
             
         elif ball_radius >10: #TODO: Determine the exact value
-            movement_angle = 90
-            desired_speed = 0.4 #TODO: Determine the exact value
+            movement_angle = 0
+            desired_speed = 0 #TODO: Determine the exact value
             angular_v = 0
             thrower_speed = 0
             state = 1
         elif ball_radius >0:    #TODO: Determine the exact value
-            movement_angle = 90
-            desired_speed = 0.4  #TODO: Determine the exact value
+            movement_angle = 0
+            desired_speed = 0  #TODO: Determine the exact value
             thrower_speed = 0
             state = 1
             angular_v = 0
