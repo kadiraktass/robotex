@@ -97,6 +97,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
         desired_speed = 0
         angular_v = 30        #TODO: Determine the exact value
         thrower_speed = 0
+	rotate_r = 0
         state = 1
         
     elif 250>ball_x>0:                   #TODO: Determine the exact value
@@ -106,6 +107,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
         angular_v = -90        #TODO: Determine the exact value
         thrower_speed = 0
         state = 1
+	rotate_r = 0
     elif 0>ball_x:
         #turn right until x is detected
         movement_angle = 0
@@ -113,7 +115,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
         angular_v = 90        #TODO: Determine the exact value
         thrower_speed = 0
         state = 1
-
+	rotate_r = 0
     else:
 	print("state= ",state)
         print("i= ",i)
@@ -121,6 +123,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
 	print("ball_radius= ",ball_radius)
 	print("basket_x= ",basket_x)
 	print("basket_dist= ", basket_dist)
+	print("thrower_speed", thrower_speed)
         if ball_radius > 18 :  #TODO: Determine the exact value    #reached to the ball, stop, set thrower speed, shoot
             #print(thrower_speed)
             if(state == 1):
@@ -141,7 +144,8 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
                     state = 1
                     j = j +1
             elif(state == 2):          #set thrower speed
-                thrower_speed = set_thrower_speed(basket_dist)
+		if(basket_dist>0):
+                	thrower_speed = set_thrower_speed(basket_dist)
                 movement_angle = 0
                 desired_speed = 0
                 angular_v = 0
@@ -156,6 +160,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
                 desired_speed = 0.4     #TODO: Determine the exact value
                 movement_angle = 90
                 angular_v = 0
+		rotate_r = 0
                 i = i + 1
                 if(i > 20):             #TODO: Determine the exact value    #go forward until the ball is shooted
                     state = 1
