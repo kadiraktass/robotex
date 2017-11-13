@@ -79,7 +79,7 @@ def detect_basket( frame ):
 
     corners, ids, rejectedImgPoints = aruco.detectMarkers(frame, aruco_dict, parameters=parameters)
     #found something. Gives None or some numpy array.
-    if not ids:
+    if ids is None:
         return [], []
 
 #    if isinstance(ids, np.ndarray): #for some sick reason, corners is a list of numpy arrays several levels deep
