@@ -55,7 +55,7 @@ try:
 		m1,m2,m3,thrower_speed = movement.get_command(ball_x1, ball_radius1, basket_x, basket_dist)
 		print("sent by the main: ",m1,m2,m3)
 		communication.set_motors(m1,m2,m3)
-
+		
 		print("THROWER SPEED IN MAIN: ", thrower_speed)
 		communication.set_thrower( thrower_speed )
 		if thrower_speed > 0:
