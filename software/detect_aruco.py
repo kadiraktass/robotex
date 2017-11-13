@@ -134,27 +134,31 @@ def fallback_to_blob( frame ):
     mask = cv2.erode(mask, None, iterations=2)
     mask = cv2.dilate(mask, None, iterations=2)
 
+
     # find contours in the mask and initialize the current
     cnts = cv2.findContours(mask, cv2.RETR_EXTERNAL,
                             cv2.CHAIN_APPROX_SIMPLE)[-2]
-    center = None
 
     # only proceed if at least one contour was found
     if len(cnts) > 0:
         # find the largest contour in the mask, then use
-        # it to compute the minimum enclosing circle and
-        # centroid
         c = max(cnts, key=cv2.contourArea)
+        cv2.drawContours(frame, c, -1, (255, 255, 0), 1)
+
         #rect = cv2.minAreaRect(c) # (x,y)(w,h)angle
         rect = cv2.boundingRect(c)
-        print(rect)
-        cv2.rectangle(frame,(rect[0], rect[1]), (rect[0]+rect[2], rect[1]+rect[3]), (255,255,0),2)
+        cv2.rectangle(frame,(rect[0], rect[1]), (rect[0]+rect[2], rect[1]+rect[3]), (255,255,0), 2)
+
         #height of basket
         if rect[3] > 20:
-            M = cv2.moments(c)
-            center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+            return rect[3] // 2, rect[0] + rect[2]//2, [], []
+
+    cv2.imshow("mask", mask)
 
     return None, None, None, None
+
+
+
 
 
 
