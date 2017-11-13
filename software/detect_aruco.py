@@ -81,20 +81,21 @@ def detect_basket( frame ):
     if type(ids) is None or type(corners) is None:
         return [], []
 
-    if isinstance(ids, np.ndarray): #for some sick reason, corners is normal list, but ids is numpy array
-        ids = ids.tolist()
+#    if isinstance(ids, np.ndarray): #for some sick reason, corners is a list of numpy arrays several levels deep
+#        ids = ids.tolist()
 
     print ('IDS:' + str(ids))
     print ('CORNERS:' + str(corners))
 
+    #when i find rightmost marker, it means basket is a little bit leftwards.
+    #ditto for left one. And arithmetic mean if both are visible.
     found = []
     for i in range(0, len(ids)):
             if ids[i][0] in [ BASKET[0], BASKET[1] ]:
-                found.append( corners[i][0] )
-                print (corners[i])
+                found.append( corners[i][0][0][0] )
 
     if len(found) > 0:
-            print("det:" + str(found))
+            print("found:" + str(found))
             dist_between = max(found) - min(found)
             print ("dist:" + dist_between)
 
