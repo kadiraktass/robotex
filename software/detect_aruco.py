@@ -3,6 +3,8 @@ Plan:
 
 Distance is expressed in pixels, simply distance between two markers.
 Converting to centimeters/etc will introduce additional errors.
+Proper pose estimation requires calibrating camera and some arcane math.
+I try first simpler variant.
 Location of basket is given in pixels also (on horizontal axis only)
 
 
@@ -10,7 +12,6 @@ Process of calibration:
 Put robot to a centerline, this is 250cm, measured from first edge of robot to backplate of basket.
 Read distance in pixels, find neccessary speed for thrower, repeat and rinse, derive a function for a curve.
 Introduce a quick calibration constant in case field of competition is slightly different.
-Centerline is 250 cm from basket
 
 Fuck it. I cannot detect both markers at the same time - i need to derive
 all the nessecary information from just one of them.
@@ -91,14 +92,11 @@ def detect_basket( frame ):
     #ditto for left one. And arithmetic mean if both are visible.
     found = []
     for i in range(0, len(ids)):
-            if ids[i][0] in [ BASKET[0], BASKET[1] ]:
-                found.append( corners[i][0][0][0] )
-
-    if len(found) > 0:
-            print("found:" + str(found))
-            dist_between = max(found) - min(found)
-            print ("dist:" + dist_between)
-
+            if ids[i][0] == BASKET[0]:
+                left_marker = corners[i][0][0][0]
+            if ids[i][0] ==  BASKET[1]:
+                right_marker = corners[i][0][0][0]
+    print (left_marker, right_marker)
     return corners, ids
     #gray = aruco.drawDetectedMarkers(gray, corners)
 
