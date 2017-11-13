@@ -163,7 +163,7 @@ def detect_serial_ports():
     if len(bestguess) == 1:
         _port = bestguess
     else:
-        _port = config.serialport
+        _port = serialport
     #yeah, id is one thing, name is another. Well do without.
     #print ("((\n TODO: if guessing is reliable, auto-set config.serialport \n" + str(bestguess) + '\n))\n')
 

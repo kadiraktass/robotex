@@ -74,6 +74,9 @@ aruco_dict = aruco.Dictionary_get( aruco.DICT_ARUCO_ORIGINAL )
 parameters =  aruco.DetectorParameters_create()
 
 #"Corrupt JPEG data: premature end of data segment" with accompanied freezing is killing me. I need to recompile again??
+#TODO: would it be reasonable to hold running average?
+#and truthness level?
+
 def detect_basket( frame ):
     #lists of ids and the corners belonging to each id
 
@@ -124,6 +127,9 @@ def detect_basket( frame ):
 
 
 if __name__ == '__main__':
+    import communication
+    throwspeed = 0
+
     print( "We have OpenCV version " + cv2.__version__ )    #i have 3.3.0
     cap = cv2.VideoCapture(0)
     ret, frame = cap.read()
@@ -138,9 +144,8 @@ if __name__ == '__main__':
         if not ret: #can i ignore bad frames?
             continue
 
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-        dist, basket, corners, ids = detect_basket(gray)
+        #gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) is it better on colorframe
+        dist, basket, corners, ids = detect_basket(frame)
 
         frame = aruco.drawDetectedMarkers(frame, corners)
 
@@ -149,8 +154,21 @@ if __name__ == '__main__':
             cv2.putText(frame, "Dist:" + str(dist), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,0) )
 
         cv2.imshow('frame', frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        keyp = cv2.waitKey(1) & 0xFF
+
+        if keyp == ord('q'):
             break
+        elif keyp == ord('e'):
+            throwspeed += 2
+        elif keyp == ord('d'):
+            throwspeed -= 2
+        elif keyp == ord('s'):
+            throwspeed = 0
+        elif keyp == ord('w'):
+            throwspeed = 100
+
+        communication.set_thrower(throwspeed)
+        communication.update_comms()
 
     # When everything done, release the capture
     cap.release()
