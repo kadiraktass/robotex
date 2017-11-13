@@ -55,6 +55,7 @@ import cv2  #Seems there are big compatibility issues between versions. So we ne
 import cv2.aruco as aruco
 import numpy as np
 from config import ARUCOWIDTH, ARUCODISTANCE, BASKET
+import time
 
 #help( cv2.aruco )
 #possible interests:
@@ -80,6 +81,15 @@ parameters =  aruco.DetectorParameters_create()
 
 #You cannot rely on finding basket from every frame. Therefore strategy is as follows:
 #find basket, select speed, attack, hope for the best.
+
+#TODO: maybe.
+#if last dist was None more than 1s ago then we do not see basket.
+#if we just saw it, but right now did'nt detect, then skip
+#if we just saw it, and keep seeing, then keep running average to smooth out fluctuations
+def calculate_speed( dist ):
+    return int( 384,3 * dist ** -0.573 )
+
+
 
 def detect_basket( frame ):
     #lists of ids and the corners belonging to each id
@@ -117,8 +127,8 @@ def detect_basket( frame ):
                 dists.append ( height )
                 basks.append ( topleft[0] - height/3 )
 
-    print ('got:', end='')
-    print(dists, basks)
+#    print ('got:', end='')
+#    print(dists, basks)
 
     #if i got both, return arithmetic mean
     if len(dists) == 0:
@@ -156,7 +166,7 @@ def fallback_to_blob( frame ):
 
         #height of basket
         if rect[3] > 20:
-            return rect[3] // 2, rect[0] + rect[2]//2, [], []
+            return rect[3] / 2, rect[0] + rect[2]//2, [], []
 
     return None, None, None, None
 
@@ -190,9 +200,11 @@ if __name__ == '__main__':
 
         if not basket is None:
             cv2.line(frame, (int(basket), 0), (int(basket),400), (255,255,0), 2)
-            cv2.putText(frame, "Dist:" + str(dist), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,0) )
+            cv2.putText(frame, "Dist:" + str(dist), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,0) )
+            cv2.putText(frame, "Suggested:" + str(calculate_speed(dist)), (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0) )
 
-        cv2.putText(frame, "Throw:" + str(throwspeed), (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,0) )
+        cv2.putText(frame, "Throw:" + str(throwspeed), (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255) )
+
 
         cv2.imshow('frame', frame)
         keyp = cv2.waitKey(1) & 0xFF
