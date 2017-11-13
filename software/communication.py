@@ -91,6 +91,8 @@ def send_soon( message ):
                 pending_commands[i] = message
                 print('break')
                 break
+            else:
+                pending_commands.append( message )
     else:
         pending_commands.append( message )
 
