@@ -5,9 +5,7 @@ import numpy as np
 import imutils
 
 
-def track(camera, colorlower, colorupper):
-    # grab the current frame
-    (grabbed, frame) = camera.read()
+def track(frame, colorlower, colorupper):
 
     # resize the frame, blur it, and convert it to the HSV
     # color space
