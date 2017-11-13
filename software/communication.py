@@ -78,7 +78,7 @@ def send_soon( message ):
     global pending_commands
     #if we already have same command in queue, then we will overwrite it.
     #its not neccessarily the last command
-    print('pending before: ' + pending_commands)
+    print('pending before: ' + str(pending_commands))
 
     if len( pending_commands ) > 0:
         for i in range(0, len(pending_commands)):
@@ -94,7 +94,7 @@ def send_soon( message ):
     else:
         pending_commands.append( message )
 
-    print('pending after: ' + pending_commands)
+    print('pending after: ' + str(pending_commands))
     return True
 
 
