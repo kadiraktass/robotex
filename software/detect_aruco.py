@@ -73,18 +73,17 @@ parameters =  aruco.DetectorParameters_create()
 #"Corrupt JPEG data: premature end of data segment" with freezing is killing me. I need to recompile again??
 def detect_basket( frame ):
     #lists of ids and the corners belonging to each id
-    corners = []
-    ids = []
-    found = []
+
     corners, ids, rejectedImgPoints = aruco.detectMarkers(frame, aruco_dict, parameters=parameters)
     #found something. Gives None or some numpy array.
-    if ids is None or corners is None:
+    if type(ids) is None or type(corners) is None:
         return [], []
 
-    #but i do not know how numpy arrays workk
+    #but i do not know how numpy arrays work
     corners = corners.tolist()
     ids = ids.tolist()
 
+    found = []
     for i in range(0, len(ids)):
             if ids[i][0] in [ BASKET[0], BASKET[1] ]:
                 found.append( corners[i][0] )
