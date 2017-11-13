@@ -48,9 +48,6 @@ ser = serial.Serial()
 
 
 def set_motors(m1, m2, m3):
-    print ("Brakes:" + str(BRAKES_ON))
-    print("Go: "+ str(m1), ':', str(m2), ':', str(m3))
-
     if not BRAKES_ON:
         t = 'sm:{0}:{1}:{2}'.format(int(m1), int(m2), int(m3))
         send_soon(t)
@@ -68,7 +65,7 @@ def send_now( message ):
     #if ser.outWaiting() > 0:
     #    ser.flushOutput()  #whatewer there was, it wasnt important anyway
     #    ser.write('\n')
-    print('SERIAL JUST SENT: ' + message)
+    print('SERIAL JUST SENT: ' + message + ', pending: ' + str(pending_commands))
 
     return ser.write( message + '\n')
     #write() is blocking by default, unless write_timeout is set. Returns number of bytes written
@@ -83,6 +80,7 @@ def send_soon( message ):
         for i in range(0, len(pending_commands)):
             if pending_commands[i].startswith( message[0:2] ):
                 pending_commands[i] = message
+                break
     else:
         pending_commands.append( message )
     return True
@@ -99,7 +97,7 @@ def update_comms():
             last_time = now
 
         #todo:see if there are something incoming from robot, read them all
-        while ser.inWaiting() > 0:
+        if ser.inWaiting() > 0:
             read_from_robot()
 
     return True
