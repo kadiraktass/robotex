@@ -93,8 +93,9 @@ def update_comms():
     if open_port():
         now = millis()
         if (now - last_time) >= forced_delay and len(pending_commands) > 0:
-            send_now( pending_commands.pop(0) )
-            last_time = now
+            while len(pending_commands) > 0:
+                send_now( pending_commands.pop(0) )
+                last_time = now
 
         #todo:see if there are something incoming from robot, read them all
         if ser.inWaiting() > 0:
