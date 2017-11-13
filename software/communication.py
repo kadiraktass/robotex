@@ -58,6 +58,7 @@ def set_thrower(sp):
     if not BRAKES_ON:
         t = 'st:{0}'.format(int(sp))
         send_soon(t)
+        print( 'added from set_thrower: ' + t)
         print('pending from set_thrower: '+ str(pending_commands))
 
 
