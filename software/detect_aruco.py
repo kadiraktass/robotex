@@ -76,7 +76,10 @@ parameters =  aruco.DetectorParameters_create()
 
 #"Corrupt JPEG data: premature end of data segment" with accompanied freezing is killing me. I need to recompile again??
 #TODO: would it be reasonable to hold running average?
-#and truthness level?
+#and truthness level? (eg two arucos is best, blob worst)
+
+#You cannot rely on finding basket from every frame. Therefore strategy is as follows:
+#find basket, select speed, attack, hope for the best.
 
 def detect_basket( frame ):
     #lists of ids and the corners belonging to each id
@@ -86,12 +89,11 @@ def detect_basket( frame ):
     if ids is None:
         return fallback_to_blob(frame)
 
-
 #    if isinstance(ids, np.ndarray): #for some sick reason, corners is a list of numpy arrays several levels deep
 #        ids = ids.tolist()
 
     print ('IDS:' + str(ids))
-    print ('CORNERS:' + str(corners))
+#    print ('CORNERS:' + str(corners))
 
     #when i find rightmost marker, it means basket is a little bit leftwards.
     #ditto for left one. And arithmetic mean if both are visible.
@@ -127,13 +129,16 @@ def detect_basket( frame ):
     #gray = aruco.drawDetectedMarkers(gray, corners)
 
 
+
+
+
+
 def fallback_to_blob( frame ):
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
     mask = cv2.inRange(hsv, BASKET[2], BASKET[3])
     mask = cv2.erode(mask, None, iterations=2)
     mask = cv2.dilate(mask, None, iterations=2)
-
 
     # find contours in the mask and initialize the current
     cnts = cv2.findContours(mask, cv2.RETR_EXTERNAL,
@@ -152,8 +157,6 @@ def fallback_to_blob( frame ):
         #height of basket
         if rect[3] > 20:
             return rect[3] // 2, rect[0] + rect[2]//2, [], []
-
-    cv2.imshow("mask", mask)
 
     return None, None, None, None
 
@@ -182,15 +185,13 @@ if __name__ == '__main__':
             continue
 
         #gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) is it better on colorframe
-#        dist, basket, corners, ids = detect_basket(frame)
-#        frame = aruco.drawDetectedMarkers(frame, corners)
-
-        fallback_to_blob(frame)
-
+        dist, basket, corners, ids = detect_basket(frame)
+        frame = aruco.drawDetectedMarkers(frame, corners)
 
         if not basket is None:
             cv2.line(frame, (int(basket), 0), (int(basket),400), (255,255,0), 2)
-            cv2.putText(frame, "Dist:" + str(dist), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,0) )
+            cv2.putText(frame, "Dist:" + str(dist), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,0) )
+
         cv2.putText(frame, "Throw:" + str(throwspeed), (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,0) )
 
         cv2.imshow('frame', frame)
