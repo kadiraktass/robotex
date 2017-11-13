@@ -79,6 +79,9 @@ def detect_basket( frame ):
     if type(ids) is None or type(corners) is None:
         return [], []
 
+    print type(ids)
+    print type(corners)
+    
     #but i do not know how numpy arrays work
     corners = corners.tolist()
     ids = ids.tolist()
