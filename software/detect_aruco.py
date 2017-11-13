@@ -176,7 +176,8 @@ if __name__ == '__main__':
             continue
 
         #gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) is it better on colorframe
-        dist, basket, corners, ids = detect_basket(frame)
+#        dist, basket, corners, ids = detect_basket(frame)
+        fallback_to_blob(frame)
 
         frame = aruco.drawDetectedMarkers(frame, corners)
 
