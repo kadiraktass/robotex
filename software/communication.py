@@ -58,6 +58,7 @@ def set_thrower(sp):
     if not BRAKES_ON:
         t = 'st:{0}'.format(int(sp))
         send_soon(t)
+        print('pending from set_thrower: '+ str(pending_commands))
 
 
 #some things need immediate sending
@@ -94,6 +95,7 @@ def update_comms():
         now = millis()
         if (now - last_time) >= forced_delay and len(pending_commands) > 0:
             while len(pending_commands) > 0:
+                print( "pending: "+ str(pending_commands))
                 send_now( pending_commands.pop(0) )
                 time.sleep(0.1)
                 last_time = now
@@ -106,6 +108,7 @@ def update_comms():
 
 
 def read_from_robot():
+
     while ser.inWaiting() > 0:
         t = ser.readline() #timeout is long enough - in no way should it snip something
         t = t.strip()
