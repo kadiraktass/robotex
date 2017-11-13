@@ -167,7 +167,7 @@ def fallback_to_blob( frame ):
 
         #height of basket
         if rect[3] > 20:
-            return rect[3] / 2, rect[0] + rect[2]//2, [], []
+            return rect[3], rect[0] + rect[2]//2, [], []
 
     return -1, -1, None, None
 
