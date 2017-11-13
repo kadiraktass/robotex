@@ -48,12 +48,13 @@ try:
 	    #    cv2.circle(frame, ball_center1, 5, (0, 0, 255), -1)
 
 	    cv2.imshow("mask", ball_mask)
-
-	    m1,m2,m3 = movement.get_command(ball_x1, ball_radius1, basket_x, basket_dist)
+	    communication.update_comms()
+	    m1,m2,m3,thrower_speed = movement.get_command(ball_x1, ball_radius1, basket_x, basket_dist)
             print("sent by the main: ",m1,m2,m3)
             communication.set_motors(m1,m2,m3)
-
-        #communication.set_thrower(0)
+	    
+	    communication.update_comms()
+            communication.set_thrower(00)
 	    cv2.putText(frame, "dx: {}, dy: {}, radius: {}".format(int(ball_x1), int(ball_y1), int(ball_radius1)),
 	                    (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
 	                    0.35, (0, 0, 255), 1)
