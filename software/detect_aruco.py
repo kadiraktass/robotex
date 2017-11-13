@@ -145,13 +145,14 @@ def fallback_to_blob( frame ):
         # it to compute the minimum enclosing circle and
         # centroid
         c = max(cnts, key=cv2.contourArea)
-        rect = cv2.minAreaRect(c)
-        box = cv2.cv.BoxPoints(rect) # cv2.boxPoints(rect) for OpenCV 3.x
-        box = np.int0(box)
-        cv2.drawContours(frame,[box],0,(255,255,0),2)
-
-        M = cv2.moments(c)
-        center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+        #rect = cv2.minAreaRect(c) # (x,y)(w,h)angle
+        rect = cv2.boundingRect(c)
+        print(rect)
+        cv2.rectangle(frame,(rect[0], rect[1]), (rect[0]+rect[2], rect[1]+rect[3]), (255,255,0),2)
+        #height of basket
+        if rect[3] > 20:
+            M = cv2.moments(c)
+            center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 
     return None, None, None, None
 
@@ -160,6 +161,7 @@ def fallback_to_blob( frame ):
 if __name__ == '__main__':
     import communication
     throwspeed = 0
+    basket = None
 
     print( "We have OpenCV version " + cv2.__version__ )    #i have 3.3.0
     cap = cv2.VideoCapture(0)
@@ -177,9 +179,10 @@ if __name__ == '__main__':
 
         #gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) is it better on colorframe
 #        dist, basket, corners, ids = detect_basket(frame)
+#        frame = aruco.drawDetectedMarkers(frame, corners)
+
         fallback_to_blob(frame)
 
-        frame = aruco.drawDetectedMarkers(frame, corners)
 
         if not basket is None:
             cv2.line(frame, (int(basket), 0), (int(basket),400), (255,255,0), 2)
