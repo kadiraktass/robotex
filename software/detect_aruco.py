@@ -91,26 +91,31 @@ def detect_basket( frame ):
     #when i find rightmost marker, it means basket is a little bit leftwards.
     #ditto for left one. And arithmetic mean if both are visible.
     #oh hell, detection is horrible. Works only under ideal conditions.
-    found, left_marker, right_marker = [], (), ()
+    found = []
     dists = []
     basks = []
     #marker is (vertical_distance, x_of_basket)
     for i in range(0, len(ids)):
-            height = corners[i][3][1] - corners[i][0][1]
-            width  = corners[i][3][1] - corners[i][0][1]
+            topleft = corners[i][0][0]
+            topright = corners[i][0][1]
+            bottomleft = corners[i][0][3]
+            height = bottomleft[1] - topleft[1]
+            print (topleft, topright, bottomleft, height)
 
-            if ids[i][0] == BASKET[0]:
+            if ids[i][0] == BASKET[0]: #left marker
                 dists.append ( height )
-                basks.append ( corners[i][1][0] + height/3 )
+                basks.append ( topright[0] + height/3 )
 
-            if ids[i][0] ==  BASKET[1]:
+            if ids[i][0] ==  BASKET[1]: #right marker
                 dists.append ( height )
-                basks.append ( corners[i][0][0] - height/3 )
+                basks.append ( topleft[0] - height/3 )
 
-    print ('got:', eol='')
+    print ('got:', end='')
     print(dists, basks)
 
     #if i got both, return arithmetic mean
+    if len(dists) == 0:
+        return None, None, corners, ids
 
     return np.mean(dists), np.mean(basks), corners, ids
 
@@ -140,7 +145,8 @@ if __name__ == '__main__':
         frame = aruco.drawDetectedMarkers(frame, corners)
 
         if not basket is None:
-            cv2.line(frame, (basket, 0), (basket,400), (255,255,0), 2)
+            cv2.line(frame, (int(basket), 0), (int(basket),400), (255,255,0), 2)
+            cv2.putText(frame, "Dist:" + str(dist), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,0) )
 
         cv2.imshow('frame', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
