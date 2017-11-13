@@ -80,7 +80,7 @@ def detect_basket( frame ):
     corners, ids, rejectedImgPoints = aruco.detectMarkers(frame, aruco_dict, parameters=parameters)
     #found something. Gives None or some numpy array.
     if ids is None:
-        return [], []
+        return None, None, None, None
 
 #    if isinstance(ids, np.ndarray): #for some sick reason, corners is a list of numpy arrays several levels deep
 #        ids = ids.tolist()
@@ -90,17 +90,30 @@ def detect_basket( frame ):
 
     #when i find rightmost marker, it means basket is a little bit leftwards.
     #ditto for left one. And arithmetic mean if both are visible.
-    found, left_marker, right_marker = [], [], []
-
+    #oh hell, detection is horrible. Works only under ideal conditions.
+    found, left_marker, right_marker = [], (), ()
+    dists = []
+    basks = []
+    #marker is (vertical_distance, x_of_basket)
     for i in range(0, len(ids)):
+            height = corners[i][3][1] - corners[i][0][1]
+            width  = corners[i][3][1] - corners[i][0][1]
+
             if ids[i][0] == BASKET[0]:
-                left_marker = corners[i][0][0][0]
+                dists.append ( height )
+                basks.append ( corners[i][1][0] + height/3 )
 
             if ids[i][0] ==  BASKET[1]:
-                right_marker = corners[i][0][0][0]
+                dists.append ( height )
+                basks.append ( corners[i][0][0] - height/3 )
 
-    print (left_marker, right_marker)
-    return corners, ids
+    print ('got:', eol='')
+    print(dists, basks)
+
+    #if i got both, return arithmetic mean
+
+    return np.mean(dists), np.mean(basks), corners, ids
+
     #gray = aruco.drawDetectedMarkers(gray, corners)
 
 
@@ -122,11 +135,14 @@ if __name__ == '__main__':
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-        corners, ids = detect_basket(gray)
+        dist, basket, corners, ids = detect_basket(gray)
 
-        gray = aruco.drawDetectedMarkers(gray, corners)
+        frame = aruco.drawDetectedMarkers(frame, corners)
 
-        cv2.imshow('frame',gray)
+        if not basket is None:
+            cv2.line(frame, (basket, 0), (basket,400), (255,255,0), 2)
+
+        cv2.imshow('frame', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
