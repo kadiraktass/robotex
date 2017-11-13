@@ -58,8 +58,8 @@ def set_thrower(sp):
     if not BRAKES_ON:
         t = 'st:{0}'.format(int(sp))
         send_soon(t)
-        print( 'added from set_thrower: ' + t)
-        print('pending from set_thrower: '+ str(pending_commands))
+#        print( 'added from set_thrower: ' + t)
+#        print('pending from set_thrower: '+ str(pending_commands))
 
 
 #some things need immediate sending
@@ -78,13 +78,23 @@ def send_soon( message ):
     global pending_commands
     #if we already have same command in queue, then we will overwrite it.
     #its not neccessarily the last command
+    print('pending before: ' + pending_commands)
+
     if len( pending_commands ) > 0:
         for i in range(0, len(pending_commands)):
+            print( 'pending[i]: ' + pending_commands[i] )
+            print('message: ' + message)
+            print('message[0:2] : ' + message[0:2] )
+            print('startswith:' + str( pending_commands[i].startswith( message[0:2] ) ) )
+
             if pending_commands[i].startswith( message[0:2] ):
                 pending_commands[i] = message
+                print('break')
                 break
     else:
         pending_commands.append( message )
+
+    print('pending after: ' + pending_commands)
     return True
 
 
