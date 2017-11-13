@@ -27,7 +27,7 @@
 from __future__ import print_function
 import serial
 import time
-from config import *
+from config import serialport, FIELD_ID, ROBOT_ID, BRAKES_ON
 import serial.tools.list_ports
 import sys
 
