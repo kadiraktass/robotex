@@ -79,23 +79,24 @@ def send_soon( message ):
     #if we already have same command in queue, then we will overwrite it.
     #its not neccessarily the last command
     print('pending before: ' + str(pending_commands))
+    doineedtoappend = True
 
     if len( pending_commands ) > 0:
         for i in range(0, len(pending_commands)):
-            print( 'pending[i]: ' + pending_commands[i] )
-            print('message: ' + message)
-            print('message[0:2] : ' + message[0:2] )
-            print('startswith:' + str( pending_commands[i].startswith( message[0:2] ) ) )
+            #print('pending[i]: ' + pending_commands[i] )
+            #print('message: ' + message)
+            #print('message[0:2] : ' + message[0:2] )
+            #print('startswith:' + str( pending_commands[i].startswith( message[0:2] ) ) )
 
             if pending_commands[i].startswith( message[0:2] ):
                 pending_commands[i] = message
-                print('break')
+                #print('break')
+                doineedtoappend = False
                 break
-            else:
-                pending_commands.append( message )
-    else:
-        pending_commands.append( message )
 
+    if doineedtoappend == True:
+        pending_commands.append( message )
+    
     print('pending after: ' + str(pending_commands))
     return True
 
