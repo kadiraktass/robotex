@@ -78,8 +78,8 @@ def detect_basket( frame ):
     found = []
     corners, ids, rejectedImgPoints = aruco.detectMarkers(frame, aruco_dict, parameters=parameters)
     #found something. Gives None or some numpy array.
-    corners = [] if type(corners) is None else corners
-    ids = [] if type(ids) is None else ids
+    if ids is None or corners is None:
+        return [], []
 
     for i in range(0, len(ids)):
             if ids[i][0] in [ BASKET[0], BASKET[1] ]:
