@@ -7,12 +7,14 @@ Location of basket is given in pixels also (on horizontal axis only)
 
 
 Process of calibration:
-Put robot to a distance of 1m, measured from first edge of robot to backplate of basket.
+Put robot to a centerline, this is 250cm, measured from first edge of robot to backplate of basket.
 Read distance in pixels, find neccessary speed for thrower, repeat and rinse, derive a function for a curve.
 Introduce a quick calibration constant in case field of competition is slightly different.
+Centerline is 250 cm from basket
+
+Fuck it. I cannot detect both markers at the same time - i need to derive
+all the nessecary information from just one of them.
 '''
-
-
 
 
 #
@@ -70,7 +72,7 @@ from config import ARUCOWIDTH, ARUCODISTANCE, BASKET
 aruco_dict = aruco.Dictionary_get( aruco.DICT_ARUCO_ORIGINAL )
 parameters =  aruco.DetectorParameters_create()
 
-#"Corrupt JPEG data: premature end of data segment" with freezing is killing me. I need to recompile again??
+#"Corrupt JPEG data: premature end of data segment" with accompanied freezing is killing me. I need to recompile again??
 def detect_basket( frame ):
     #lists of ids and the corners belonging to each id
 
@@ -81,7 +83,10 @@ def detect_basket( frame ):
 
     if isinstance(ids, np.ndarray): #for some sick reason, corners is normal list, but ids is numpy array
         ids = ids.tolist()
+
     print ('IDS:' + str(ids))
+    print ('CORNERS:' + str(corners))
+
     found = []
     for i in range(0, len(ids)):
             if ids[i][0] in [ BASKET[0], BASKET[1] ]:
