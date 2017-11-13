@@ -79,13 +79,9 @@ def detect_basket( frame ):
     if type(ids) is None or type(corners) is None:
         return [], []
 
-    print (type(ids))
-    print (type(corners))
-
-    #but i do not know how numpy arrays work
-    corners = corners.tolist()
-    ids = ids.tolist()
-
+    if isinstance(ids, np.ndarray): #for some sick reason, corners is normal list, but ids is numpy array
+        ids = ids.tolist()
+    print ('IDS:' + str(ids))
     found = []
     for i in range(0, len(ids)):
             if ids[i][0] in [ BASKET[0], BASKET[1] ]:
