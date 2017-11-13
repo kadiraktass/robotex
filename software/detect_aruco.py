@@ -77,7 +77,7 @@ def detect_basket( frame ):
     ids = []
     found = []
     corners, ids, rejectedImgPoints = aruco.detectMarkers(frame, aruco_dict, parameters=parameters)
-    #found something. Gives None or some numpy array. 
+    #found something. Gives None or some numpy array.
     corners = [] if type(corners) is None else corners
     ids = [] if type(ids) is None else ids
 
@@ -87,7 +87,7 @@ def detect_basket( frame ):
                 print (corners[i])
 
     if len(found) > 0:
-            print("det:" + found)
+            print("det:" + str(found))
             dist_between = max(found) - min(found)
             print (dist_between)
 
