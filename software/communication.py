@@ -38,6 +38,7 @@ last_time = 0
 forced_delay = 50 #millis between sends
 
 
+_port = '' #i am trying autodetection, else takes from config
 _baud = 9600
 _timeout=0.2
 _write_timeout=0.1
@@ -132,7 +133,7 @@ def parse_incoming_message ( message ):
 
                 if com == 'START':
                     BRAKES_ON = False
-                    send_soon( 'st:20' )
+                    send_soon( 'st:40' )
                     send_soon( 'r0' )
                     print ("Houston, all systems green...")
 
@@ -152,21 +153,29 @@ def millis():
 
 #from: http://stackoverflow.com/questions/12090503/listing-available-com-ports-with-python
 def detect_serial_ports():
+    global _port
 
     ports = serial.tools.list_ports.comports() #gives list of tuples
     result = [p for p in ports if p[2] != 'n/a']
     result.sort( key=lambda row: (row[2], row[1]) )
 
-    bestguess = [p for p in result if p[2].find('1f00:2012') > 0]
+    bestguess = [p for p in result if p[2].find('1f00:2012') >= 0]
+    if len(bestguess) == 1:
+        _port = bestguess
+    else:
+        _port = config.serialport
     #yeah, id is one thing, name is another. Well do without.
-    print ("((\n TODO: if guessing is reliable, auto-set config.serialport \n" + str(bestguess) + '\n))\n')
+    #print ("((\n TODO: if guessing is reliable, auto-set config.serialport \n" + str(bestguess) + '\n))\n')
+
     return result
 
 ## try to reconnect if connection lost
 def open_port():
     global pending_commands
+    detect_serial_ports()
+
     if not ser.isOpen():
-        ser.port = serialport
+        ser.port = _port
         #ser.baud = _baud
         ser.timeout = _timeout
         ser.write_timeout = _write_timeout
@@ -177,14 +186,14 @@ def open_port():
         try:
             ser.open()
             if ser.isOpen():
-                print('Serial port just opened.')
+                print('Serial port just opened @ '+ _port)
             else:
                 if len(pending_commands) > 0:
                     print('Not sent:' + pending_commands.pop(0) )
 
         except (OSError, serial.SerialException) as e:
                 print (e)
-                print ('Might help: $ fuser ' + serialport)
+                print ('Might help: $ fuser ' + _port)
 
                 if len(pending_commands) > 0:
                     print('Not sent:' + pending_commands.pop(0) )
@@ -198,7 +207,7 @@ if __name__ == "__main__":
 
     # try to open defined port
     print ('Serial version ' + serial.VERSION)
-    print ('Lets see if we can communicate with robot @ ' + serialport + '?')
+    print ('Lets see if we can communicate with robot?')
     for i in range(0,10):
         open_port()
         if ser.isOpen():

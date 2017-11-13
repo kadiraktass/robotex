@@ -1,3 +1,20 @@
+'''
+Plan:
+
+Distance is expressed in pixels, simply distance between two markers.
+Converting to centimeters/etc will introduce additional errors.
+Location of basket is given in pixels also (on horizontal axis only)
+
+
+Process of calibration:
+Put robot to a distance of 1m, measured from first edge of robot to backplate of basket.
+Read distance in pixels, find neccessary speed for thrower, repeat and rinse, derive a function for a curve.
+Introduce a quick calibration constant in case field of competition is slightly different.
+'''
+
+
+
+
 #
 # In theory, AruCo markers can give us much more reliable information about basket distance (and heading),
 # than measuring blobs.
@@ -60,9 +77,9 @@ def detect_basket( frame ):
     ids = []
     found = []
     corners, ids, rejectedImgPoints = aruco.detectMarkers(frame, aruco_dict, parameters=parameters)
-    #found something. Gives None or some numpy array.
-    corners = corners if type(corners) is None else []
-    ids = ids if type(ids) is None else []
+    #found something. Gives None or some numpy array. 
+    corners = [] if type(corners) is None else corners
+    ids = [] if type(ids) is None else ids
 
     for i in range(0, len(ids)):
             if ids[i][0] in [ BASKET[0], BASKET[1] ]:
@@ -91,6 +108,9 @@ if __name__ == '__main__':
     while cap.isOpened():
         # Capture frame-by-frame
         ret, frame = cap.read()
+        if not ret: #can i ignore bad frames?
+            continue
+
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         corners, ids = detect_basket(gray)
