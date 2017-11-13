@@ -52,7 +52,7 @@ def set_motors(m1, m2, m3):
     print("Go: "+ str(m1), ':', str(m2), ':', str(m3))
 
     if not BRAKES_ON:
-        t = 'sm:{0}:{0}:{0}'.format(int(m1), int(m2), int(m3))
+        t = 'sm:{0}:{1}:{2}'.format(int(m1), int(m2), int(m3))
         send_soon(t)
 
 
