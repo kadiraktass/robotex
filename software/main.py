@@ -26,12 +26,12 @@ redLower = (0, 86, 182)
 redUpper = (10, 255, 255)
 
 #hsv values for the object5
-greenLower = (40, 255, 45)
-greenUpper = (60, 255, 255)
+greenLower = (39, 191, 53)
+greenUpper = (56, 255, 255)
 
 camera = cv2.VideoCapture(0)
 
-camera.set(13, 0.60)
+camera.set(13, 0.4)
 camera.set(14, 0.04)
 
 i=0
@@ -53,7 +53,7 @@ try:
 	    communication.update_comms()
 	    m1,m2,m3,thrower_speed = movement.get_command(ball_x1, ball_radius1, basket_x, basket_dist)
             print("sent by the main: ",m1,m2,m3)
-            communication.set_motors(m1,m2,m3)
+           # communication.set_motors(m1,m2,m3)
 	    
 	    communication.update_comms()
             communication.set_thrower(00)
