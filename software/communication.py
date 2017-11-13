@@ -68,6 +68,8 @@ def send_now( message ):
     #if ser.outWaiting() > 0:
     #    ser.flushOutput()  #whatewer there was, it wasnt important anyway
     #    ser.write('\n')
+    print('SERIAL JUST SENT: ' + message)
+
     return ser.write( message + '\n')
     #write() is blocking by default, unless write_timeout is set. Returns number of bytes written
 
@@ -80,7 +82,7 @@ def send_soon( message ):
     if len( pending_commands ) > 0:
         for i in range(0, len(pending_commands)):
             if pending_commands[i].startswith( message[0:2] )
-                pending_commands[i] = message                
+                pending_commands[i] = message
     else:
         pending_commands.append( message )
     return True
@@ -97,7 +99,7 @@ def update_comms():
             last_time = now
 
         #todo:see if there are something incoming from robot, read them all
-        if ser.inWaiting() > 0:
+        while ser.inWaiting() > 0:
             read_from_robot()
 
     return True
