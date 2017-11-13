@@ -48,18 +48,18 @@ ser = serial.Serial()
 
 
 def set_motors(m1, m2, m3):
-    print ( BRAKES_ON)
+    print ("Brakes:" + BRAKES_ON)
     print( str(m1), ':',  str(m2), ':',str(m3))
 
     if not BRAKES_ON:
-        t = 'sm:{0}:{0}:{0}'.format(m1, m2, m3)
+        t = 'sm:{0}:{0}:{0}'.format(int(m1), int(m2), int(m3))
         send_soon(t)
 
 
 #todo: would be nice to input distance in centimeters and get proper correlated speed for thrower
 def set_thrower(sp):
     if not BRAKES_ON:
-        t = 'st:{0}'.format(sp)
+        t = 'st:{0}'.format(int(sp))
         send_soon(t)
 
 
@@ -76,8 +76,11 @@ def send_now( message ):
 def send_soon( message ):
     global pending_commands
     #if we already have same command in queue, then we will overwrite it.
-    if len( pending_commands ) > 0 and pending_commands[-1].startswith( message[0:2] ):
-        pending_commands[-1] = message
+    #its not neccessarily the last command
+    if len( pending_commands ) > 0:
+        for i in range(0, len(pending_commands)):
+            if pending_commands[i].startswith( message[0:2] )
+                pending_commands[i] = message                
     else:
         pending_commands.append( message )
     return True
