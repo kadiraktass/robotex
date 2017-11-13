@@ -1,6 +1,7 @@
  #!/bin/bash
 
 
+
 echo "--- wait"
 #test for internet: 
 #but we might not have internet, but still need to run. 10+ second delay is not too long?
@@ -17,6 +18,7 @@ done
 echo "--- start"
 
 #git pull
+#Btw, user is roboteer and pass is roboteer2017
 git fetch --all
 git reset --hard origin/master
 

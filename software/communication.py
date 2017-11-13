@@ -81,7 +81,7 @@ def send_soon( message ):
     #its not neccessarily the last command
     if len( pending_commands ) > 0:
         for i in range(0, len(pending_commands)):
-            if pending_commands[i].startswith( message[0:2] )
+            if pending_commands[i].startswith( message[0:2] ):
                 pending_commands[i] = message
     else:
         pending_commands.append( message )
