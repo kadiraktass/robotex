@@ -87,7 +87,8 @@ parameters =  aruco.DetectorParameters_create()
 #if we just saw it, but right now did'nt detect, then skip
 #if we just saw it, and keep seeing, then keep running average to smooth out fluctuations
 def calculate_speed( dist ):
-    return int( 384.3 * dist ** -0.573 )
+    tambov = 0.1 #coefficent of precision. Yeah, just made up.
+    return int( 417.7 * dist ** -0.5867 + tambov )
 
 
 
@@ -212,9 +213,9 @@ if __name__ == '__main__':
         if keyp == ord('q'):
             break
         elif keyp == ord('e'):
-            throwspeed += 2
+            throwspeed += 1
         elif keyp == ord('d'):
-            throwspeed -= 2
+            throwspeed -= 1
         elif keyp == ord('s'):
             throwspeed = 0
         elif keyp == ord('w'):
