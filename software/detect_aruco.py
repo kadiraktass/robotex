@@ -90,12 +90,15 @@ def detect_basket( frame ):
 
     #when i find rightmost marker, it means basket is a little bit leftwards.
     #ditto for left one. And arithmetic mean if both are visible.
-    found = []
+    found, left_marker, right_marker = [], [], []
+
     for i in range(0, len(ids)):
             if ids[i][0] == BASKET[0]:
                 left_marker = corners[i][0][0][0]
+
             if ids[i][0] ==  BASKET[1]:
                 right_marker = corners[i][0][0][0]
+
     print (left_marker, right_marker)
     return corners, ids
     #gray = aruco.drawDetectedMarkers(gray, corners)
