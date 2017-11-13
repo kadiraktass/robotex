@@ -133,7 +133,7 @@ def detect_basket( frame ):
 
     #if i got both, return arithmetic mean
     if len(dists) == 0:
-        return None, None, corners, ids
+        return -1, -1, corners, ids
 
     return np.mean(dists), np.mean(basks), corners, ids
 
@@ -169,7 +169,7 @@ def fallback_to_blob( frame ):
         if rect[3] > 20:
             return rect[3] / 2, rect[0] + rect[2]//2, [], []
 
-    return None, None, None, None
+    return -1, -1, None, None
 
 
 
@@ -199,7 +199,7 @@ if __name__ == '__main__':
         dist, basket, corners, ids = detect_basket(frame)
         frame = aruco.drawDetectedMarkers(frame, corners)
 
-        if not basket is None:
+        if basket >= 0:
             cv2.line(frame, (int(basket), 0), (int(basket),400), (255,255,0), 2)
             cv2.putText(frame, "Dist:" + str(dist), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,0) )
             cv2.putText(frame, "Suggested:" + str(calculate_speed(dist)), (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0) )

@@ -18,7 +18,8 @@ done
 echo "--- start"
 
 #git pull
-#Btw, user is roboteer and pass is roboteer2017
+#Btw, git user is roboteer and pass is roboteer2017
+# Robotiklubi24 Labor001
 git fetch --all
 git reset --hard origin/master
 
