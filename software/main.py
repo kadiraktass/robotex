@@ -50,26 +50,27 @@ try:
 	    #if ball_radius1 > 10:
 	    #    cv2.circle(frame, ball_center1, 5, (0, 0, 255), -1)
 
-	    cv2.imshow("mask", ball_mask)
-	    communication.update_comms()
-	    m1,m2,m3,thrower_speed = movement.get_command(ball_x1, ball_radius1, basket_x, basket_dist)
+		cv2.imshow("mask", ball_mask)
+		communication.update_comms()
+		m1,m2,m3,thrower_speed = movement.get_command(ball_x1, ball_radius1, basket_x, basket_dist)
             print("sent by the main: ",m1,m2,m3)
             communication.set_motors(m1,m2,m3)
-	    
-	    
-	    print("THROWER SPEED IN MAIN: ", thrower_speed)
-            communication.set_thrower(thrower_speed)
-	    if thrower_speed > 0:
-		communication.update_comms()
-		time.sleep(0.1)
-		communication.update_comms()
+
+		print("THROWER SPEED IN MAIN: ", thrower_speed)
+		communication.set_thrower( thrower_speed )
+		if thrower_speed > 0:
+			communication.update_comms()
+			time.sleep(3)
+			print("didnt i just send st?")
+			communication.update_comms()
+			time.sleep(3)
 
 	    cv2.putText(frame, "dx: {}, dy: {}, radius: {}".format(int(ball_x1), int(ball_y1), int(ball_radius1)),
 	                    (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
 	                    0.35, (0, 0, 255), 1)
 
-            communication.update_comms()
-            cv2.imshow("Frame", frame)
+		communication.update_comms()
+		cv2.imshow("Frame", frame)
 
 	    key = cv2.waitKey(1) & 0xFF
 	    if key == ord("q"):
