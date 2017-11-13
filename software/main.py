@@ -26,11 +26,13 @@ redLower = (0, 86, 182)
 redUpper = (10, 255, 255)
 
 #hsv values for the object5
-greenLower = (49, 180, 100)
-greenUpper = (88, 255, 255)
+greenLower = (40, 255, 45)
+greenUpper = (60, 255, 255)
 
 camera = cv2.VideoCapture(0)
 
+camera.set(13, 0.60)
+camera.set(14, 0.04)
 
 i=0
 
