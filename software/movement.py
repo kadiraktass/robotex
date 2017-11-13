@@ -3,7 +3,7 @@
 import numpy as np
 import time
 import math
-
+from detect_aruco import calculate_speed as set_thrower_speed
 
 # (0,0) -----------------------  (600,0)
 #   |                               |
@@ -15,11 +15,11 @@ j= 0
 state = 1
 thrower_speed = 0
 rotate_r=0
-def set_thrower_speed(basket_dist):
+#def set_thrower_speed(basket_dist):
+#    tambov = 0.1
+   # thrower_speed = 417.7 * (dist ** -0.5867) +tambov      #TODO: Calculate thrower speed here
     
-    thrower_speed = 10      #TODO: Calculate thrower speed here
-    
-    return thrower_speed
+    #return thrower_speed
     
 def get_command(ball_x, ball_radius, basket_x, basket_dist):
 
@@ -63,7 +63,7 @@ def get_command(ball_x, ball_radius, basket_x, basket_dist):
         temp3 = -12
     #cmd = 'sm'+ ':' + temp1 + ':'+ temp3+ ':'+ temp2        #add thrower speed thrower_speed
     
-    return temp1, temp3, temp2
+    return temp1, temp3, temp2, thrower_speed
 
 def calculate_speed(ball_x, ball_radius, basket_x, basket_diag):
 
@@ -133,6 +133,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
 		    desired_speed = 0
                     movement_angle = 0
                     angular_v = 0
+		    thrower_speed = 0
                 else:
                     desired_speed = 0         #TODO: Determine the exact value 
                     movement_angle = 0        #TODO: Determine the exact value 
@@ -146,7 +147,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
                 angular_v = 0
 		rotate_r = 0
                 i = i + 1
-                if(i > 50):             #TODO: Determine the exact value    #wait until thrower motor reaches desired speed
+                if(i > 100):             #TODO: Determine the exact value    #wait until thrower motor reaches desired speed
                     state = 3
                     i = 0
                 else:
