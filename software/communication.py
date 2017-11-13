@@ -48,8 +48,8 @@ ser = serial.Serial()
 
 
 def set_motors(m1, m2, m3):
-    print ("Brakes:" + BRAKES_ON)
-    print( str(m1), ':',  str(m2), ':',str(m3))
+    print ("Brakes:" + str(BRAKES_ON))
+    print("Go: "+ str(m1), ':', str(m2), ':', str(m3))
 
     if not BRAKES_ON:
         t = 'sm:{0}:{0}:{0}'.format(int(m1), int(m2), int(m3))
