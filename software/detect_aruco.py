@@ -81,6 +81,10 @@ def detect_basket( frame ):
     if ids is None or corners is None:
         return [], []
 
+    #but i do not know how numpy arrays workk
+    corners = corners.tolist()
+    ids = ids.tolist()
+
     for i in range(0, len(ids)):
             if ids[i][0] in [ BASKET[0], BASKET[1] ]:
                 found.append( corners[i][0] )
@@ -89,7 +93,7 @@ def detect_basket( frame ):
     if len(found) > 0:
             print("det:" + str(found))
             dist_between = max(found) - min(found)
-            print (dist_between)
+            print ("dist:" + dist_between)
 
     return corners, ids
     #gray = aruco.drawDetectedMarkers(gray, corners)
