@@ -1,7 +1,6 @@
 '''
 Plan:
-
-Distance is expressed in pixels, simply distance between two markers.
+Distance is expressed in pixels
 Converting to centimeters/etc will introduce additional errors.
 Proper pose estimation requires calibrating camera and some arcane math.
 I try first simpler variant.
@@ -15,6 +14,8 @@ Introduce a quick calibration constant in case field of competition is slightly 
 
 Fuck it. I cannot detect both markers at the same time - i need to derive
 all the nessecary information from just one of them.
+Double fuck it. I cannot even detect a single marker under ideal conditions.
+I need a fallback plan (blob detection)
 '''
 
 
@@ -83,7 +84,8 @@ def detect_basket( frame ):
     corners, ids, rejectedImgPoints = aruco.detectMarkers(frame, aruco_dict, parameters=parameters)
     #found something. Gives None or some numpy array.
     if ids is None:
-        return None, None, None, None
+        return fallback_to_blob(frame)
+
 
 #    if isinstance(ids, np.ndarray): #for some sick reason, corners is a list of numpy arrays several levels deep
 #        ids = ids.tolist()
@@ -125,6 +127,35 @@ def detect_basket( frame ):
     #gray = aruco.drawDetectedMarkers(gray, corners)
 
 
+def fallback_to_blob( frame ):
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+    mask = cv2.inRange(hsv, BASKET[2], BASKET[3])
+    mask = cv2.erode(mask, None, iterations=2)
+    mask = cv2.dilate(mask, None, iterations=2)
+
+    # find contours in the mask and initialize the current
+    cnts = cv2.findContours(mask, cv2.RETR_EXTERNAL,
+                            cv2.CHAIN_APPROX_SIMPLE)[-2]
+    center = None
+
+    # only proceed if at least one contour was found
+    if len(cnts) > 0:
+        # find the largest contour in the mask, then use
+        # it to compute the minimum enclosing circle and
+        # centroid
+        c = max(cnts, key=cv2.contourArea)
+        rect = cv2.minAreaRect(c)
+        box = cv2.cv.BoxPoints(rect) # cv2.boxPoints(rect) for OpenCV 3.x
+        box = np.int0(box)
+        cv2.drawContours(frame,[box],0,(255,255,0),2)
+
+        M = cv2.moments(c)
+        center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+
+    return None, None, None, None
+
+
 
 if __name__ == '__main__':
     import communication
@@ -152,6 +183,7 @@ if __name__ == '__main__':
         if not basket is None:
             cv2.line(frame, (int(basket), 0), (int(basket),400), (255,255,0), 2)
             cv2.putText(frame, "Dist:" + str(dist), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,0) )
+        cv2.putText(frame, "Throw:" + str(throwspeed), (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,0) )
 
         cv2.imshow('frame', frame)
         keyp = cv2.waitKey(1) & 0xFF
