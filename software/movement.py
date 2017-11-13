@@ -15,15 +15,15 @@ j= 0
 state = 1
 thrower_speed = 0
 rotate_r=0
-def set_thrower_speed(basket_radius):
+def set_thrower_speed(basket_dist):
     
     thrower_speed = 10      #TODO: Calculate thrower speed here
     
     return thrower_speed
     
-def get_command(ball_x, ball_radius, basket_x, basket_diag):
+def get_command(ball_x, ball_radius, basket_x, basket_dist):
 
-    wheelLinearVelocity1, wheelLinearVelocity2, wheelLinearVelocity3, thrower_speed,rotate = calculate_speed(ball_x, ball_radius, basket_x, basket_diag)
+    wheelLinearVelocity1, wheelLinearVelocity2, wheelLinearVelocity3, thrower_speed,rotate = calculate_speed(ball_x, ball_radius, basket_x, basket_dist)
     
     wheelSpeedToMainboardUnits = 91         #TODO: Determine the exact value
     print("rotate",rotate)
@@ -84,7 +84,7 @@ def calculate_speed(ball_x, ball_radius, basket_x, basket_diag):
     return wheelLinearVelocity1, wheelLinearVelocity2, wheelLinearVelocity3, thrower_speed,rotate
     
     
-def find_directions(ball_x, ball_radius, basket_x, basket_diag):
+def find_directions(ball_x, ball_radius, basket_x, basket_dist):
     
     global state
     global thrower_speed
@@ -119,13 +119,16 @@ def find_directions(ball_x, ball_radius, basket_x, basket_diag):
         print("i= ",i)
 	print("j= ",j)
 	print("ball_radius= ",ball_radius)
-        if ball_radius > 20 :  #TODO: Determine the exact value    #reached to the ball, stop, set thrower speed, shoot
+	print("basket_x= ",basket_x)
+	print("basket_dist= ", basket_dist)
+        if ball_radius > 18 :  #TODO: Determine the exact value    #reached to the ball, stop, set thrower speed, shoot
             #print(thrower_speed)
             if(state == 1):
                 #print(j)
                 if(j>60):
                 #if(basket_diag>0 & 350>basket_x & basket_x>250):        #rotate around the ball until basket is found and it is in the same direction
-                    state = 2
+                    if(350>basket_x>250):
+			state = 2
                     rotate_r = 1
 		    desired_speed = 0
                     movement_angle = 0
@@ -137,10 +140,11 @@ def find_directions(ball_x, ball_radius, basket_x, basket_diag):
                     state = 1
                     j = j +1
             elif(state == 2):          #set thrower speed
-                thrower_speed = set_thrower_speed(basket_diag)
+                thrower_speed = set_thrower_speed(basket_dist)
                 movement_angle = 0
                 desired_speed = 0
                 angular_v = 0
+		rotate_r = 0
                 i = i + 1
                 if(i > 50):             #TODO: Determine the exact value    #wait until thrower motor reaches desired speed
                     state = 3
