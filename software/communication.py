@@ -58,8 +58,6 @@ def set_thrower(sp):
     if not BRAKES_ON:
         t = 'st:{0}'.format(int(sp))
         send_soon(t)
-#        print( 'added from set_thrower: ' + t)
-#        print('pending from set_thrower: '+ str(pending_commands))
 
 
 #some things need immediate sending
@@ -78,26 +76,13 @@ def send_soon( message ):
     global pending_commands
     #if we already have same command in queue, then we will overwrite it.
     #its not neccessarily the last command
-    print('pending before: ' + str(pending_commands))
-    doineedtoappend = True
-
     if len( pending_commands ) > 0:
         for i in range(0, len(pending_commands)):
-            #print('pending[i]: ' + pending_commands[i] )
-            #print('message: ' + message)
-            #print('message[0:2] : ' + message[0:2] )
-            #print('startswith:' + str( pending_commands[i].startswith( message[0:2] ) ) )
-
             if pending_commands[i].startswith( message[0:2] ):
                 pending_commands[i] = message
-                #print('break')
-                doineedtoappend = False
                 break
-
-    if doineedtoappend == True:
+    else:
         pending_commands.append( message )
-    
-    print('pending after: ' + str(pending_commands))
     return True
 
 
@@ -109,9 +94,7 @@ def update_comms():
         now = millis()
         if (now - last_time) >= forced_delay and len(pending_commands) > 0:
             while len(pending_commands) > 0:
-                print( "pending: "+ str(pending_commands))
                 send_now( pending_commands.pop(0) )
-                time.sleep(0.1)
                 last_time = now
 
         #todo:see if there are something incoming from robot, read them all
@@ -122,7 +105,6 @@ def update_comms():
 
 
 def read_from_robot():
-
     while ser.inWaiting() > 0:
         t = ser.readline() #timeout is long enough - in no way should it snip something
         t = t.strip()

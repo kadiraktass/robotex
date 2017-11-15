@@ -15,7 +15,7 @@ ARUCODISTANCE = 250 #distance between two markers, center-to-center
 #basket is defined by two aruco markers and optionally blob of color (HSV) (not implemented).
 #RAL code did not give meaningful detection, therefore manual calibration is required
 #BASKET = (10, 11,   (122, 77, 58), (157, 139, 201)) #Magenta RAL4010
-BASKET = (21, 22,   (70, 100, 0) ,(255, 255, 255)) #Blue RAL5015
+BASKET = (21, 22,   (63, 202, 45) ,(107, 255, 160)) #Blue RAL5015
 
 
 
