@@ -26,12 +26,14 @@ redLower = (0, 86, 182)
 redUpper = (10, 255, 255)
 
 #hsv values for the object5
-greenLower = (40, 255, 45)
-greenUpper = (60, 255, 255)
+#greenLower = (40, 255, 45)
+#greenUpper = (60, 255, 255)
+greenLower = (41, 220, 83)
+greenUpper = (62, 255, 255)
 
 camera = cv2.VideoCapture(0)
 
-camera.set(13, 0.60)
+camera.set(13, 0.40)
 camera.set(14, 0.04)
 
 i=0
@@ -56,7 +58,7 @@ try:
             communication.set_motors(m1,m2,m3)
 	    
 	    communication.update_comms()
-            communication.set_thrower(0)
+            communication.set_thrower(thrower_speed)
 	    cv2.putText(frame, "dx: {}, dy: {}, radius: {}".format(int(ball_x1), int(ball_y1), int(ball_radius1)),
 	                    (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
 	                    0.35, (0, 0, 255), 1)

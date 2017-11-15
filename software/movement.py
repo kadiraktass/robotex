@@ -60,7 +60,7 @@ def get_command(ball_x, ball_radius, basket_x, basket_dist):
     else:
         temp1 = 0
         temp2 = 0
-        temp3 = -12
+        temp3 = -6
     #cmd = 'sm'+ ':' + temp1 + ':'+ temp3+ ':'+ temp2        #add thrower speed thrower_speed
     
     return temp1, temp3, temp2, thrower_speed
@@ -98,6 +98,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
         angular_v = 30        #TODO: Determine the exact value
         thrower_speed = 0
         state = 1
+	rotate_r = 0
         
     elif 250>ball_x>0:                   #TODO: Determine the exact value
         #turn left until x 290 310
@@ -106,6 +107,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
         angular_v = -90        #TODO: Determine the exact value
         thrower_speed = 0
         state = 1
+	rotate_r = 0
     elif 0>ball_x:
         #turn right until x is detected
         movement_angle = 0
@@ -113,6 +115,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
         angular_v = 90        #TODO: Determine the exact value
         thrower_speed = 0
         state = 1
+	rotate_r = 0
 
     else:
 	print("state= ",state)
@@ -120,15 +123,15 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
 	print("j= ",j)
 	print("ball_radius= ",ball_radius)
 	print("basket_x= ",basket_x)
+	print("ball_x= ",ball_x)
 	print("basket_dist= ", basket_dist)
-        if ball_radius > 18 :  #TODO: Determine the exact value    #reached to the ball, stop, set thrower speed, shoot
+        if ball_radius > 27 :  #TODO: Determine the exact value    #reached to the ball, stop, set thrower speed, shoot
             #print(thrower_speed)
             if(state == 1):
-                #print(j)
-                if(j>60):
-                #if(basket_diag>0 & 350>basket_x & basket_x>250):        #rotate around the ball until basket is found and it is in the same direction
-                    if(350>basket_x>250):
+                if(j>20):
+                    if(abs(basket_x - ball_x) < 10): #if(350>basket_x>250):
 			state = 2
+			print("abs(basket_x - ball_x= ",abs(basket_x - ball_x))
                     rotate_r = 1
 		    desired_speed = 0
                     movement_angle = 0
@@ -147,7 +150,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
                 angular_v = 0
 		rotate_r = 0
                 i = i + 1
-                if(i > 100):             #TODO: Determine the exact value    #wait until thrower motor reaches desired speed
+                if(i > 20):             #TODO: Determine the exact value    #wait until thrower motor reaches desired speed
                     state = 3
                     i = 0
                 else:
@@ -156,6 +159,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
                 desired_speed = 0.4     #TODO: Determine the exact value
                 movement_angle = 90
                 angular_v = 0
+		rotate_r = 0
                 i = i + 1
                 if(i > 20):             #TODO: Determine the exact value    #go forward until the ball is shooted
                     state = 1
@@ -163,24 +167,27 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
                 else:
                     state = 3
             
-        elif ball_radius >10: #TODO: Determine the exact value
+        elif ball_radius >15: #TODO: Determine the exact value
             movement_angle = 90
-            desired_speed = 0.4 #TODO: Determine the exact value
+            desired_speed = 0.1 #TODO: Determine the exact value
             angular_v = 0
             thrower_speed = 0
             state = 1
+	    rotate_r = 0
         elif ball_radius >0:    #TODO: Determine the exact value
             movement_angle = 90
             desired_speed = 0.4  #TODO: Determine the exact value
             thrower_speed = 0
             state = 1
             angular_v = 0
+	    rotate_r = 0
         else:
             desired_speed = 0  #TODO: Determine the exact value
             angular_v = 0
             movement_angle = 0
             thrower_speed = 0
-            state = 1    
+            state = 1
+	    rotate_r = 0    
     return movement_angle*3.14/180, angular_v*3.14/180, desired_speed, thrower_speed, rotate_r
     
     
