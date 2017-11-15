@@ -1,7 +1,7 @@
 import serial
 import time
 
-port = "COM3"
+port = "/dev/ttyACM0"
 baud = 9600
  
 ser = serial.Serial(port, baud, timeout=1)

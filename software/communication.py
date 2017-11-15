@@ -55,9 +55,9 @@ def set_motors(m1, m2, m3):
 
 #todo: would be nice to input distance in centimeters and get proper correlated speed for thrower
 def set_thrower(sp):
-    if not BRAKES_ON:
-        t = 'st:{0}'.format(int(sp))
-        send_soon(t)
+    a = "st:"+ str(sp) 
+    print("thrower command=",a)
+    ser.write("st:"+ str(sp) + '\r\n')
 
 
 #some things need immediate sending
