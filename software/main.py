@@ -56,7 +56,7 @@ try:
             communication.set_motors(m1,m2,m3)
 	    
 	    communication.update_comms()
-            communication.set_thrower(00)
+        communication.set_thrower(10)
 	    cv2.putText(frame, "dx: {}, dy: {}, radius: {}".format(int(ball_x1), int(ball_y1), int(ball_radius1)),
 	                    (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
 	                    0.35, (0, 0, 255), 1)
