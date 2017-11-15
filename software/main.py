@@ -44,7 +44,7 @@ try:
 	while 1:
 
 	    (grabbed, frame) = camera.read()
-
+	    print("grabbed = ",grabbed)
 	    ball_x1, ball_y1, ball_radius1, ball_center1, ball_mask = detect_object.track(frame, greenLower, greenUpper)
 	    basket_dist, basket_x, basket_corners, basket_ids = detect_aruco.detect_basket(frame)
 
@@ -54,10 +54,9 @@ try:
 	    cv2.imshow("mask", ball_mask)
 	    communication.update_comms()
             print(ball_y1)
-            if(ball_y1 == -1 or ball_y1 >30):
-                m1,m2,m3,thrower_speed = movement.get_command(ball_x1, ball_radius1, basket_x, basket_dist)
-                print("sent by the main: ",m1,m2,m3)
-                communication.set_motors(m1,m2,m3)
+            m1,m2,m3,thrower_speed = movement.get_command(ball_x1, ball_radius1, basket_x, basket_dist)
+            print("sent by the main: ",m1,m2,m3)
+            communication.set_motors(m1,m2,m3)
 	    
 	    communication.update_comms()
             communication.set_thrower(thrower_speed)
