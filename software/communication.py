@@ -41,7 +41,7 @@ forced_delay = 50 #millis between sends
 _port = '' #i am trying autodetection, else takes from config
 _baud = 9600
 _timeout=0.2
-_write_timeout=0
+_write_timeout=0.5
 _dsrtr=True
 _tscts=True
 ser = serial.Serial()
@@ -70,7 +70,10 @@ def send_now( message ):
     #    ser.write('\n')
     if ser.isOpen():
         print('SERIAL JUST SENT: ' + message + ', pending: ' + str(pending_commands))
-        return ser.write( message + '\n')
+        try:
+            ser.write( message + '\n')
+        except:
+            #serial write timeout...
     return False
     #write() is blocking by default, unless write_timeout is set. Returns number of bytes written
 
@@ -97,7 +100,7 @@ def update_comms():
     if open_port():
         now = millis()
         if (now - last_time) >= forced_delay and len(pending_commands) > 0:
-            while len(pending_commands) > 0:
+            #while len(pending_commands) > 0:
                 send_now( pending_commands.pop(0) )
                 last_time = now
 
