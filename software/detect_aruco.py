@@ -216,7 +216,7 @@ if __name__ == '__main__':
 
         h, w = frame.shape[:2]
         print (frame.shape)
-        cv2.line(frame, (w,100), (w,200), (0,0,255),1)
+        cv2.line(frame, (w//2,100), (w//2,200), (0,0,255),1)
 
 
         cv2.imshow('frame', frame)
