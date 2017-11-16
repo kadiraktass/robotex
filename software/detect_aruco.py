@@ -166,8 +166,9 @@ def fallback_to_blob( frame ):
         cv2.rectangle(frame,(rect[0], rect[1]), (rect[0]+rect[2], rect[1]+rect[3]), (255,255,0), 2)
 
         #width of basket. Convert from 16cm to 25cm.
+        #ideally there should be no difference in calculated distance between aruco and blob.
         if rect[3] > 20:
-            return rect[2] * 1.56, rect[0] + rect[2]//2, [], []
+            return rect[2] * 1.8096, rect[0] + rect[2]//2, [], []
 
     return -1, -1, None, None
 
