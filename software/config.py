@@ -5,7 +5,7 @@ import platform
 
 #must be manually set before match
 FIELD_ID = 'A'
-ROBOT_ID = 'Z'
+ROBOT_ID = 'C'
 BRAKES_ON = False #if BRAKES_ON then _no movement_ must occur.
 				  #referee can turn it on and off
 
