@@ -55,9 +55,12 @@ def set_motors(m1, m2, m3):
 
 #todo: would be nice to input distance in centimeters and get proper correlated speed for thrower
 def set_thrower(sp):
-    a = "st:"+ str(sp) 
-    print("thrower command=",a)
-    ser.write("st:"+ str(sp) + '\r\n')
+#    a = "st:"+ str(sp)
+#    print("thrower command=",a)
+#    ser.write("st:"+ str(sp) + '\r\n')
+    if not BRAKES_ON:
+        t = 'st:{0}'.format(int(sp))
+        send_now(t)
 
 
 #some things need immediate sending
@@ -65,9 +68,10 @@ def send_now( message ):
     #if ser.outWaiting() > 0:
     #    ser.flushOutput()  #whatewer there was, it wasnt important anyway
     #    ser.write('\n')
-    print('SERIAL JUST SENT: ' + message + ', pending: ' + str(pending_commands))
-
-    return ser.write( message + '\n')
+    if ser.isOpen():
+        print('SERIAL JUST SENT: ' + message + ', pending: ' + str(pending_commands))
+        return ser.write( message + '\n')
+    return False
     #write() is blocking by default, unless write_timeout is set. Returns number of bytes written
 
 

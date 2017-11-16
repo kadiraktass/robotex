@@ -165,9 +165,9 @@ def fallback_to_blob( frame ):
         rect = cv2.boundingRect(c)
         cv2.rectangle(frame,(rect[0], rect[1]), (rect[0]+rect[2], rect[1]+rect[3]), (255,255,0), 2)
 
-        #height of basket
+        #width of basket. Convert from 16cm to 25cm.
         if rect[3] > 20:
-            return rect[3] / 2, rect[0] + rect[2]//2, [], []
+            return rect[2] * 1.56, rect[0] + rect[2]//2, [], []
 
     return -1, -1, None, None
 
@@ -183,6 +183,9 @@ if __name__ == '__main__':
 
     print( "We have OpenCV version " + cv2.__version__ )    #i have 3.3.0
     cap = cv2.VideoCapture(0)
+    cap.set(13, 0.40)
+    cap.set(14, 0.04)
+
     ret, frame = cap.read()
     print('Frame shape: ' + str(frame.shape)) #480x640
     print('aruco params: ' + str(parameters))
