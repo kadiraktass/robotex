@@ -75,6 +75,7 @@ def send_now( message ):
             #serial write timeout...
         except:
             print ('LIFE SUCKS! Oh and you just lost a packet for no good reason.')
+            time.sleep(0.5)
             return False
     #write() is blocking by default, unless write_timeout is set. Returns number of bytes written
 
