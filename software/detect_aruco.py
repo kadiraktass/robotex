@@ -220,7 +220,7 @@ if __name__ == '__main__':
 
 
         cv2.imshow('frame', frame)
-        keyp = cv2.waitKey(0) & 0xFF
+        keyp = cv2.waitKey(1) & 0xFF
 
         if keyp == ord('q'):
             break
