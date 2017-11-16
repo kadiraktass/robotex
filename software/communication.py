@@ -71,10 +71,11 @@ def send_now( message ):
     if ser.isOpen():
         print('SERIAL JUST SENT: ' + message + ', pending: ' + str(pending_commands))
         try:
-            ser.write( message + '\n')
-        except:
+            return ser.write( message + '\n')
             #serial write timeout...
-    return False
+        except:
+            print ('LIFE SUCKS! Oh and you just lost a packet for no good reason.')
+            return False
     #write() is blocking by default, unless write_timeout is set. Returns number of bytes written
 
 
