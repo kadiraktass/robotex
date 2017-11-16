@@ -90,7 +90,8 @@ def calculate_speed( dist ):
     tambov = 0.1 #coefficent of precision. Yeah, just made up.
     if dist > 0:
         return int( 417.7 * dist ** -0.5867 + tambov )
-    else return 0
+    else:
+        return 0
 
 
 
