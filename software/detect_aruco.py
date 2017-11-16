@@ -88,7 +88,9 @@ parameters =  aruco.DetectorParameters_create()
 #if we just saw it, and keep seeing, then keep running average to smooth out fluctuations
 def calculate_speed( dist ):
     tambov = 0.1 #coefficent of precision. Yeah, just made up.
-    return int( 417.7 * dist ** -0.5867 + tambov )
+    if dist > 0:
+        return int( 417.7 * dist ** -0.5867 + tambov )
+    else return 0
 
 
 
@@ -165,7 +167,8 @@ def fallback_to_blob( frame ):
         rect = cv2.boundingRect(c)
         cv2.rectangle(frame,(rect[0], rect[1]), (rect[0]+rect[2], rect[1]+rect[3]), (255,255,0), 2)
 
-        #width of basket. Convert from 16cm to 25cm.
+        #width of basket. Magic number onverts from 16cm to 25cm.
+        #might and will depend on lighting and distance of robot.
         #ideally there should be no difference in calculated distance between aruco and blob.
         if rect[3] > 20:
             return rect[2] * 1.689, rect[0] + rect[2]//2, [], []
