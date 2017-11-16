@@ -214,6 +214,9 @@ if __name__ == '__main__':
 
         cv2.putText(frame, "Throw:" + str(throwspeed), (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255) )
 
+        h, w = frame.shape[:2]
+        cv2.line(frame, (w,100), (w,200), (0,0,255),1)
+
 
         cv2.imshow('frame', frame)
         keyp = cv2.waitKey(0) & 0xFF

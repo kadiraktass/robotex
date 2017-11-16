@@ -69,6 +69,8 @@ try:
 
         key = cv2.waitKey(1) & 0xFF
         if key == ord("q"):
+            communication.send_now("sm:0:0:0")
+            communication.send_now("st:0")
             break
 
 except KeyboardInterrupt:
