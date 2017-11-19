@@ -20,15 +20,16 @@ rotate_speed = 0
 last_basket_x = -1
 def get_rotate_speed(last_basket_x, ball_x):
     global rotate_speed
+    global stop_rotate
     print("abs(basket_x - ball_x= ",abs(last_basket_x - ball_x))
     print("last_basket_x = ", last_basket_x)
-    if abs(last_basket_x-ball_x)>20:
-        rotate_speed = 24
+    if abs(last_basket_x-ball_x)>100:
+        rotate_speed = 36
         stop_rotate = 0
-    elif 20>abs(last_basket_x-ball_x)>10:
-        rotate_speed = 6
+    elif abs(last_basket_x-ball_x)>50:
+        rotate_speed = 12
         stop_rotate = 0
-    elif 10>abs(last_basket_x-ball_x)>6:
+    elif abs(last_basket_x-ball_x)>6:
         rotate_speed = 6
         stop_rotate= 0
     elif 5>abs(last_basket_x-ball_x):
@@ -37,7 +38,8 @@ def get_rotate_speed(last_basket_x, ball_x):
     return rotate_speed, stop_rotate
     
 def aim_basket(last_basket_x, ball_x):
-    if (last_basket_x>300):
+    global rotate_r
+    if (last_basket_x>=300):
         rotate_r = 1
     elif(last_basket_x<300):
         rotate_r = -1
@@ -166,7 +168,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
         print("basket_x= ",basket_x)
         print("ball_x= ",ball_x)
         print("basket_dist= ", basket_dist)
-        if ball_radius > 20 :  #TODO: Determine the exact value    #reached to the ball, stop, set thrower speed, shoot
+        if ball_radius > 25 :  #TODO: Determine the exact value    #reached to the ball, stop, set thrower speed, shoot
             if(state == 1):
                 if(j>20):
                     movement_angle = 0
@@ -189,6 +191,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
                     j = j +1
             elif(state == 2):          #set thrower speed
                 thrower_speed = set_thrower_speed(basket_dist)
+                stop_rotate = 0
                 movement_angle = 0
                 desired_speed = 0
                 angular_v = 0
@@ -211,7 +214,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
                 else:
                     state = 3
             
-        elif ball_radius >15: #TODO: Determine the exact value
+        elif ball_radius >20: #TODO: Determine the exact value
             movement_angle = 90
             desired_speed = 0.1 #TODO: Determine the exact value
             angular_v = 0
