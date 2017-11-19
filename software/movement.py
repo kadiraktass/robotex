@@ -24,13 +24,13 @@ def get_rotate_speed(last_basket_x, ball_x):
     print("abs(basket_x - ball_x= ",abs(last_basket_x - ball_x))
     print("last_basket_x = ", last_basket_x)
     if abs(last_basket_x-ball_x)>100:
-        rotate_speed = 36
+        rotate_speed = 18
         stop_rotate = 0
     elif abs(last_basket_x-ball_x)>50:
         rotate_speed = 12
         stop_rotate = 0
     elif abs(last_basket_x-ball_x)>6:
-        rotate_speed = 6
+        rotate_speed = 3
         stop_rotate= 0
     elif 5>abs(last_basket_x-ball_x):
         rotate_speed = 0
@@ -133,7 +133,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
     global j
     global i
     global rotate_r
-    if ball_x>310:               #TODO: Determine the exact value
+    if ball_x>315:               #TODO: Determine the exact value
         #turn right until x 290 310
         movement_angle = 0
         desired_speed = 0
@@ -142,7 +142,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
         state = 1
         rotate_r = 0
         
-    elif 290>ball_x>0:                   #TODO: Determine the exact value
+    elif 285>ball_x>0:                   #TODO: Determine the exact value
         #turn left until x 290 310
         movement_angle = 0
         desired_speed = 0
@@ -155,7 +155,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
         #turn right until x is detected
         movement_angle = 0
         desired_speed = 0
-        angular_v = 90        #TODO: Determine the exact value
+        angular_v = 180        #TODO: Determine the exact value
         thrower_speed = 0
         state = 1
         rotate_r = 0
@@ -168,47 +168,40 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
         print("basket_x= ",basket_x)
         print("ball_x= ",ball_x)
         print("basket_dist= ", basket_dist)
-        if ball_radius > 25 :  #TODO: Determine the exact value    #reached to the ball, stop, set thrower speed, shoot
+        if ball_radius > 26 :  #TODO: Determine the exact value    #reached to the ball, stop, set thrower speed, shoot
             if(state == 1):
-                if(j>20):
-                    movement_angle = 0
-                    desired_speed = 0
-                    angular_v = 0
-                    state = 1
-                    #if(abs(basket_x - ball_x) < 10): #if(350>basket_x>250):
-                    if(stop_rotate == 0):
-                        rotate_r, rotate_speed  , stop_rotate = aim_basket(last_basket_x,ball_x)
-                        print("rotate_Speed = ", rotate_speed)
-                        print("stop_rotate = ", stop_rotate)
-                    else:
-                        rotate_r = 0
-                        state = 2
+                movement_angle = 0
+                desired_speed = 0
+                angular_v = 0
+                state = 1
+                #if(abs(basket_x - ball_x) < 10): #if(350>basket_x>250):
+                if(stop_rotate == 0):
+                    rotate_r, rotate_speed  , stop_rotate = aim_basket(last_basket_x,ball_x)
+                    print("rotate_Speed = ", rotate_speed)
+                    print("stop_rotate = ", stop_rotate)
                 else:
-                    desired_speed = 0         #TODO: Determine the exact value 
-                    movement_angle = 0        #TODO: Determine the exact value 
-                    angular_v = 0
-                    state = 1
-                    j = j +1
+                    rotate_r = 0
+                    state = 2
             elif(state == 2):          #set thrower speed
-                thrower_speed = set_thrower_speed(basket_dist)
+                thrower_speed = set_thrower_speed(basket_dist) *3/2
                 stop_rotate = 0
                 movement_angle = 0
                 desired_speed = 0
                 angular_v = 0
                 rotate_r = 0
                 i = i + 1
-                if(i > 20):             #TODO: Determine the exact value    #wait until thrower motor reaches desired speed
+                if(i > 10):             #TODO: Determine the exact value    #wait until thrower motor reaches desired speed
                     state = 3
                     i = 0
                 else:
                     state = 2
             elif(state == 3):
-                desired_speed = 0.4     #TODO: Determine the exact value
+                desired_speed = 0.2     #TODO: Determine the exact value
                 movement_angle = 90
                 angular_v = 0
                 rotate_r = 0
                 i = i + 1
-                if(i > 20):             #TODO: Determine the exact value    #go forward until the ball is shooted
+                if(i > 30):             #TODO: Determine the exact value    #go forward until the ball is shooted
                     state = 1
                     i = 0
                 else:
