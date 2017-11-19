@@ -36,9 +36,8 @@ camera = cv2.VideoCapture(0)
 camera.set(13, 0.40)
 camera.set(14, 0.04)
 
-i=0
+communication.send_soon("init")
 
-communication.send_soon("init") #does'nt do anything besides clearing buffers
 thrower_speed = 0
 try:
     while 1:
@@ -59,7 +58,7 @@ try:
             print("sent by the main: ",m1,m2,m3)
         
         communication.set_motors(m1,m2,m3)
-
+                
         communication.update_comms()
         communication.set_thrower(thrower_speed)
         cv2.putText(frame, "dx: {}, dy: {}, radius: {}".format(int(ball_x1), int(ball_y1), int(ball_radius1)),

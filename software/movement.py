@@ -15,7 +15,9 @@ j= 0
 state = 1
 thrower_speed = 0
 rotate_r=0
-stop_rotate = 1
+stop_rotate = 0
+rotate_speed = 0
+last_basket_x = -1
 def get_rotate_speed(last_basket_x, ball_x):
     
     print("abs(basket_x - ball_x= ",abs(basket_x - ball_x))
@@ -44,7 +46,7 @@ def aim_basket(last_basket_x, ball_x):
     
 def get_command(ball_x, ball_radius, basket_x, basket_dist):
 
-    wheelLinearVelocity1, wheelLinearVelocity2, wheelLinearVelocity3, thrower_speed,rotate = calculate_speed(ball_x, ball_radius, basket_x, basket_dist)
+    wheelLinearVelocity1, wheelLinearVelocity2, wheelLinearVelocity3, thrower_speed,rotate, rotate_speed = calculate_speed(ball_x, ball_radius, basket_x, basket_dist)
     
     wheelSpeedToMainboardUnits = 91         #TODO: Determine the exact value
     print("rotate",rotate)
@@ -81,18 +83,18 @@ def get_command(ball_x, ball_radius, basket_x, basket_dist):
     elif rotate==1:
         temp1 = 0
         temp2 = 0
-        temp3 = 12
+        temp3 = rotate_speed
     else:
 	temp1 = 0
         temp2 = 0
-        temp3 = -12
+        temp3 = rotate_speed
     #cmd = 'sm'+ ':' + temp1 + ':'+ temp3+ ':'+ temp2        #add thrower speed thrower_speed
     
     return temp1, temp3, temp2, thrower_speed
 
 def calculate_speed(ball_x, ball_radius, basket_x, basket_diag):
 
-    movement_angle, angular_v, desired_speed, thrower_speed,rotate = find_directions(ball_x, ball_radius, basket_x, basket_diag)
+    movement_angle, angular_v, desired_speed, thrower_speed,rotate,rotate_speed = find_directions(ball_x, ball_radius, basket_x, basket_diag)
     robotDirectionAngle= movement_angle         #rad
     robotAngularVelocity= angular_v
     
@@ -106,7 +108,7 @@ def calculate_speed(ball_x, ball_radius, basket_x, basket_diag):
     wheelLinearVelocity2 = robotSpeed * math.cos(robotDirectionAngle - wheelAngle2) + wheelDistanceFromCenter * robotAngularVelocity
     wheelLinearVelocity3 = robotSpeed * math.cos(robotDirectionAngle - wheelAngle3) + wheelDistanceFromCenter * robotAngularVelocity   
     
-    return wheelLinearVelocity1, wheelLinearVelocity2, wheelLinearVelocity3, thrower_speed,rotate
+    return wheelLinearVelocity1, wheelLinearVelocity2, wheelLinearVelocity3, thrower_speed,rotate,rotate_speed
     
 def get_angular_speed(ball_x):
     angular_v = abs(ball_x-300)*100/300
@@ -118,7 +120,11 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
     
     if basket_x>0:
         last_basket_x = basket_x
-        
+    else:
+        last_basket_x = last_basket_x
+    global last_basket_x
+    global rotate_speed
+    global stop_rotate
     global state
     global thrower_speed
     global j
@@ -162,6 +168,10 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
         if ball_radius > 25 :  #TODO: Determine the exact value    #reached to the ball, stop, set thrower speed, shoot
             if(state == 1):
                 if(j>20):
+                    movement_angle = 0
+                    desired_speed = 0
+                    angular_v = 0
+                    state = 1
                     #if(abs(basket_x - ball_x) < 10): #if(350>basket_x>250):
                     if(stop_rotate == 0):
                         rotate_r, rotate_speed  , stop_rotate = aim_basket(last_basket_x,ball_x)
@@ -219,7 +229,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
             thrower_speed = 0
             state = 1
             rotate_r = 0    
-    return movement_angle*3.14/180, angular_v*3.14/180, desired_speed, thrower_speed, rotate_r
+    return movement_angle*3.14/180, angular_v*3.14/180, desired_speed, thrower_speed, rotate_r, rotate_speed
     
     
 
