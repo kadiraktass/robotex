@@ -15,11 +15,32 @@ j= 0
 state = 1
 thrower_speed = 0
 rotate_r=0
-#def set_thrower_speed(basket_dist):
-#    tambov = 0.1
-   # thrower_speed = 417.7 * (dist ** -0.5867) +tambov      #TODO: Calculate thrower speed here
+stop_rotate = 1
+def get_rotate_speed(last_basket_x, ball_x):
     
-    #return thrower_speed
+    print("abs(basket_x - ball_x= ",abs(basket_x - ball_x))
+    if abs(last_basket_x-ball_x)>20:
+        rotate_speed = 36
+        stop_rotate = false
+    elif 20>abs(last_basket_x-ball_x)>10:
+        rotate_speed = 12
+        stop_rotate = false
+    elif 10>abs(last_basket_x-ball_x)>6:
+        rotate_speed = 6
+        stop_rotate= false
+    elif 5>abs(last_basket_x-ball_x):
+        rotate_speed = 0
+        stop_rotate = true
+    return rotate_speed, stop_rotate
+    
+def aim_basket(last_basket_x, ball_x):
+    if (last_basket_x>300):
+        rotate_r = 1
+    elif(last_basekt_x<300):.
+        rotate_r = -1
+    rotate_speed,stop_rotate = get_rotate_speed(last_basket_x, ball_x)
+    return rotate_r, rotate_speed, stop_rotate
+    
     
 def get_command(ball_x, ball_radius, basket_x, basket_dist):
 
@@ -88,17 +109,16 @@ def calculate_speed(ball_x, ball_radius, basket_x, basket_diag):
     return wheelLinearVelocity1, wheelLinearVelocity2, wheelLinearVelocity3, thrower_speed,rotate
     
 def get_angular_speed(ball_x):
-	angular_v = abs(ball_x-300)*100/300
-	if 5>angular_v>0:
-		angular_v = 5
-	elif 0>angular_v>-5:
-		angular_v = -5
-	else:
-		pass 
-	return angular_v    
+    angular_v = abs(ball_x-300)*100/300
+    if 5>angular_v>0:
+        angular_v = 5
+    return angular_v    
 
 def find_directions(ball_x, ball_radius, basket_x, basket_dist):
     
+    if basket_x>0:
+        last_basket_x = basket_x
+        
     global state
     global thrower_speed
     global j
@@ -111,16 +131,17 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
         angular_v = get_angular_speed(ball_x)	#30        #TODO: Determine the exact value
         thrower_speed = 0
         state = 1
-	rotate_r = 0
+        rotate_r = 0
         
     elif 290>ball_x>0:                   #TODO: Determine the exact value
         #turn left until x 290 310
         movement_angle = 0
         desired_speed = 0
-        angular_v =-5 #-90        #TODO: Determine the exact valueW
+        angular_v =-1*get_angular_speed(ball_x) #-90        #TODO: Determine the exact valueW
         thrower_speed = 0
         state = 1
-	rotate_r = 0
+        rotate_r = 0
+    
     elif 0>ball_x:
         #turn right until x is detected
         movement_angle = 0
@@ -128,31 +149,31 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
         angular_v = 90        #TODO: Determine the exact value
         thrower_speed = 0
         state = 1
-	rotate_r = 0
+        rotate_r = 0
 
     else:
-	print("state= ",state)
+        print("state= ",state)
         print("i= ",i)
-	print("j= ",j)
-	print("ball_radius= ",ball_radius)
-	print("basket_x= ",basket_x)
-	print("ball_x= ",ball_x)
-	print("basket_dist= ", basket_dist)
+        print("j= ",j)
+        print("ball_radius= ",ball_radius)
+        print("basket_x= ",basket_x)
+        print("ball_x= ",ball_x)
+        print("basket_dist= ", basket_dist)
         if ball_radius > 25 :  #TODO: Determine the exact value    #reached to the ball, stop, set thrower speed, shoot
-            #print(thrower_speed)
             if(state == 1):
                 if(j>20):
-                    if(abs(basket_x - ball_x) < 10): #if(350>basket_x>250):
-			state = 2
-			print("abs(basket_x - ball_x= ",abs(basket_x - ball_x))
-		    if(basket_x >300):
-                    	rotate_r = 1
-		    else:
-			rotate_r = -1
-		    desired_speed = 0
+                    #if(abs(basket_x - ball_x) < 10): #if(350>basket_x>250):
+                    if(stop_rotate == false):
+                        rotate_r, rotate_speed  , stop_rotate = aim_basket(last_basket_x,ball_x)
+                    else:
+                        rotate_r = 0
+                        state = 2
+            else:
+                    rotate_r = -1
+                    desired_speed = 0
                     movement_angle = 0
                     angular_v = 0
-		    thrower_speed = 0
+                    thrower_speed = 0
                 else:
                     desired_speed = 0         #TODO: Determine the exact value 
                     movement_angle = 0        #TODO: Determine the exact value 
@@ -164,7 +185,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
                 movement_angle = 0
                 desired_speed = 0
                 angular_v = 0
-		rotate_r = 0
+                rotate_r = 0
                 i = i + 1
                 if(i > 20):             #TODO: Determine the exact value    #wait until thrower motor reaches desired speed
                     state = 3
@@ -175,7 +196,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
                 desired_speed = 0.4     #TODO: Determine the exact value
                 movement_angle = 90
                 angular_v = 0
-		rotate_r = 0
+                rotate_r = 0
                 i = i + 1
                 if(i > 20):             #TODO: Determine the exact value    #go forward until the ball is shooted
                     state = 1
@@ -189,21 +210,21 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
             angular_v = 0
             thrower_speed = 0
             state = 1
-	    rotate_r = 0
+            rotate_r = 0
         elif ball_radius >0:    #TODO: Determine the exact value
             movement_angle = 90
             desired_speed = 0.4  #TODO: Determine the exact value
             thrower_speed = 0
             state = 1
             angular_v = 0
-	    rotate_r = 0
+            rotate_r = 0
         else:
             desired_speed = 0  #TODO: Determine the exact value
             angular_v = 0
             movement_angle = 0
             thrower_speed = 0
             state = 1
-	    rotate_r = 0    
+            rotate_r = 0    
     return movement_angle*3.14/180, angular_v*3.14/180, desired_speed, thrower_speed, rotate_r
     
     
