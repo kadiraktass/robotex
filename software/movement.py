@@ -21,22 +21,22 @@ def get_rotate_speed(last_basket_x, ball_x):
     print("abs(basket_x - ball_x= ",abs(basket_x - ball_x))
     if abs(last_basket_x-ball_x)>20:
         rotate_speed = 36
-        stop_rotate = false
+        stop_rotate = 0
     elif 20>abs(last_basket_x-ball_x)>10:
         rotate_speed = 12
-        stop_rotate = false
+        stop_rotate = 0
     elif 10>abs(last_basket_x-ball_x)>6:
         rotate_speed = 6
-        stop_rotate= false
+        stop_rotate= 0
     elif 5>abs(last_basket_x-ball_x):
         rotate_speed = 0
-        stop_rotate = true
+        stop_rotate = 1
     return rotate_speed, stop_rotate
     
 def aim_basket(last_basket_x, ball_x):
     if (last_basket_x>300):
         rotate_r = 1
-    elif(last_basekt_x<300):.
+    elif(last_basekt_x<300):
         rotate_r = -1
     rotate_speed,stop_rotate = get_rotate_speed(last_basket_x, ball_x)
     return rotate_r, rotate_speed, stop_rotate
@@ -163,17 +163,11 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
             if(state == 1):
                 if(j>20):
                     #if(abs(basket_x - ball_x) < 10): #if(350>basket_x>250):
-                    if(stop_rotate == false):
+                    if(stop_rotate == 0):
                         rotate_r, rotate_speed  , stop_rotate = aim_basket(last_basket_x,ball_x)
                     else:
                         rotate_r = 0
                         state = 2
-            else:
-                    rotate_r = -1
-                    desired_speed = 0
-                    movement_angle = 0
-                    angular_v = 0
-                    thrower_speed = 0
                 else:
                     desired_speed = 0         #TODO: Determine the exact value 
                     movement_angle = 0        #TODO: Determine the exact value 
