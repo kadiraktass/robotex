@@ -160,7 +160,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
         state = 1
         rotate_r = 0
 
-    else:
+    else: #BALL HAS TO BE IN THE CENTER
         print("state= ",state)
         print("i= ",i)
         print("j= ",j)
@@ -168,7 +168,9 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
         print("basket_x= ",basket_x)
         print("ball_x= ",ball_x)
         print("basket_dist= ", basket_dist)
-        if ball_radius > 26 :  #TODO: Determine the exact value    #reached to the ball, stop, set thrower speed, shoot
+        #reached to the ball, stop, set thrower speed, shoot
+        if ball_radius > 26 :  #TODO: Determine the exact value
+            #FINDING THE BASKET
             if(state == 1):
                 movement_angle = 0
                 desired_speed = 0
@@ -183,6 +185,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
                     rotate_r = 0
                     state = 2
 
+            #BASKET HAS BEEN FOUND, ALIGNED, STARTING TO THROW
             elif(state == 2):          #set thrower speed
                 thrower_speed = set_thrower_speed(basket_dist) #*3/2
                 stop_rotate = 0
