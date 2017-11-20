@@ -120,7 +120,9 @@ int main() {
         serialCount = 0;
         memset(buf, 0, 32);
       } else {
+
         serialCount++;
+        if (serialCount >= 32) serialCount = 0; //possible overflow fix
       }
     }
 
