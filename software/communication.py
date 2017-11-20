@@ -67,7 +67,9 @@ def set_thrower(sp):
 def send_now( message ):
     #if ser.outWaiting() > 0:
     #    ser.flushOutput()  #whatewer there was, it wasnt important anyway
+    #    sleep(.1)
     #    ser.write('\n')
+
     if ser.isOpen():
         print('SERIAL JUST SENT: ' + message + ', pending: ' + str(pending_commands))
         try:
@@ -75,6 +77,7 @@ def send_now( message ):
             #serial write timeout...
         except:
             print ('LIFE SUCKS! Oh and you just lost a packet for no good reason.')
+            ser.flushOutput()  #whatewer there was, it wasnt important anyway
             time.sleep(0.5)
             return False
     #write() is blocking by default, unless write_timeout is set. Returns number of bytes written
