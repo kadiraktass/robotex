@@ -182,6 +182,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
                 else:
                     rotate_r = 0
                     state = 2
+
             elif(state == 2):          #set thrower speed
                 thrower_speed = set_thrower_speed(basket_dist) #*3/2
                 stop_rotate = 0
@@ -197,13 +198,15 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
                     state = 2
 
             #go forward until the ball is shooted
+            #TODO: keep aiming for basket
             elif(state == 3):
+                thrower_speed = set_thrower_speed(basket_dist) #H: adjust while edging closer also
                 desired_speed = 0.2     #TODO: Determine the exact value
                 movement_angle = 90
                 angular_v = 0
                 rotate_r = 0
                 i = i + 1
-                if(i > 60):             #TODO: Determine the exact value    
+                if(i > 60):             #TODO: Determine the exact value
                     state = 1
                     i = 0
                 else:
