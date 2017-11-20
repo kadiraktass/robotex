@@ -134,13 +134,13 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
     global i
     global rotate_r
 
-    if state == 1 and ball_x>315:               #TODO: Determine the exact value
+    if state == 1  and ball_x>315:               #TODO: Determine the exact value
         #turn right until x 290 310
         movement_angle = 0
         desired_speed = 0
         angular_v = get_angular_speed(ball_x)	#30        #TODO: Determine the exact value
         thrower_speed = 0
-        state = 1
+        #state = 1
         rotate_r = 0
 
     elif state == 1 and 285>ball_x>0:                   #TODO: Determine the exact value
@@ -149,7 +149,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
         desired_speed = 0
         angular_v =-1*get_angular_speed(ball_x) #-90        #TODO: Determine the exact valueW
         thrower_speed = 0
-        state = 1
+        #state = 1
         rotate_r = 0
 
     elif state == 1 and 0>ball_x:
@@ -158,7 +158,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
         desired_speed = 0
         angular_v = 180        #TODO: Determine the exact value
         thrower_speed = 0
-        state = 1
+        #state = 1
         rotate_r = 0
 
     else: #BALL HAS TO BE IN THE CENTER
@@ -224,6 +224,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
             thrower_speed = 0
             state = 1
             rotate_r = 0
+
         elif ball_radius >0:    #TODO: Determine the exact value
             movement_angle = 90
             desired_speed = 0.4  #TODO: Determine the exact value
@@ -231,6 +232,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
             state = 1
             angular_v = 0
             rotate_r = 0
+
         else:
             desired_speed = 0  #TODO: Determine the exact value
             angular_v = 0
@@ -238,4 +240,5 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
             thrower_speed = 0
             state = 1
             rotate_r = 0
+
     return movement_angle*3.14/180, angular_v*3.14/180, desired_speed, thrower_speed, rotate_r, rotate_speed
