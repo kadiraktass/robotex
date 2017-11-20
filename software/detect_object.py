@@ -6,6 +6,7 @@ import imutils
 
 
 def track(frame, colorlower, colorupper):
+    # i put rezising (which we probably do not need) and converting to HSV to main loop
 
 	# construct a mask for the color "orange", then perform
     # a series of dilations and erosions to remove any small
