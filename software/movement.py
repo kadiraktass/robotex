@@ -4,6 +4,7 @@ import numpy as np
 import time
 import math
 from detect_aruco import calculate_speed as set_thrower_speed
+from communication import millis
 
 # (0,0) -----------------------  (600,0)
 #   |                               |
@@ -18,6 +19,9 @@ rotate_r=0
 stop_rotate = 0
 rotate_speed = 0
 last_basket_x = -1
+
+last_throw = millis()
+
 def get_rotate_speed(last_basket_x, ball_x):
     global rotate_speed
     global stop_rotate
@@ -200,6 +204,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
                     i = 0
                 else:
                     state = 2
+                    last_throw = millis()
 
             #go forward until the ball is shooted
             #TODO: keep aiming for basket
@@ -211,7 +216,8 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
                 rotate_r = 0
                 i = i + 1
 
-                if(i > 300):             #TODO: Determine the exact value
+                #if(i > 300):             #TODO: Determine the exact value
+                if millis() > last_throw + 4000:
                     state = 1
                     i = 0
                 else:
