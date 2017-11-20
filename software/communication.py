@@ -107,6 +107,7 @@ def update_comms():
         if (now - last_time) >= forced_delay and len(pending_commands) > 0:
             #while len(pending_commands) > 0:
                 send_now( pending_commands.pop(0) )
+                print (last_time, now)
                 last_time = now
 
         #todo:see if there are something incoming from robot, read them all
