@@ -41,6 +41,7 @@ camera.set(14, 0.04)
 communication.send_soon("init")
 
 thrower_speed = 0
+last_throw = communication.millis()
 
 blinds = cv2.imread('horseblinds.png', 0)
 
@@ -69,8 +70,15 @@ try:
 
         communication.set_motors(m1,m2,m3)
 
+        now = communication.millis()
         communication.update_comms()
-        communication.set_thrower(thrower_speed)
+        if thrower_speed > 0:
+            communication.set_thrower(thrower_speed)
+            last_throw = now
+        elif (now - last_throw) >= 4000:
+            communication.set_thrower(0)
+            
+
         cv2.putText(frame, "dx: {}, dy: {}, radius: {}".format(int(ball_x1), int(ball_y1), int(ball_radius1)),
                         (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
                         0.35, (0, 0, 255), 1)

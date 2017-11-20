@@ -35,7 +35,7 @@ import sys
 last_command = ''
 pending_commands = []  #FIFO buffer. Add to the end, and pop from beginning.
 last_time = 0
-forced_delay = 50 #millis between sends
+forced_delay = 100 #millis between sends
 
 
 _port = '' #i am trying autodetection, else takes from config
@@ -67,7 +67,9 @@ def set_thrower(sp):
 def send_now( message ):
     #if ser.outWaiting() > 0:
     #    ser.flushOutput()  #whatewer there was, it wasnt important anyway
+    #    sleep(.1)
     #    ser.write('\n')
+
     if ser.isOpen():
         print('SERIAL JUST SENT: ' + message + ', pending: ' + str(pending_commands))
         try:
@@ -75,6 +77,7 @@ def send_now( message ):
             #serial write timeout...
         except:
             print ('LIFE SUCKS! Oh and you just lost a packet for no good reason.')
+            ser.flushOutput()  #whatewer there was, it wasnt important anyway
             time.sleep(0.5)
             return False
     #write() is blocking by default, unless write_timeout is set. Returns number of bytes written
@@ -104,6 +107,7 @@ def update_comms():
         if (now - last_time) >= forced_delay and len(pending_commands) > 0:
             #while len(pending_commands) > 0:
                 send_now( pending_commands.pop(0) )
+                print (last_time, now)
                 last_time = now
 
         #todo:see if there are something incoming from robot, read them all
