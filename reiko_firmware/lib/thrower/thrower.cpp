@@ -69,10 +69,11 @@ void Thrower::PulseFall() {
 
 void Thrower::setSpeed (int16_t speed){
   if (speed < 0) speed = 0;
-  if (speed > 100) speed = 100;
+  if (speed > 1000) speed = 1000;
 
-  _speed = 1000 + speed*10; //local _speed is pulsewidth in us, 1000 - 2000. setSpeed takes percentage 0..100.
+  _speed = 1000 + speed; //local _speed is pulsewidth in us, 1000 - 2000. setSpeed takes percentage 0..100.
   // _pwm-> pulsewidth_us( 1000 + speed*10 ); //value needs to be between 1000 and 2000 (or so they say)
+  // 
 }
 
 

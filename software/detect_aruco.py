@@ -87,9 +87,9 @@ parameters =  aruco.DetectorParameters_create()
 #if we just saw it, but right now did'nt detect, then skip
 #if we just saw it, and keep seeing, then keep running average to smooth out fluctuations
 def calculate_speed( dist ):
-    tambov = 0.1 #coefficent of precision. Yeah, just made up.
+    tambov = 0.0 #coefficent of precision. Yeah, just made up.
     if dist > 0:
-        return int( 417.7 * dist ** -0.5867 + tambov )
+        return int( 3381.8 * dist ** -0.5328 + tambov )
     else:
         return 0
 
