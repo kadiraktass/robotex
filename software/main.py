@@ -49,6 +49,10 @@ try:
         (grabbed, frame) = camera.read()
         print("grabbed = ",grabbed)
         frame = cv2.bitwise_and(frame, frame, mask = blinds)
+        # resize the frame, blur it, and convert it to the HSV
+        frame = imutils.resize(frame, width=600)
+        # blurred = cv2.GaussianBlur(frame, (11, 11), 0)
+        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
         ball_x1, ball_y1, ball_radius1, ball_center1, ball_mask = detect_object.track(frame, greenLower, greenUpper)
         cv2.circle(frame, ball_center1, 10, (0, 0, 255), -1)
