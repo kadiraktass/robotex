@@ -30,8 +30,8 @@ redUpper = (10, 255, 255)
 #hsv values for the BALL!!
 #greenLower = (40, 255, 45)
 #greenUpper = (60, 255, 255)
-greenLower = (32, 123, 33)
-greenUpper = (73, 255, 172)
+greenLower = (32, 223, 33)
+greenUpper = (55, 255, 192)
 
 camera = cv2.VideoCapture(0)
 
