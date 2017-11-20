@@ -51,12 +51,11 @@ try:
         frame = cv2.bitwise_and(frame, frame, mask = blinds)
 
         ball_x1, ball_y1, ball_radius1, ball_center1, ball_mask = detect_object.track(frame, greenLower, greenUpper)
+        cv2.circle(frame, ball_center1, 10, (0, 0, 255), -1)
+        cv2.imshow("mask", ball_mask)
+
         basket_dist, basket_x, basket_corners, basket_ids = detect_aruco.detect_basket(frame)
 
-        #if ball_radius1 > 10:
-        #    cv2.circle(frame, ball_center1, 5, (0, 0, 255), -1)
-
-        cv2.imshow("mask", ball_mask)
         communication.update_comms()
         print("ball_y = ", ball_y1)
         m1,m2,m3,thrower_speed = movement.get_command(ball_x1, ball_radius1, basket_x, basket_dist)
