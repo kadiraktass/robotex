@@ -58,7 +58,7 @@ try:
         print("sent by the main: ",m1,m2,m3)
 
         communication.set_motors(m1,m2,m3)
-                
+
         communication.update_comms()
         communication.set_thrower(thrower_speed)
         cv2.putText(frame, "dx: {}, dy: {}, radius: {}".format(int(ball_x1), int(ball_y1), int(ball_radius1)),
@@ -73,6 +73,8 @@ try:
             communication.send_now("sm:0:0:0")
             communication.send_now("st:0")
             break
+        elif key == ord('s'): # take a screenshot
+            cv2.imwrite('screenshot.png', frame)
 
 except KeyboardInterrupt:
     communication.send_now("sm:0:0:0")
