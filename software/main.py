@@ -8,6 +8,8 @@ import detect_object
 import movement
 import communication
 import detect_aruco
+import numpy as np
+import imutils
 
 #hsv values for the object1
 orangeLower = (0, 136, 232)
