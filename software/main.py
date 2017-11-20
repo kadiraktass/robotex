@@ -40,11 +40,16 @@ communication.send_soon("init")
 
 thrower_speed = 0
 
+blinds = cv2.imread('horseblinds.png', 0)
+
+
 try:
     while 1:
 
         (grabbed, frame) = camera.read()
         print("grabbed = ",grabbed)
+        frame = cv2.bitwise_and(frame, frame, mask = blinds)
+
         ball_x1, ball_y1, ball_radius1, ball_center1, ball_mask = detect_object.track(frame, greenLower, greenUpper)
         basket_dist, basket_x, basket_corners, basket_ids = detect_aruco.detect_basket(frame)
 
