@@ -7,12 +7,10 @@ import imutils
 
 def track(frame, colorlower, colorupper):
 
-
-
 	# construct a mask for the color "orange", then perform
     # a series of dilations and erosions to remove any small
     # blobs left in the mask
-    mask = cv2.inRange(hsv, colorlower, colorupper)
+    mask = cv2.inRange(frame, colorlower, colorupper)
     mask = cv2.erode(mask, None, iterations=2)
     mask = cv2.dilate(mask, None, iterations=2)
 
