@@ -137,6 +137,7 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
     global j
     global i
     global rotate_r
+    global last_throw
 
     if state == 1  and ball_x>315:               #TODO: Determine the exact value
         #turn right until x 290 310
