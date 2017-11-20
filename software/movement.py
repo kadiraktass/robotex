@@ -217,8 +217,9 @@ def find_directions(ball_x, ball_radius, basket_x, basket_dist):
                 rotate_r = 0
                 i = i + 1
 
-                #if(i > 300):             #TODO: Determine the exact value
-                if millis() > last_throw + 4000:
+                if(i > 300):             #TODO: Determine the exact value
+                #if millis() > last_throw + 4000:
+                #    thrower_speed = 0
                     state = 1
                     i = 0
                 else:
