@@ -111,20 +111,20 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist):
             grabBallStartTime = time.time()
             
     else:
-        if time.time() - grabBallStartTime > 5:
+        if time.time() - grabBallStartTime > 2:
             activeState = State.FIND_BALL
     
     if (activeState == State.FIND_BALL):
-        rotSpeed = -1 * basketPosOnRight
+        rotSpeed = -2.5
         
     elif (activeState == State.DRIVE_TO_BALL):
-        rotSpeed = (ball_x - 300) * 1 / 300
-        ySpeed = 0.5 * abs(430 - ball_y) / 430
+        rotSpeed = 1.5*(ball_x - 300) * 1 / 300
+        ySpeed = 1.5*0.5 * abs(430 - ball_y) / 430
      
     elif (activeState == State.ROTATE_AROUND_BALL):
         if (basket_x == -1):
-            rotSpeed = 2*0.5* 2 *  basketPosOnRight               #rotate to the right if basket left from the right side of the screen
-            xSpeed = 2*-0.1* 2 * basketPosOnRight
+            rotSpeed = 4 * 0.5 * basketPosOnRight               #rotate to the right if basket left from the right side of the screen
+            xSpeed = 4 * -0.1* basketPosOnRight
         else:
             rotSpeed = (basket_x - 300) * 0.5 / 300
             xSpeed = (basket_x - 300) * -0.1 / 300
