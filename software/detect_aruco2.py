@@ -67,9 +67,11 @@ def detect_basket( frame ):
     basks = []
     #marker is (vertical_distance, x_of_basket)
     for i in range(0, len(ids)):
-            topleft = corners[i][0][0]
-            topright = corners[i][0][1]
-            bottomleft = corners[i][0][3]
+            topleft     = corners[i][0][0]
+            topright    = corners[i][0][1]
+            bottomright = corners[i][0][2]
+            bottomleft  = corners[i][0][3]
+
             height = bottomleft[1] - topleft[1]
             print (topleft, topright, bottomleft, height)
 
