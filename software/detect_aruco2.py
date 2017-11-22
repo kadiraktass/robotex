@@ -87,7 +87,7 @@ def detect_basket( frame ):
     if len(dists) == 0:
         return -1, -1, corners, ids
 
-    return np.mean(dists), np.mean(basks), corners, ids
+    return int(np.mean(dists)), np.mean(basks), corners, ids
 
 
 
