@@ -90,7 +90,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist):
 #        basketPosOnRight = -1
     if basket_x>0:
             basketPosOnRight = -1
-        elif basket_x>300:
+    elif basket_x>300:
             basketPosOnRight = 1
 
 
