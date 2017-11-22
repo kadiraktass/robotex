@@ -83,16 +83,10 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist):
     rotSpeed = 0
 
     #memorize the basket's last position
-    #TODO: Kadir, are you sure it does exactly what was intended? If basket_x is 400..
-#    if basket_x>300:
-#        basketPosOnRight = 1
-#    elif basket_x>0:
-#        basketPosOnRight = -1
-    if basket_x>0:
-            basketPosOnRight = -1
-    elif basket_x>300:
-            basketPosOnRight = 1
-
+    if basket_x>300:
+        basketPosOnRight = 1
+    elif basket_x>0:
+        basketPosOnRight = -1
 
     basketInCenter = abs(basket_x  - 300) <= 20
     seesBall = ball_x != -1
@@ -138,7 +132,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist):
             xSpeed = (basket_x - 300) * -0.1 / 300
 
     elif (activeState == State.GRAB_BALL):
-            ySpeed = 0.05
+            ySpeed = 0.1 #was 0.05
             rotSpeed = (basket_x - 300) * 0.2 / 300
             thrower_speed = calculate_thrower_speed(basket_dist)
 
