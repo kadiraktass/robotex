@@ -150,17 +150,19 @@ def parse_incoming_message ( message ):
 
                 if com == 'START':
                     BRAKES_ON = False
-                    send_soon( 'st:40' )
-                    send_soon( 'r0' )
-                    print ("Houston, all systems green...")
+                    pending_commands = []
+                    send_now( 'st:40' )
+                    send_now( 'r0' )
+                    print ("Houston, we have a liftoff!")
 
                 elif com == 'STOP':
                     BRAKES_ON = True
                     pending_commands = []
                     send_now( 'sm:0:0:0' )
-                    send_soon ( 'st:0' )
-                    send_soon ( 'r1' ) #red led on
+                    send_now ( 'st:0' )
+                    send_now ( 'r1' ) #red led on
                     print ("BRAKES, BRAA-AAKES!!!!!")
+
     return True
 
 

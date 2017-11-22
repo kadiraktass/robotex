@@ -7,23 +7,30 @@ import pickle
 #must be manually set before match
 FIELD_ID = 'A'
 ROBOT_ID = 'C'
+#choose one:
+TARGET_BASKET = 'blue'
+#TARGET_BASKET = 'magenta'
+
 BRAKES_ON = False #if BRAKES_ON then _no movement_ must occur.
 				  #referee can turn it on and off
 
+
 #need to be measured in real life
-ARUCOWIDTH = 138 #real-life width of aruco marker, black border edge-to-edge
-ARUCODISTANCE = 250 #distance between two markers, center-to-center
+#ARUCOWIDTH = 138 #real-life width of aruco marker, black border edge-to-edge
+#ARUCODISTANCE = 250 #distance between two markers, center-to-center
 #basket is defined by two aruco markers and optionally blob of color (HSV) (not implemented).
 #RAL code did not give meaningful detection, therefore manual calibration is required
 
 
-TARGET_BASKET = 'blue'
-#TARGET_BASKET = 'magenta'
 #BASKET = (10, 11,   (0, 0, 0), (12, 244, 114)) #Magenta RAL4010
 #BASKET = (21, 22,   (63, 150, 0),  (128, 255, 150)) #Blue RAL5015
 
-#read values from file
+
+##############################################################################
+#read color limits from file
 colorvals = pickle.load( open( "color_values.pkl", "rb" ) )
+print ("From color config file read: " + str(colorvals))
+
 if TARGET_BASKET == 'magenta'
     BASKET = (10, 11, (), ())
     BASKET[2] = colorvals['basket_magenta'][0]
@@ -34,7 +41,15 @@ elif TARGET_BASKET == 'blue':
     BASKET[2] = colorvals['basket_blue'][0]
     BASKET[3] = colorvals['basket_blue'][1]
 
-# TODO: BALL AND FIELD globals also here.
+BALL_LOWER = colorvals['ball'][0]
+BALL_UPPER = colorvals['ball'][1]
+
+FIELD_LOWER = colorvals['field'][0]
+FIELD_UPPER = colorvals['field'][1]
+
+CARPET_LOWER = colorvals['carpet'][0]
+CARPET_UPPER = colorvals['carpet'][1]
+
 
 
 

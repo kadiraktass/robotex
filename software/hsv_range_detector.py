@@ -18,14 +18,19 @@ def callback(value):
     pass
 
 
-def setup_trackbars(range_filter):
+def setup_trackbars(range_filter, colorvals, active):
     cv2.namedWindow("Trackbars", 0)
 
     for i in ["MIN", "MAX"]:
-        v = 0 if i == "MIN" else 255
+        if active in colorvals:
+            colors = colorvals[active][0 if i == "MIN" else 1]
+        else:
+            v = 0 if i == "MIN" else 255
+            colors = (v, v, v)
 
-        for j in range_filter:
-            cv2.createTrackbar("%s_%s" % (j, i), "Trackbars", v, 255, callback)
+        print(colors)
+        for j in range(0, len(range_filter)):
+            cv2.createTrackbar("%s_%s" % (range_filter[j], i), "Trackbars", colors[j], 255, callback)
 
 
 def get_arguments():
@@ -66,13 +71,24 @@ def main():
     #args = get_arguments()
     colorvals = pickle.load( open( "color_values.pkl", "rb" ) )
     active = 'ball'
+
+    cv2.namedWindow("Thresh")
+    cv2.moveWindow("Thresh", 20,20)
+    cv2.namedWindow("Original")
+    cv2.moveWindow("Original", 600,20)
+    cv2.namedWindow("Trackbars", cv2.WINDOW_NORMAL)
+    cv2.moveWindow("Trackbars", 600,600)
+
+
+
+
+
     print ("Loaded: " + str(colorvals))
     '''
     { 'ball' : ( (0,0,0),  (255,255,255) )
       'basket_magenta' : ...
     }
     '''
-
 
     range_filter = 'HSV' #args['filter'].upper()
 
@@ -87,8 +103,8 @@ def main():
     camera = cv2.VideoCapture(0)
     camera.set(13, 0.4)
     camera.set(14, 0.04)
-    setup_trackbars(range_filter)
 
+    setup_trackbars(range_filter, colorvals, active)
     while True:
         #if args['webcam']:
         if True:
@@ -112,9 +128,10 @@ def main():
             preview = cv2.bitwise_and(image, image, mask=thresh)
             cv2.imshow("Preview", preview)
         else:
-            cv2.putText(image, "Active:" + active, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,0) )
-            cv2.imshow("Original", image)
+            cv2.putText(image, "Configure:" + active, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,0) )
+            cv2.putText(image, "(Press 's' for save; '1'..'4' to select what to configure)", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255,200,0) )
             cv2.imshow("Thresh", thresh)
+            cv2.imshow("Original", image)
 
         key = cv2.waitKey(1) & 0xFF
         key = chr(key).lower()
@@ -129,12 +146,16 @@ def main():
 
         if key == '1':
             active = 'ball'
+            setup_trackbars(range_filter, colorvals, active)
         if key == '2':
             active = 'basket_magenta'
+            setup_trackbars(range_filter, colorvals, active)
         if key == '3':
             active = 'basket_blue'
+            setup_trackbars(range_filter, colorvals, active)
         if key == '4':
             active = 'carpet'
+            setup_trackbars(range_filter, colorvals, active)
 
 
 

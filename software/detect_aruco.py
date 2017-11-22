@@ -57,7 +57,7 @@ from __future__ import print_function
 import cv2  #Seems there are big compatibility issues between versions. So we need to be on same lib.
 import cv2.aruco as aruco
 import numpy as np
-from config import ARUCOWIDTH, ARUCODISTANCE, BASKET
+from config import ARUCOWIDTH, BASKET
 import time
 
 #help( cv2.aruco )
@@ -89,7 +89,8 @@ parameters =  aruco.DetectorParameters_create()
 #if last dist was None more than 1s ago then we do not see basket.
 #if we just saw it, but right now did'nt detect, then skip
 #if we just saw it, and keep seeing, then keep running average to smooth out fluctuations
-def calculate_speed( dist ):
+
+def calculate_thrower_speed( dist ):
     tambov = -20 #coefficent of precision. Yeah, just made up.
     if dist > 0:
         return int( 3381.8 * dist ** -0.5328 + tambov )

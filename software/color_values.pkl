@@ -13,12 +13,12 @@ tp4
 sS'ball'
 p5
 ((I0
-I0
+I84
 I0
 tp6
-(I255
-I255
-I255
+(I176
+I157
+I160
 tp7
 tp8
 sS'basket_magenta'
