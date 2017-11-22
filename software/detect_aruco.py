@@ -222,7 +222,7 @@ if __name__ == '__main__':
         if basket >= 0:
             cv2.line(frame, (int(basket), 0), (int(basket),400), (255,255,0), 2)
             cv2.putText(frame, "Dist:" + str(dist), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,0) )
-            cv2.putText(frame, "Calculated:" + str(calculate_speed(dist)), (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0) )
+            cv2.putText(frame, "Calculated:" + str(calculate_thrower_speed(dist)), (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0) )
 
         cv2.putText(frame, "Adjust:" + str(adjust), (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255) )
 
