@@ -25,16 +25,23 @@ parameters =  aruco.DetectorParameters_create()
 #if we just saw it, and keep seeing, then keep running average to smooth out fluctuations, and slow down gracefullyb
 
 #lookup table:
-#as big as needed, but keep ordered by distance (ascending).
+#as big as needed, but keep ordered by distance (ascending)
+#start from far away, headed closer
 lookup=[
 #(distance, throw),
-(10,0),
-(20,10),
-(30,10),
+(0, 999),
+(48,650), #it cannot reach anyway
+(57,505),
+(67,450),
+(99, 317),
+(159, 243),
+(232, 234),#too close is bad also
+(1000, 0)
 #etcetera, upto crazy numbers
-(1000, 1000)
-]
 
+]
+# TODO: more tries, plot to chart, look for anomalies, repair
+# Look if something can be done about close-range-detection and throw
 
 def calculate_thrower_speed( dist ):
     if dist < 0:
