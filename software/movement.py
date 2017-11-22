@@ -83,10 +83,16 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist):
     rotSpeed = 0
 
     #memorize the basket's last position
-    if basket_x>300:
-        basketPosOnRight = 1
-    elif basket_x>0:
-        basketPosOnRight = -1
+    #TODO: Kadir, are you sure it does exactly what was intended? If basket_x is 400..
+#    if basket_x>300:
+#        basketPosOnRight = 1
+#    elif basket_x>0:
+#        basketPosOnRight = -1
+    if basket_x>0:
+            basketPosOnRight = -1
+        elif basket_x>300:
+            basketPosOnRight = 1
+
 
     basketInCenter = abs(basket_x  - 300) <= 20
     seesBall = ball_x != -1
@@ -95,6 +101,11 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist):
         if (ball_x == -1):
             activeState = State.FIND_BALL
         else:
+            #I'm trying a little jerk in another direction
+            #if activeState == State.FIND_BALL: #Was searching for ball, did glimpse it
+            #Nooo, It does find and aim for ball perfectly while it is closer.
+            #Therefore problem lies in detecting the ball.
+
             activeState = State.DRIVE_TO_BALL
 
         if ball_x != -1 and basketInCenter:
