@@ -44,9 +44,6 @@ elif TARGET_BASKET == 'blue':
 BALL_LOWER = colorvals['ball'][0]
 BALL_UPPER = colorvals['ball'][1]
 
-FIELD_LOWER = colorvals['field'][0]
-FIELD_UPPER = colorvals['field'][1]
-
 CARPET_LOWER = colorvals['carpet'][0]
 CARPET_UPPER = colorvals['carpet'][1]
 
