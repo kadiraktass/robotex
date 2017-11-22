@@ -96,10 +96,11 @@ def calculate_thrower_speed( dist ):
     tambov2 = 0
     if dist > 0:
         #ehh, trying to add a little power to close and far throws
+        #Lookup table is starting to make sense suddenly
         if dist > 160:
             tambov2 = dist - 160
         if dist < 40:
-            tambov2 = (40 - dist)*4
+            tambov2 = (40 - dist)*5
 
         return int( 3381.8 * dist ** -0.5328 + tambov + tambov2)
     else:
