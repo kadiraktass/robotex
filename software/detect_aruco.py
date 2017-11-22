@@ -57,7 +57,7 @@ from __future__ import print_function
 import cv2  #Seems there are big compatibility issues between versions. So we need to be on same lib.
 import cv2.aruco as aruco
 import numpy as np
-from config import ARUCOWIDTH, BASKET
+from config import BASKET
 import time
 
 #help( cv2.aruco )
