@@ -66,9 +66,10 @@ def set_thrower(sp):
 
 #some things need immediate sending
 def send_now( message ):
-    #if ser.outWaiting() > 0:
-    #    ser.flushOutput()  #whatewer there was, it wasnt important anyway
-    #    sleep(.1)
+    if ser.outWaiting() > 0:
+        ser.flushOutput()  #whatewer there was, it wasnt important anyway
+        sleep(.1)
+        print("FLUSHED")
     #    ser.write('\n')
 
     if ser.isOpen():
