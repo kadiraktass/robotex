@@ -35,7 +35,8 @@ import sys
 last_command = ''
 pending_commands = []  #FIFO buffer. Add to the end, and pop from beginning.
 last_time = 0
-forced_delay = 100 #millis between sends
+forced_delay = 50 #millis between sends
+#does not help, still occasional buffer fill.
 
 
 _port = '' #i am trying autodetection, else takes from config
@@ -227,9 +228,9 @@ def open_port():
 
 
 if BRAKES_ON:
-    communication.send_soon('r1')
+    send_soon('r1')
 else:
-    communication.send_soon('r0')
+    send_soon('r0')
 
 
 #todo: when called as main program: provide serial monitoring and debugging interface
