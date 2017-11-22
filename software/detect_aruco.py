@@ -108,6 +108,7 @@ def calculate_thrower_speed( dist ):
 
 
 
+#TODO: STUPID! JUST FIND distance of lower border (and some adjustment)
 def detect_basket( frame ):
     #lists of ids and the corners belonging to each id
 
