@@ -76,11 +76,11 @@ def detect_basket( frame ):
             print (topleft, topright, bottomleft, height)
 
             if ids[i][0] == BASKET[0]: #left marker
-                dists.append ( bottomright[1] + height/5 )
+                dists.append ( bottomright[1] + height/6 )
                 basks.append ( topright[0] + height/3 )
 
             if ids[i][0] ==  BASKET[1]: #right marker
-                dists.append ( bottomleft[1] + height/5  )
+                dists.append ( bottomleft[1] + height/6 )
                 basks.append ( topleft[0] - height/3 )
 
     #if i got both, return arithmetic mean
