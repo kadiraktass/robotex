@@ -99,7 +99,7 @@ def calculate_thrower_speed( dist ):
         if dist > 160:
             tambov2 = dist - 160
         if dist < 40:
-            tambov2 = 40 - dist
+            tambov2 = (40 - dist)*4
 
         return int( 3381.8 * dist ** -0.5328 + tambov + tambov2)
     else:
@@ -235,6 +235,9 @@ if __name__ == '__main__':
         keyp = cv2.waitKey(1) & 0xFF
 
         if keyp == ord('q'):
+            communication.set_thrower(0)
+            communication.update_comms()
+
             break
         elif keyp == ord('e'):
             adjust += 1
