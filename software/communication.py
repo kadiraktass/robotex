@@ -89,12 +89,15 @@ def send_soon( message ):
     global pending_commands
     #if we already have same command in queue, then we will overwrite it.
     #its not neccessarily the last command
+    doineedtoappend = True
     if len( pending_commands ) > 0:
         for i in range(0, len(pending_commands)):
             if pending_commands[i].startswith( message[0:2] ):
                 pending_commands[i] = message
+                doineedtoappend = False
                 break
-    else:
+
+    if doineedtoappend == True:
         pending_commands.append( message )
     return True
 
@@ -137,7 +140,7 @@ def parse_incoming_message ( message ):
     #what referee has to say?
     if message.startswith('<ref:'):
         package = message[5:-1]
-        print ( package )
+        print ( message )
 
         if package[0] == 'a' and (len(package) >= 12 or package[-1] == '-'): #seems legit
             fid, rid, com = package[1], package[2], package[3: package.find('-') ]
