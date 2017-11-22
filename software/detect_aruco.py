@@ -93,7 +93,7 @@ parameters =  aruco.DetectorParameters_create()
 def calculate_thrower_speed( dist ):
     tambov = -20 #coefficent of precision. Yeah, just made up.
     #todo: actually,
-
+    tambov2 = 0
     if dist > 0:
         #ehh, trying to add a little power to close and far throws
         if dist > 160:
