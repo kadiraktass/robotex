@@ -32,12 +32,12 @@ colorvals = pickle.load( open( "color_values.pkl", "rb" ) )
 print ("From color config file read: " + str(colorvals))
 
 if TARGET_BASKET == 'magenta':
-    BASKET = (10, 11, (), ())
+    BASKET = [10, 11, (), ()]
     BASKET[2] = colorvals['basket_magenta'][0]
     BASKET[3] = colorvals['basket_magenta'][1]
 
 elif TARGET_BASKET == 'blue':
-    BASKET = (21, 22, (), ())
+    BASKET = [21, 22, (), ()]
     BASKET[2] = colorvals['basket_blue'][0]
     BASKET[3] = colorvals['basket_blue'][1]
 
