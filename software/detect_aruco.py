@@ -207,7 +207,7 @@ if __name__ == '__main__':
     print('Frame shape: ' + str(frame.shape)) #480x640
     print('aruco params: ' + str(parameters))
     print('searching for basket: ' + str(BASKET) )
-
+    adjust = 0
 
     while cap.isOpened():
         # Capture frame-by-frame
@@ -222,9 +222,9 @@ if __name__ == '__main__':
         if basket >= 0:
             cv2.line(frame, (int(basket), 0), (int(basket),400), (255,255,0), 2)
             cv2.putText(frame, "Dist:" + str(dist), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,0) )
-            cv2.putText(frame, "Suggested:" + str(calculate_speed(dist)), (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0) )
+            cv2.putText(frame, "Calculated:" + str(calculate_speed(dist)), (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0) )
 
-        cv2.putText(frame, "Throw:" + str(throwspeed), (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255) )
+        cv2.putText(frame, "Adjust:" + str(adjust), (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255) )
 
         h, w = frame.shape[:2]
         print (frame.shape)
@@ -237,14 +237,16 @@ if __name__ == '__main__':
         if keyp == ord('q'):
             break
         elif keyp == ord('e'):
-            throwspeed += 1
+            adjust += 1
         elif keyp == ord('d'):
-            throwspeed -= 1
-        elif keyp == ord('s'):
-            throwspeed = 0
-        elif keyp == ord('w'):
-            throwspeed = 100
+            adjust -= 1
 
+
+        #elif keyp == ord('s'):
+        #    adjust = 0
+        #elif keyp == ord('w'):
+        #    adjust = 100
+        throwspeed = throwspeed + adjust
         communication.set_thrower(throwspeed)
         communication.update_comms()
 
