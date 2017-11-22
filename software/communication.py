@@ -66,11 +66,14 @@ def set_thrower(sp):
 
 #some things need immediate sending
 def send_now( message ):
-    if ser.outWaiting() > 0:
+    #Hm, is different in some versions outWaiting
+    if ser.out_waiting() > 0:
+        ser.reset_output_buffer()
+        ser.write('\n')
         ser.flushOutput()  #whatewer there was, it wasnt important anyway
         sleep(.1)
-        print("FLUSHED")
-    #    ser.write('\n')
+        print("FLUSHED, DOWN THE DRAIN")
+
 
     if ser.isOpen():
         print('SERIAL JUST SENT: ' + message + ', pending: ' + str(pending_commands))
