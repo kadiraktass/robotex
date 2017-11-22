@@ -131,6 +131,8 @@ def read_from_robot():
 # set failsade, send ack where appropriate
 def parse_incoming_message ( message ):
     global BRAKES_ON
+    global pending_commands
+
     #what referee has to say?
     if message.startswith('<ref:'):
         package = message[5:-1]
