@@ -10,6 +10,7 @@ import communication
 import detect_aruco
 import numpy as np
 import imutils
+import time
 from config import *
 
 #COLOR VALUES ARE MOVED TO CONFIG.PY, or more precisely into color_values.pkl, which is written by hsv_range_detector.py
