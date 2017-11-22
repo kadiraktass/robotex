@@ -57,7 +57,7 @@ Ticker pidTicker;
 int pidTickerCount = 0;
 static const float PID_FREQ = 60;
 
-char buf[32] = {0};
+char buf[100] = {0};
 int serialCount = 0;
 bool serialData = false;
 
@@ -118,11 +118,11 @@ int main() {
         parseCommand(buf);
 
         serialCount = 0;
-        memset(buf, 0, 32);
+        memset(buf, 0, 100);
       } else {
 
         serialCount++;
-        if (serialCount >= 32) serialCount = 0; //possible overflow fix
+        if (serialCount >= 99) serialCount = 0; //possible overflow fix
       }
     }
 
@@ -141,7 +141,7 @@ int main() {
 //why?
 void parseCommand(char *buffer) {
   ticksSinceCommand = 0;
-  serial.printf("ack comm: %s\n", buffer);
+  //serial.printf("ack comm: %s\n", buffer);
 
   char *cmd = strtok(buffer, ":");
 
@@ -151,11 +151,12 @@ void parseCommand(char *buffer) {
       motors[i] -> setSpeed( (int16_t) atoi(strtok(NULL, ":")) );
     }
 
-    serial.printf("<gs:%d:%d:%d>\n",
+    /*serial.printf("<gs:%d:%d:%d>\n",
       motors[0]->getSpeed(),
       motors[1]->getSpeed(),
       motors[2]->getSpeed()
     );
+    */
   }
 
   //  st:1000 - 2000  - thrower speed.
@@ -166,7 +167,7 @@ void parseCommand(char *buffer) {
       pwm1.pulsewidth_us(268);
     } else*/ {
       //pwm1.pulsewidth_us(atoi(buffer + 2));
-      serial.printf("THROW\n");
+      //serial.printf("THROW\n");
       thrower.setSpeed( atoi(buffer+3) );
 
     }

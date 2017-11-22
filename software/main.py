@@ -13,31 +13,8 @@ import imutils
 import time
 from config import *
 
-#COLOR VALUES ARE MOVED TO CONFIG.PY, or more precisely into color_values.pkl, which is written by hsv_range_detector.py
-
-#hsv values for the object1
-#orangeLower = (0, 136, 232)
-#orangeUpper = (255, 255, 255)
-
-#hsv values for the object2
-#blueLower = (88, 160, 133)
-#blueUpper = (255, 255, 255)
-
-#hsv values for the object3
-#whiteLower = (0, 0, 255)
-#whiteUpper = (0, 0, 255)
-
-#hsv values for the object4
-#redLower = (0, 86, 182)
-#redUpper = (10, 255, 255)
-
-#hsv values for the BALL!!
-#greenLower = (40, 255, 45)
-#greenUpper = (60, 255, 255)
-#greenLower = (29, 255, 86)
-#greenUpper = (60, 255, 255)
-
-
+#COLOR VALUES ARE MOVED TO CONFIG.PY, or more precisely into color_values.pkl,
+#which is written by hsv_range_detector.py
 
 camera = cv2.VideoCapture(0)
 camera.set(13, 0.40)

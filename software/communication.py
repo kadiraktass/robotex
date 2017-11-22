@@ -159,8 +159,11 @@ def parse_incoming_message ( message ):
                     BRAKES_ON = True
                     pending_commands = []
                     send_now( 'sm:0:0:0' )
+                    time.sleep(.1)
                     send_now ( 'st:0' )
+                    time.sleep(.1)
                     send_now ( 'r1' ) #red led on
+                    time.sleep(.1)
                     print ("BRAKES, BRAA-AAKES!!!!!")
 
     return True
