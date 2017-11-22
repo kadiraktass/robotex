@@ -61,7 +61,7 @@ def set_thrower(sp):
 #    ser.write("st:"+ str(sp) + '\r\n')
     if not BRAKES_ON:
         t = 'st:{0}'.format(int(sp))
-        send_now(t)
+        send_soon(t)
 
 
 #some things need immediate sending

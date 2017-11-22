@@ -22,6 +22,7 @@ camera.set(14, 0.04)
 
 communication.send_soon("init")
 
+
 thrower_speed = 0
 last_throw = time.time()
 
