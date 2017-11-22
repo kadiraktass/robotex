@@ -224,6 +224,12 @@ def open_port():
     return ser.isOpen()
 
 
+if BRAKES_ON:
+    communication.send_soon('r1')
+else:
+    communication.send_soon('r0')
+
+
 #todo: when called as main program: provide serial monitoring and debugging interface
 if __name__ == "__main__":
 
