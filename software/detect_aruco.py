@@ -91,7 +91,7 @@ parameters =  aruco.DetectorParameters_create()
 #if we just saw it, and keep seeing, then keep running average to smooth out fluctuations
 
 def calculate_thrower_speed( dist ):
-    tambov = -20 #coefficent of precision. Yeah, just made up.
+    tambov = -15 #coefficent of precision. Yeah, just made up.
     #todo: actually,
     tambov2 = 0
     if dist > 0:
