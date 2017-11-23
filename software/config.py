@@ -6,7 +6,7 @@ import pickle
 
 #must be manually set before match
 FIELD_ID = 'A'
-ROBOT_ID = 'B'
+ROBOT_ID = 'A'
 #choose one:
 TARGET_BASKET = 'blue'
 #TARGET_BASKET = 'magenta'
