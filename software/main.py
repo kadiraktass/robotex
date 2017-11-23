@@ -12,6 +12,7 @@ import numpy as np
 import imutils
 import time
 from config import *
+import argparse
 
 #COLOR VALUES ARE MOVED TO CONFIG.PY, or more precisely into color_values.pkl,
 #which is written by hsv_range_detector.py
@@ -28,6 +29,26 @@ last_throw = time.time()
 
 blinds = cv2.imread('horseblinds.png', 0)
 
+
+'''Command line:
+    Command line parameters are not saved anywhere, so use always when needed.
+    Defaults are AA, off, blue.
+'''
+parser=argparse.ArgumentParser()
+parser.add_argument('--id', help='Field and robot: AA, AB, AC, BA...')
+parser.add_argument('--brakes', help='Emergency brake is on or not: on/off')
+parser.add_argument('--target', help='Where to throw: magenta or blue')
+args=parser.parse_args()
+
+if not args.id is None:
+    FIELD_ID = args.id[0]
+    ROBOT_ID = args.id[1]
+if not args.brakes is None:
+    BRAKES_ON = True if args.brakes=='on' else False
+if not args.target is None:
+    TARGET_BASKET = args.target
+#print('PARAMS: FIELD=', FIELD_ID, ', ROBOT=', ROBOT_ID, ', BRAKES=', BRAKES_ON, ', TARGET=', TARGET_BASKET)
+#input()
 
 try:
     while 1:
