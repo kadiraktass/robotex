@@ -8,10 +8,10 @@ import pickle
 FIELD_ID = 'A'
 ROBOT_ID = 'A'
 #choose one:
-TARGET_BASKET = 'blue'
-#TARGET_BASKET = 'magenta'
+#TARGET_BASKET = 'blue'
+TARGET_BASKET = 'magenta'
 
-BRAKES_ON = False #if BRAKES_ON then _no movement_ must occur.
+BRAKES_ON = True #if BRAKES_ON then _no movement_ must occur.
 				  #referee can turn it on and off
 
 
