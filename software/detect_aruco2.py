@@ -15,14 +15,38 @@ import time
 aruco_dict = aruco.Dictionary_get( aruco.DICT_ARUCO_ORIGINAL )
 parameters =  aruco.DetectorParameters_create()
 
+
 #TODO:
 #You cannot rely on finding basket from every frame. Therefore strategy is as follows:
 #find basket, select speed, attack, hope for the best.
 
 #TODO: maybe.
 #if last dist was None more than 1s ago then we do not see basket.
-#if we just saw it, but right now did'nt detect, then skip
-#if we just saw it, and keep seeing, then keep running average to smooth out fluctuations, and slow down gracefullyb
+#if we just saw it, but right now did'nt detect, then skip. Timeout keeps track of shutting down.
+#if we just saw it, and keep seeing, then keep short running average to smooth out fluctuations, and slow down gracefullyb
+running = [0]*5
+last_seen = 0
+
+def gimme_running_average( current ):
+    global running
+    global last_seen
+
+    now = time.time()
+    if current == -1:
+        if ( now - last_seen) > 1: #Havent seen for some time, start degrading
+            running.append(0)
+            running.pop(0)
+        else: #just skip
+            pass
+
+    else: #saw the basket
+        running.append(current)
+        running.pop(0)
+        last_seen = now
+
+    print(running)
+    return np.mean( running )
+
 
 #lookup table:
 #as big as needed, but keep ordered by distance (ascending)
@@ -111,7 +135,7 @@ def fallback_to_blob( frame ):
     # find contours in the mask and initialize the current
     cnts = cv2.findContours(mask, cv2.RETR_EXTERNAL,
                             cv2.CHAIN_APPROX_SIMPLE)[-2]
-
+    cv2.imshow("mask", mask)
     # only proceed if at least one contour was found
     if len(cnts) > 0:
         # find the largest contour in the mask, then use
@@ -166,6 +190,7 @@ if __name__ == '__main__':
             cv2.putText(frame, "Calculated:" + str(throwspeed), (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0) )
 
         cv2.putText(frame, "Adjust:" + str(adjust), (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255) )
+        cv2.putText(frame, "Running:" + str(gimme_running_average(throwspeed + adjust)), (10, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255) )
 
         h, w = frame.shape[:2]
         print (frame.shape)

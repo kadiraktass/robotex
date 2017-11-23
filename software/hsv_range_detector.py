@@ -67,15 +67,29 @@ def get_trackbar_values(range_filter):
     return values
 
 
+picked = None
+#mouse callback for picking a pixel value.
+def pick(event, x, y, flags, param):
+    global picked
+    if event == cv2.EVENT_LBUTTONUP:
+        picked = (x, y)
+
+
 def main():
+    global picked
     #args = get_arguments()
-    colorvals = pickle.load( open( "color_values.pkl", "rb" ) )
+    try:
+        colorvals = pickle.load( open( "color_values.pkl", "rb" ) )
+    except:
+        colorvals = {'ball':((0,0,0),(255,255,255))}
     active = 'ball'
 
     cv2.namedWindow("Thresh")
     cv2.moveWindow("Thresh", 20,20)
     cv2.namedWindow("Original")
     cv2.moveWindow("Original", 600,20)
+    cv2.setMouseCallback("Original", pick)
+
     cv2.namedWindow("Trackbars", cv2.WINDOW_NORMAL)
     cv2.moveWindow("Trackbars", 600,600)
 
@@ -118,6 +132,14 @@ def main():
             else:
                 frame_to_thresh = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
+        if picked:
+            print ("PICKED!")
+            c = frame_to_thresh[picked[1]][picked[0]]
+            print(c)
+            setup_trackbars(range_filter, {active: ((c[0]-5,c[1]-5,c[2]-5,),(c[0]+5,c[1]+5,c[2]+5))}, active)
+            picked = None
+
+
         v1_min, v2_min, v3_min, v1_max, v2_max, v3_max = get_trackbar_values(range_filter)
         #print ("({0}, {1}, {2}) ({3}, {4}, {5})".format(v1_min, v2_min, v3_min,    v1_max, v2_max, v3_max))
 
@@ -135,8 +157,10 @@ def main():
 
         key = cv2.waitKey(1) & 0xFF
         key = chr(key).lower()
+
         if key == 'q':
             break
+
         if key == 's':
             print('save here')
             f = open('color_values.pkl', 'wb')
