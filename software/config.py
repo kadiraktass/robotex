@@ -11,7 +11,7 @@ ROBOT_ID = 'A'
 TARGET_BASKET = 'blue'
 #TARGET_BASKET = 'magenta'
 
-BRAKES_ON = True #if BRAKES_ON then _no movement_ must occur.
+BRAKES_ON = False #if BRAKES_ON then _no movement_ must occur.
 				  #referee can turn it on and off
 
 
