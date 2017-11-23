@@ -29,20 +29,19 @@ parameters =  aruco.DetectorParameters_create()
 #start from far away, headed closer
 lookup=[
 #(distance, throw),
-(0, 999),
-(48,650), #it cannot reach anyway
-(57,505),
-(67,450),
-(99, 317),
+(  0, 999), #0 cannot happen
+( 48, 650), #edge of field, max speed, cannot reach anyway
+( 57, 505),
+( 67, 450),
+( 99, 317),
 (159, 243),
-(232, 234),#too close is bad also
+(232, 234),#too close is bad also - forget sideways throw.
 (1000, 0)
 #etcetera, upto crazy numbers
-
 ]
+
 # TODO: more tries, plot to chart, look for anomalies, repair
 # Look if something can be done about close-range-detection and throw
-
 def calculate_thrower_speed( dist ):
     if dist < 0:
         return 0
@@ -52,8 +51,12 @@ def calculate_thrower_speed( dist ):
             return lookup[i][1]
 
         if lookup[i][0] <= dist <= lookup[i+1][0]:
-            return int(round((lookup[i][1] + lookup[i][1]) / 2))
-
+            #return int(round((lookup[i][1] + lookup[i][1]) / 2))
+            #No, not average. Linear extrapolation, stupid!
+            # (y2-y1)/(x2-x1) * (X-x1) + y1
+            a = (lookup[i+1][1] - lookup[i][1]) / (lookup[i+1][0] - lookup[i][0])
+            dx = dist - lookup[i][0]
+            return int( a * dx + lookup[i][1] )
     return 0
 
 
@@ -64,7 +67,6 @@ def detect_basket( frame ):
     #found something. Gives None or some numpy array.
     if ids is None:
         return fallback_to_blob(frame)
-
 
     #when i find rightmost marker, it means basket is a little bit leftwards.
     #ditto for left one. And arithmetic mean if both are visible.
@@ -83,7 +85,7 @@ def detect_basket( frame ):
             print (topleft, topright, bottomleft, height)
 
             if ids[i][0] == BASKET[0]: #left marker
-                dists.append ( bottomright[1] + height/6 )
+                dists.append ( bottomright[1] + height/6 ) #magic numbers found by trial
                 basks.append ( topright[0] + height/3 )
 
             if ids[i][0] ==  BASKET[1]: #right marker
