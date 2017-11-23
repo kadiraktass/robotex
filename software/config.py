@@ -6,10 +6,10 @@ import pickle
 
 #must be manually set before match
 FIELD_ID = 'A'
-ROBOT_ID = 'A'
+ROBOT_ID = 'B'
 #choose one:
-TARGET_BASKET = 'blue'
-#TARGET_BASKET = 'magenta'
+#TARGET_BASKET = 'blue'
+TARGET_BASKET = 'magenta'
 
 BRAKES_ON = True #if BRAKES_ON then _no movement_ must occur.
 				  #referee can turn it on and off
