@@ -50,6 +50,8 @@ if not args.target is None:
     TARGET_BASKET = args.target
 if not args.tambov is None:
     detect_aruco2.TAMBOV = int(args.tambov)
+    print (detect_aruco2.TAMBOV)
+    return
 
 
 #print('PARAMS: FIELD=', FIELD_ID, ', ROBOT=', ROBOT_ID, ', BRAKES=', BRAKES_ON, ', TARGET=', TARGET_BASKET)
@@ -85,8 +87,8 @@ try:
         if thrower_speed > 0:
             communication.set_thrower(thrower_speed)
             last_throw = now
-        #elif (now - last_throw) >= 3:
-        #    communication.set_thrower(0)
+        elif (now - last_throw) >= 3:
+            communication.set_thrower(0)
 
 
         cv2.putText(frame, "dx: {}, dy: {}, radius: {}".format(int(ball_x1), int(ball_y1), int(ball_radius1)),
