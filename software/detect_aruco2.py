@@ -55,8 +55,10 @@ lookup=[
 #(distance, throw),
 (  0, 999), #0 cannot happen
 ( 48, 650), #edge of field, max speed, cannot reach anyway
+( 54, 590),
 ( 57, 565),
 ( 58, 558),
+( 60, 513),
 ( 67, 450),
 ( 99, 317),
 (159, 243),
@@ -196,11 +198,11 @@ if __name__ == '__main__':
         if basket >= 0:
             cv2.line(frame, (int(basket), 0), (int(basket),400), (255,255,0), 2)
             cv2.line(frame, (250, dist), (350, dist), (255,255,0), 2)
-            cv2.putText(frame, "Dist:" + str(dist), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,0) )
+            cv2.putText(frame, "Dist:" + str(dist), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,100,100) )
             cv2.putText(frame, "Calculated:" + str(throwspeed), (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0) )
 
         cv2.putText(frame, "Adjust:" + str(adjust), (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255) )
-        cv2.putText(frame, "Running:" + str(gimme_running_average(throwspeed + adjust)), (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255) )
+        cv2.putText(frame, "Running:" + str(gimme_running_average(throwspeed + adjust)), (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,100,100) )
 
         h, w = frame.shape[:2]
         print (frame.shape)
@@ -212,7 +214,6 @@ if __name__ == '__main__':
 
         if keyp == ord('q'):
             communication.send_now("st:0")
-            communication.update_comms()
 
             break
         elif keyp == ord('e'):
