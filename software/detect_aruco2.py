@@ -199,7 +199,7 @@ if __name__ == '__main__':
             cv2.putText(frame, "Calculated:" + str(throwspeed), (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0) )
 
         cv2.putText(frame, "Adjust:" + str(adjust), (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255) )
-        cv2.putText(frame, "Running:" + str(gimme_running_average(throwspeed + adjust)), (10, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255) )
+        cv2.putText(frame, "Running:" + str(gimme_running_average(throwspeed + adjust)), (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255) )
 
         h, w = frame.shape[:2]
         print (frame.shape)
