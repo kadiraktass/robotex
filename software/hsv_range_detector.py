@@ -81,17 +81,23 @@ def main():
     try:
         colorvals = pickle.load( open( "color_values.pkl", "rb" ) )
     except:
+        try:
+            colorvals = pickle.load( open( "color_values.pkl.bak", "rb" ) )
+        except:
+            raise
         colorvals = {'ball':((0,0,0),(255,255,255))}
     active = 'ball'
 
     cv2.namedWindow("Thresh")
     cv2.moveWindow("Thresh", 20,20)
     cv2.namedWindow("Original")
-    cv2.moveWindow("Original", 600,20)
+    cv2.moveWindow("Original", 500,20)
     cv2.setMouseCallback("Original", pick)
 
     cv2.namedWindow("Trackbars", cv2.WINDOW_NORMAL)
-    cv2.moveWindow("Trackbars", 600,600)
+    cv2.resizeWindow("Trackbars", 400, 300)
+    cv2.moveWindow("Trackbars", 400,400)
+
 
 
 
@@ -136,7 +142,7 @@ def main():
             print ("PICKED!")
             c = frame_to_thresh[picked[1]][picked[0]]
             print(c)
-            setup_trackbars(range_filter, {active: ((c[0]-5,c[1]-5,c[2]-5,),(c[0]+5,c[1]+5,c[2]+5))}, active)
+            setup_trackbars(range_filter, {active: ((c[0]-5,c[0]-20,0,),(c[0]+5,c[1]+20,255))}, active)
             picked = None
 
 
@@ -164,6 +170,10 @@ def main():
         if key == 's':
             print('save here')
             f = open('color_values.pkl', 'wb')
+            colorvals[active] = ((v1_min, v2_min, v3_min), (v1_max, v2_max, v3_max))
+            pickle.dump( colorvals, f)
+            f.close()
+            f = open('color_values.pkl.bak', 'wb')
             colorvals[active] = ((v1_min, v2_min, v3_min), (v1_max, v2_max, v3_max))
             pickle.dump( colorvals, f)
             f.close()
