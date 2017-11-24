@@ -7,7 +7,7 @@ import cv2
 import detect_object
 import movement
 import communication
-import detect_aruco
+import detect_aruco2
 import numpy as np
 import imutils
 import time
@@ -65,7 +65,8 @@ try:
         cv2.circle(frame, ball_center1, 10, (0, 0, 255), -1)
         cv2.imshow("mask", ball_mask)
 
-        basket_dist, basket_x, basket_corners, basket_ids = detect_aruco.detect_basket(frame)
+        basket_dist, basket_x, basket_corners, basket_ids = detect_aruco2.detect_basket(frame)
+        basket_dist = detect_aruco2.gimme_running_average(basket_dist)
 
         communication.update_comms()
         print("ball_y = ", ball_y1)
