@@ -11,6 +11,7 @@ import cv2.aruco as aruco
 import numpy as np
 from config import BASKET
 import time
+import imutils
 
 aruco_dict = aruco.Dictionary_get( aruco.DICT_ARUCO_ORIGINAL )
 parameters =  aruco.DetectorParameters_create()
@@ -56,6 +57,7 @@ def gimme_running_average( current_dist ):
 #lookup table:
 #as big as needed, but keep ordered by distance (ascending)
 #start from far away, headed closer
+#RESIZE!!!! Oh hell.
 lookup=[
 #(distance, throw),
 (  0, 999), #0 cannot happen
