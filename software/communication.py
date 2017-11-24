@@ -27,7 +27,8 @@
 from __future__ import print_function
 import serial
 import time
-from config import serialport, FIELD_ID, ROBOT_ID, BRAKES_ON
+#from config import serialport, FIELD_ID, ROBOT_ID, BRAKES_ON
+import config
 import serial.tools.list_ports
 import sys
 
@@ -49,7 +50,7 @@ ser = serial.Serial()
 
 
 def set_motors(m1, m2, m3):
-    if not BRAKES_ON:
+    if not config.BRAKES_ON:
         t = 'sm:{0}:{1}:{2}'.format(int(m1), int(m2), int(m3))
         send_soon(t)
 
@@ -59,7 +60,7 @@ def set_thrower(sp):
 #    a = "st:"+ str(sp)
 #    print("thrower command=",a)
 #    ser.write("st:"+ str(sp) + '\r\n')
-    if not BRAKES_ON:
+    if not config.BRAKES_ON:
         t = 'st:{0}'.format(int(sp))
         send_soon(t)
 
@@ -138,7 +139,7 @@ def read_from_robot():
 # mainboard doesnt send much useful information
 # set failsade, send ack where appropriate
 def parse_incoming_message ( message ):
-    global BRAKES_ON
+    global config.BRAKES_ON
     global pending_commands
 
     #what referee has to say?
@@ -153,20 +154,20 @@ def parse_incoming_message ( message ):
                 return False
 
             #else recognizable command
-            if fid == FIELD_ID and rid in [ROBOT_ID, 'X']:
-                if rid == ROBOT_ID:
+            if fid == config.FIELD_ID and rid in [config.ROBOT_ID, 'X']:
+                if rid == config.ROBOT_ID:
                     send_now( 'rf:a' + fid + rid + 'ACK------') #PING and personal commands must be answered
                     print("ACK sent\n")
 
                 if com == 'START':
-                    BRAKES_ON = False
+                    config.BRAKES_ON = False
                     pending_commands = []
                     send_now( 'st:40' )
                     send_now( 'r0' )
                     print ("Houston, we have a liftoff!")
 
                 elif com == 'STOP':
-                    BRAKES_ON = True
+                    config.BRAKES_ON = True
                     pending_commands = []
                     send_now( 'sm:0:0:0' )
                     time.sleep(.1)
@@ -195,7 +196,7 @@ def detect_serial_ports():
     if len(bestguess) == 1:
         _port = bestguess
     else:
-        _port = serialport
+        _port = config.serialport
     #yeah, id is one thing, name is another. Well do without.
     #print ("((\n TODO: if guessing is reliable, auto-set config.serialport \n" + str(bestguess) + '\n))\n')
 
