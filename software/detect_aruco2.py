@@ -85,7 +85,7 @@ lookup=[
 # TODO: more tries, plot to chart, look for anomalies, repair
 # Look if something can be done about close-range-detection and throw
 def calculate_thrower_speed( dist ):
-    global TAMBOV
+    print("tambov", TAMBOV)
     if dist < 0:
         return 0
 
@@ -99,6 +99,7 @@ def calculate_thrower_speed( dist ):
             # (y2-y1)/(x2-x1) * (X-x1) + y1
             a = (lookup[i+1][1] - lookup[i][1]) / (lookup[i+1][0] - lookup[i][0])
             dx = dist - lookup[i][0]
+
             return int( a * dx + lookup[i][1] + TAMBOV )
     return 0
 
