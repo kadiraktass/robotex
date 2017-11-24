@@ -1,2 +1,3 @@
 *.pyc
-color_values.pkl
+*.pkl
+*.pkl.bak
