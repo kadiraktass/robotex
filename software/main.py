@@ -11,7 +11,8 @@ import detect_aruco2
 import numpy as np
 import imutils
 import time
-from config import *
+#from config import *
+import config
 import argparse
 
 #COLOR VALUES ARE MOVED TO CONFIG.PY, or more precisely into color_values.pkl,
@@ -42,15 +43,14 @@ parser.add_argument('--tambov', help='linear adjustment of throwing distance')
 args=parser.parse_args()
 
 if not args.id is None:
-    FIELD_ID = args.id[0]
-    ROBOT_ID = args.id[1]
+    config.FIELD_ID = args.id[0]
+    config.ROBOT_ID = args.id[1]
 if not args.brakes is None:
-    BRAKES_ON = True if args.brakes=='on' else False
+    config.BRAKES_ON = True if args.brakes=='on' else False
 if not args.target is None:
-    TARGET_BASKET = args.target
+    config.TARGET_BASKET=args.target
 if not args.tambov is None:
     detect_aruco2.TAMBOV = int(args.tambov)
-
 
 
 #print('PARAMS: FIELD=', FIELD_ID, ', ROBOT=', ROBOT_ID, ', BRAKES=', BRAKES_ON, ', TARGET=', TARGET_BASKET)

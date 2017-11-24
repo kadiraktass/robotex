@@ -9,7 +9,7 @@ from __future__ import print_function
 import cv2  #Seems there are big compatibility issues between versions. So we need to be on same lib.
 import cv2.aruco as aruco
 import numpy as np
-from config import BASKET
+import config
 import time
 import imutils
 
@@ -98,7 +98,7 @@ def calculate_thrower_speed( dist ):
             # (y2-y1)/(x2-x1) * (X-x1) + y1
             a = (lookup[i+1][1] - lookup[i][1]) / (lookup[i+1][0] - lookup[i][0])
             dx = dist - lookup[i][0]
-            return int( a * dx + lookup[i][1] + TAMBOV ) 
+            return int( a * dx + lookup[i][1] + TAMBOV )
     return 0
 
 
@@ -126,6 +126,7 @@ def detect_basket( frame ):
     found = []
     dists = []
     basks = []
+    BASKET = config.BASKET
     #marker is (vertical_distance, x_of_basket)
     for i in range(0, len(ids)):
             topleft     = corners[i][0][0]
@@ -154,6 +155,7 @@ def detect_basket( frame ):
 
 
 def fallback_to_blob( frame ):
+    BASKET = config.BASKET
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
     mask = cv2.inRange(hsv, BASKET[2], BASKET[3])
@@ -200,7 +202,7 @@ if __name__ == '__main__':
 
     print('Frame shape: ' + str(frame.shape)) #480x640
     print('aruco params: ' + str(parameters))
-    print('searching for basket: ' + str(BASKET) )
+    print('searching for basket: ' + str(config.BASKET) )
     adjust = 0
 
     while cap.isOpened():
