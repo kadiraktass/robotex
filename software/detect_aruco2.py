@@ -87,10 +87,18 @@ def calculate_thrower_speed( dist ):
 def detect_basket( frame ):
     #lists of ids and the corners belonging to each id
 
-    corners, ids, rejectedImgPoints = aruco.detectMarkers(frame, aruco_dict, parameters=parameters)
+    #corners, ids, rejectedImgPoints = aruco.detectMarkers(frame, aruco_dict, parameters=parameters)
     #found something. Gives None or some numpy array.
-    if ids is None:
-        return fallback_to_blob(frame)
+    #if ids is None:
+    #    return fallback_to_blob(frame)
+    #try it
+    a,b,c,d = fallback_to_blob(frame)
+    if a > 0:
+        return a,b,c,d
+
+    #else look for aruco
+    corners, ids, rejectedImgPoints = aruco.detectMarkers(frame, aruco_dict, parameters=parameters)
+
 
     #when i find rightmost marker, it means basket is a little bit leftwards.
     #ditto for left one. And arithmetic mean if both are visible.
@@ -144,10 +152,9 @@ def fallback_to_blob( frame ):
 
         #rect = cv2.minAreaRect(c) # (x,y)(w,h)angle
         rect = cv2.boundingRect(c)
-        cv2.rectangle(frame,(rect[0], rect[1]), (rect[0]+rect[2], rect[1]+rect[3]), (255,255,0), 2)
-
         #ideally there should be no difference in calculated distance between aruco and blob.
         if rect[3] > 20:
+            cv2.rectangle(frame,(rect[0], rect[1]), (rect[0]+rect[2], rect[1]+rect[3]), (255,255,0), 2)
             return rect[1] + rect[3], rect[0] + rect[2]//2, [], []
 
     return -1, -1, None, None
