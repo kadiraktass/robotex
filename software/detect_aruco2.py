@@ -76,7 +76,7 @@ lookup=[
 #etcetera, upto crazy numbers
 ]
 
-print (lookup.join('\n'))
+print ('\n'.join( lookup ))
 # TODO: more tries, plot to chart, look for anomalies, repair
 # Look if something can be done about close-range-detection and throw
 def calculate_thrower_speed( dist ):
