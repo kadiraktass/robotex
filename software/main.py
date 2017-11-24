@@ -51,7 +51,8 @@ if not args.target is None:
 if not args.tambov is None:
     detect_aruco2.TAMBOV = int(args.tambov)
     print (detect_aruco2.TAMBOV)
-    return
+
+input()
 
 
 #print('PARAMS: FIELD=', FIELD_ID, ', ROBOT=', ROBOT_ID, ', BRAKES=', BRAKES_ON, ', TARGET=', TARGET_BASKET)
