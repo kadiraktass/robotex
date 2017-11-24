@@ -38,6 +38,7 @@ parser=argparse.ArgumentParser()
 parser.add_argument('--id', help='Field and robot: AA, AB, AC, BA...')
 parser.add_argument('--brakes', help='Emergency brake is on or not: on/off')
 parser.add_argument('--target', help='Where to throw: magenta or blue')
+parser.add_argument('--tambov', help='linear adjustment of throwing distance')
 args=parser.parse_args()
 
 if not args.id is None:
@@ -47,6 +48,10 @@ if not args.brakes is None:
     BRAKES_ON = True if args.brakes=='on' else False
 if not args.target is None:
     TARGET_BASKET = args.target
+if not args.tambov is None:
+    detect_aruco2.TAMBOV = int(args.tambov)
+
+
 #print('PARAMS: FIELD=', FIELD_ID, ', ROBOT=', ROBOT_ID, ', BRAKES=', BRAKES_ON, ', TARGET=', TARGET_BASKET)
 #input()
 

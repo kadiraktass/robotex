@@ -16,7 +16,7 @@ import imutils
 aruco_dict = aruco.Dictionary_get( aruco.DICT_ARUCO_ORIGINAL )
 parameters =  aruco.DetectorParameters_create()
 
-
+TAMBOV = 0
 #TODO:
 #You cannot rely on finding basket from every frame. Therefore strategy is as follows:
 #find basket, select speed, attack, hope for the best.
@@ -66,7 +66,7 @@ lookup=[
 ( 60, 520),
 
 ( 62, 494),
-( 69, 464), #WUT???
+( 69, 464),
 
 ( 95, 336),#
 (104, 313),
@@ -98,7 +98,7 @@ def calculate_thrower_speed( dist ):
             # (y2-y1)/(x2-x1) * (X-x1) + y1
             a = (lookup[i+1][1] - lookup[i][1]) / (lookup[i+1][0] - lookup[i][0])
             dx = dist - lookup[i][0]
-            return int( a * dx + lookup[i][1] )
+            return int( a * dx + lookup[i][1] + TAMBOV ) 
     return 0
 
 
