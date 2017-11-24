@@ -98,6 +98,8 @@ def detect_basket( frame ):
 
     #else look for aruco
     corners, ids, rejectedImgPoints = aruco.detectMarkers(frame, aruco_dict, parameters=parameters)
+    if ids is None:
+        return -1, -1, None, None
 
 
     #when i find rightmost marker, it means basket is a little bit leftwards.
