@@ -67,7 +67,7 @@ try:
         # blurred = cv2.GaussianBlur(frame, (11, 11), 0)
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-        ball_x1, ball_y1, ball_radius1, ball_center1, ball_mask = detect_object.track(hsv, BALL_LOWER, BALL_UPPER)
+        ball_x1, ball_y1, ball_radius1, ball_center1, ball_mask = detect_object.track(hsv, config.BALL_LOWER, config.BALL_UPPER)
         cv2.circle(frame, ball_center1, 10, (0, 0, 255), -1)
         cv2.imshow("mask", ball_mask)
 
