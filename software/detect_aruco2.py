@@ -28,12 +28,12 @@ running = [0]*10
 last_seen = 0
 
 #Use it for distance, not speed!
-def gimme_running_average( current ):
+def gimme_running_average( current_dist ):
     global running
     global last_seen
 
     now = time.time()
-    if current == -1:
+    if current_dist == -1 or current_dist < 48: #so it doesnt hit a kid if a fly flies around
         if ( now - last_seen) > 1: #Havent seen for some time, start degrading
             running.append(999) #this is distance, in a galaxy far, far away...
             running.pop(0)
@@ -41,7 +41,7 @@ def gimme_running_average( current ):
             pass
 
     else: #saw the basket
-        running.append(current)
+        running.append(current_dist)
         running.pop(0)
         last_seen = now
 
@@ -59,13 +59,15 @@ lookup=[
 ( 54, 590),
 ( 57, 565),
 ( 58, 558),
+( 59, 548),
 ( 60, 513),
+( 63, 502),
 ( 67, 450),
 ( 99, 317),
 (100, 326),
 (110, 303),
 (132, 258),
-(159, 243),
+(153, 241),
 (183, 229),
 (202, 220),
 (232, 234), #too close is bad also - forget sideways throw.
@@ -74,6 +76,7 @@ lookup=[
 #etcetera, upto crazy numbers
 ]
 
+print (lookup.join('\n'))
 # TODO: more tries, plot to chart, look for anomalies, repair
 # Look if something can be done about close-range-detection and throw
 def calculate_thrower_speed( dist ):
@@ -165,6 +168,7 @@ def fallback_to_blob( frame ):
         #rect = cv2.minAreaRect(c) # (x,y)(w,h)angle
         rect = cv2.boundingRect(c)
         #ideally there should be no difference in calculated distance between aruco and blob.
+        #NB! 50 or less could be already erraneous
         if rect[3] > 20:
             cv2.rectangle(frame,(rect[0], rect[1]), (rect[0]+rect[2], rect[1]+rect[3]), (255,255,0), 2)
             return rect[1] + rect[3], rect[0] + rect[2]//2, [], []
