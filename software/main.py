@@ -66,7 +66,7 @@ try:
         cv2.imshow("mask", ball_mask)
 
         basket_dist, basket_x, basket_corners, basket_ids = detect_aruco2.detect_basket(frame)
-        #basket_dist = detect_aruco2.gimme_running_average(basket_dist)
+        basket_dist = detect_aruco2.gimme_running_average(basket_dist)
 
         communication.update_comms()
         print("ball_y = ", ball_y1)

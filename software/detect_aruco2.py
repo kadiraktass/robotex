@@ -46,7 +46,11 @@ def gimme_running_average( current_dist ):
         last_seen = now
 
     print(running)
-    return np.mean( running )
+    ret = np.mean( running )
+    if ret == 0:
+        return -1
+    else:
+        return ret
 
 
 #lookup table:
@@ -221,6 +225,9 @@ if __name__ == '__main__':
         cv2.putText(frame, "Adjust:" + str(adjust), (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255) )
         cv2.putText(frame, "Speed:" + str(throwspeed), (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255) )
 
+        communication.set_thrower(throwspeed)
+        communication.update_comms()
+
         h, w = frame.shape[:2]
         print (frame.shape)
         cv2.line(frame, (w//2,100), (w//2,200), (0,0,255),1)
@@ -243,8 +250,7 @@ if __name__ == '__main__':
         #    adjust = 0
         #elif keyp == ord('w'):
         #    adjust = 100
-        communication.set_thrower(throwspeed)
-        communication.update_comms()
+
 
     # When everything done, release the capture
     cap.release()
