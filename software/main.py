@@ -66,7 +66,7 @@ try:
         cv2.imshow("mask", ball_mask)
 
         basket_dist, basket_x, basket_corners, basket_ids = detect_aruco2.detect_basket(frame)
-        basket_dist = detect_aruco2.gimme_running_average(basket_dist)
+        #basket_dist = detect_aruco2.gimme_running_average(basket_dist)
 
         communication.update_comms()
         print("ball_y = ", ball_y1)
@@ -80,8 +80,8 @@ try:
         if thrower_speed > 0:
             communication.set_thrower(thrower_speed)
             last_throw = now
-        elif (now - last_throw) >= 3:
-            communication.set_thrower(0)
+        #elif (now - last_throw) >= 3:
+        #    communication.set_thrower(0)
 
 
         cv2.putText(frame, "dx: {}, dy: {}, radius: {}".format(int(ball_x1), int(ball_y1), int(ball_radius1)),
