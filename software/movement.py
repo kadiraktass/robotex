@@ -3,7 +3,7 @@ import time
 import math
 from enum import Enum
 
-from detect_aruco import calculate_thrower_speed
+from detect_aruco2 import calculate_thrower_speed
 from communication import millis
 
 
