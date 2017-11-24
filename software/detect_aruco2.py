@@ -197,6 +197,8 @@ if __name__ == '__main__':
     cap.set(14, 0.04)
 
     ret, frame = cap.read()
+    frame = imutils.resize(frame, width=600) #DOOOH!!!! How it managed, i do not know.
+
     print('Frame shape: ' + str(frame.shape)) #480x640
     print('aruco params: ' + str(parameters))
     print('searching for basket: ' + str(BASKET) )
