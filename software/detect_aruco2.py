@@ -63,8 +63,9 @@ lookup=[
 (  0, 999), #0 cannot happen
 ( 48, 650), #edge of field, max speed, cannot reach anyway
 
+( 60, 520),
 
-( 60, 302),
+( 62, 494),
 ( 69, 464), #WUT???
 
 ( 95, 336),#
