@@ -235,7 +235,7 @@ def open_port():
     return ser.isOpen()
 
 
-if BRAKES_ON:
+if config.BRAKES_ON:
     send_soon('r1')
 else:
     send_soon('r0')
