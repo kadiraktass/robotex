@@ -24,7 +24,8 @@ git fetch --all
 git reset --hard origin/master
 
 
-sudo python software/main.py
+cd software
+python main.py --id=AZ --brakes=on --target=blue
 
 
 echo "--- finish"
