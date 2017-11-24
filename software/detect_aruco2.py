@@ -35,7 +35,7 @@ def gimme_running_average( current ):
     now = time.time()
     if current == -1:
         if ( now - last_seen) > 1: #Havent seen for some time, start degrading
-            running.append(0)
+            running.append(999) #this is distance, in a galaxy far, far away...
             running.pop(0)
         else: #just skip
             pass
