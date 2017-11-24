@@ -24,7 +24,7 @@ parameters =  aruco.DetectorParameters_create()
 #if last dist was None more than 1s ago then we do not see basket.
 #if we just saw it, but right now did'nt detect, then skip. Timeout keeps track of shutting down.
 #if we just saw it, and keep seeing, then keep short running average to smooth out fluctuations, and slow down gracefullyb
-running = [0]*5
+running = [0]*10
 last_seen = 0
 
 def gimme_running_average( current ):
@@ -55,7 +55,8 @@ lookup=[
 #(distance, throw),
 (  0, 999), #0 cannot happen
 ( 48, 650), #edge of field, max speed, cannot reach anyway
-( 57, 505),
+( 57, 565),
+( 58, 558),
 ( 67, 450),
 ( 99, 317),
 (159, 243),
@@ -210,14 +211,14 @@ if __name__ == '__main__':
         keyp = cv2.waitKey(1) & 0xFF
 
         if keyp == ord('q'):
-            communication.set_thrower(0)
+            communication.send_now("st:0")
             communication.update_comms()
 
             break
         elif keyp == ord('e'):
-            adjust += 1
+            adjust += 2
         elif keyp == ord('d'):
-            adjust -= 1
+            adjust -= 2
 
 
         #elif keyp == ord('s'):
