@@ -195,14 +195,16 @@ if __name__ == '__main__':
         dist, basket, corners, ids = detect_basket(frame)
         frame = aruco.drawDetectedMarkers(frame, corners)
         throwspeed = calculate_thrower_speed(dist)
+        runnin = gimme_running_average(throwspeed + adjust)
+
         if basket >= 0:
             cv2.line(frame, (int(basket), 0), (int(basket),400), (255,255,0), 2)
             cv2.line(frame, (250, dist), (350, dist), (255,255,0), 2)
-            cv2.putText(frame, "Dist:" + str(dist), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (100,100,255) )
+            cv2.putText(frame, "Dist:" + str(dist), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255) )
             cv2.putText(frame, "Calculated:" + str(throwspeed), (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0) )
 
         cv2.putText(frame, "Adjust:" + str(adjust), (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255) )
-        cv2.putText(frame, "Running:" + str(gimme_running_average(throwspeed + adjust)), (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 1, (100,100,255) )
+        cv2.putText(frame, "Running:" + str(runnin), (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255) )
 
         h, w = frame.shape[:2]
         print (frame.shape)
@@ -226,8 +228,7 @@ if __name__ == '__main__':
         #    adjust = 0
         #elif keyp == ord('w'):
         #    adjust = 100
-        throwspeed = throwspeed + adjust
-        communication.set_thrower(throwspeed)
+        communication.set_thrower(runnin)
         communication.update_comms()
 
     # When everything done, release the capture
