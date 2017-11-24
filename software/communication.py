@@ -139,7 +139,7 @@ def read_from_robot():
 # mainboard doesnt send much useful information
 # set failsade, send ack where appropriate
 def parse_incoming_message ( message ):
-    global config.BRAKES_ON
+    #global config.BRAKES_ON
     global pending_commands
 
     #what referee has to say?
