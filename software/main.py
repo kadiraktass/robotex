@@ -49,6 +49,8 @@ if not args.brakes is None:
     config.BRAKES_ON = True if args.brakes=='on' else False
 if not args.target is None:
     config.TARGET_BASKET=args.target
+    config.BASKET = MAGENTA_BASKET if args.target == 'magenta' else BLUE_BASKET
+
 if not args.tambov is None:
     detect_aruco2.TAMBOV = int(args.tambov)
 

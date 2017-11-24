@@ -33,15 +33,16 @@ BRAKES_ON = False #if BRAKES_ON then _no movement_ must occur.
 colorvals = pickle.load( open( "color_values.pkl", "rb" ) )
 print ("From color config file read: " + str(colorvals))
 
-if TARGET_BASKET == 'magenta':
-    BASKET = [10, 11, (), ()]
-    BASKET[2] = colorvals['basket_magenta'][0]
-    BASKET[3] = colorvals['basket_magenta'][1]
 
-elif TARGET_BASKET == 'blue':
-    BASKET = [21, 22, (), ()]
-    BASKET[2] = colorvals['basket_blue'][0]
-    BASKET[3] = colorvals['basket_blue'][1]
+#if TARGET_BASKET == 'magenta':
+MAGENTA_BASKET = [10, 11, (), ()]
+MAGENTA_BASKET[2] = colorvals['basket_magenta'][0]
+MAGENTA_BASKET[3] = colorvals['basket_magenta'][1]
+
+#elif TARGET_BASKET == 'blue':
+BLUE_BASKET = [21, 22, (), ()]
+BLUE_BASKET[2] = colorvals['basket_blue'][0]
+BLUE_BASKET[3] = colorvals['basket_blue'][1]
 
 BALL_LOWER = colorvals['ball'][0]
 BALL_UPPER = colorvals['ball'][1]
@@ -49,7 +50,7 @@ BALL_UPPER = colorvals['ball'][1]
 CARPET_LOWER = colorvals['carpet'][0]
 CARPET_UPPER = colorvals['carpet'][1]
 
-
+BASKET = BLUE_BASKET
 
 
 # computer-specific stuff
