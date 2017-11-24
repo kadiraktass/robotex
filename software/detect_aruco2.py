@@ -62,8 +62,14 @@ lookup=[
 ( 60, 513),
 ( 67, 450),
 ( 99, 317),
+(100, 326),
+(110, 303),
+(132, 258),
 (159, 243),
-(232, 234),#too close is bad also - forget sideways throw.
+(183, 229),
+(202, 220),
+(232, 234), #too close is bad also - forget sideways throw.
+(253, 221), #only straight, wall bounce
 (1000, 0)
 #etcetera, upto crazy numbers
 ]
