@@ -122,7 +122,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
         if not basketInCenter and ball_y >= 380:
             activeState = State.ROTATE_AROUND_BALL
 
-        if basketInCenter and ball_y >= 420:
+        if basketInCenter and ball_y >= 380: #420:
             activeState = State.GRAB_BALL
             grabBallStartTime = time.time()
 
