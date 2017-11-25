@@ -20,8 +20,8 @@ def percentage_of_color(hsv, lower, upper):
     mask = cv2.inRange(hsv, lower, upper)
     count = np.count_nonzero( mask )
     #print ("COUNTOFCOLOR:" + str(count) + " SHAPE: " + str(hsv.shape))
-    return float(count) / (hsv.shape[0] * hsv.shape[1])
-
+    #return float(count) / (hsv.shape[0] * hsv.shape[1])
+    return count
 
 def track(frame, colorlower, colorupper):
     # i put rezising (which we probably do not need) and converting to HSV to main loop
