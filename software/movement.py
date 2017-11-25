@@ -112,8 +112,8 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
         if basketInCenter and ball_y >= 420:
             activeState = State.GRAB_BALL
             grabBallStartTime = time.time()
-            
-        if orangeArea < 1500:
+
+        if orangeArea < 100000:
             activeState = RUN_FROM_BORDER
 
     else:
@@ -139,7 +139,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
             ySpeed = 0.05 #was 0.05
             rotSpeed = (basket_x - 300) * 0.2 / 300
             thrower_speed = calculate_thrower_speed(basket_dist)
-            
+
     elif (activeState == RUN_FROM_BORDER):
         rotSpeed = -2.5
 
