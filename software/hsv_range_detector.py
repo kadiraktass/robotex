@@ -121,7 +121,7 @@ def main():
     #        frame_to_thresh = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     #else:
     camera = cv2.VideoCapture(0)
-    camera.set(13, 0.28) #was 0.4
+    camera.set(13, 0.75) #was 0.4
     camera.set(14, 0.04)
 
     setup_trackbars(range_filter, colorvals, active)
