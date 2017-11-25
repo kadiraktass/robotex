@@ -117,6 +117,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
         if ball_x != -1 and basketInCenter:
             activeState = State.DRIVE_TO_BALL
 
+        print("basket_dist = ", basket_dist)
         if orangeArea < 132000:
             activeState = State.RUN_FROM_BORDER
             print("FLEEEEE!!!! ")
