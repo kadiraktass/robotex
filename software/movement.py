@@ -172,7 +172,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
                 xSpeed = 0
 
             if time.time() - findBallStartTime > 5:
-                activeState = FIND_BALL
+                activeState = State.FIND_BALL
 
 
 
