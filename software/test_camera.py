@@ -14,7 +14,7 @@ while True:
 
 
     (grabbed, frame) = camera.read()
-    cv2.imshow("Frame", frame)
+
 
     cv2.putText(frame, "HUE: {}".format(hue),
                         (50, 80), cv2.FONT_HERSHEY_SIMPLEX,
@@ -24,7 +24,8 @@ while True:
                         (50, 100), cv2.FONT_HERSHEY_SIMPLEX,
                         0.5, (255, 255, 255), 1)
 
-
+    cv2.imshow("Frame", frame)
+    
     key = cv2.waitKey(1) & 0xFF
     if key == ord("q"):
         break
