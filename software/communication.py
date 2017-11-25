@@ -157,13 +157,16 @@ def parse_incoming_message ( message ):
             if fid == config.FIELD_ID and rid in [config.ROBOT_ID, 'X']:
                 if rid == config.ROBOT_ID:
                     send_now( 'rf:a' + fid + rid + 'ACK------') #PING and personal commands must be answered
+                    time.sleep(.1)
                     print("ACK sent\n")
 
                 if com == 'START':
                     config.BRAKES_ON = False
                     pending_commands = []
                     send_now( 'st:40' )
+                    time.sleep(.1)
                     send_now( 'r0' )
+                    time.sleep(.1)
                     print ("Houston, we have a liftoff!")
 
                 elif com == 'STOP':
