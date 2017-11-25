@@ -16,9 +16,10 @@ def find_ball(hsv, colorlower, colorupper):
     ballframe = cv2.bitwise_and(hsv, hsv, mask = ballmask)
     return track(ballframe, colorlower, colorupper)
 
-def percentage_of_carpet(hsv):
-
-
+def percentage_of_color(hsv, lower, upper):
+    mask = cv2.inRange(hsv, lower, upper)
+    count = np.count_nonzero( mask )
+    return (count / (hsv.shape[0] * hsv.shape[1]) ) * 100.0
 
 
 def track(frame, colorlower, colorupper):
