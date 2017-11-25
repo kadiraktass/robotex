@@ -161,8 +161,8 @@ def fallback_to_blob( frame ):
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
     mask = cv2.inRange(hsv, BASKET[2], BASKET[3])
-    mask = cv2.erode(mask, None, iterations=2)
-    mask = cv2.dilate(mask, None, iterations=2)
+    mask = cv2.erode(mask, None, iterations=4)
+    mask = cv2.dilate(mask, None, iterations=4)
 
     # find contours in the mask and initialize the current
     cnts = cv2.findContours(mask, cv2.RETR_EXTERNAL,
