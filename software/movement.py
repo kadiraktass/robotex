@@ -95,73 +95,68 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
     basketInCenter = abs(basket_x  - 300) <= 20
     seesBall = ball_x != -1
 
-    if activeState != State.FIND_BALL:
-        if (ball_x == -1):
-            activeState = State.FIND_BALL
-            findBallStartTime = time.time()
-    else:
-        if time.time() - findBallStartTime > 6:
-            findBallStartTime = time.time()
+        
 
     if activeState  != State.GRAB_BALL:
-        if (ball_x == -1):
-            activeState = activeState
+        if (ball_x == -1) and activeState != State.FIND_BALL:
+            activeState = State.FIND_BALL
+            findBallStartTime = time.time()
+        elif time.time() - findBallStartTime > 6:
+            findBallStartTime = time.time()
         else:
             #I'm trying a little jerk in another direction
             #if activeState == State.FIND_BALL: #Was searching for ball, did glimpse it
             #Nooo, It does find and aim for ball perfectly while it is closer.
             #Therefore problem lies in detecting the ball.
-
             activeState = State.DRIVE_TO_BALL
 
         if ball_x != -1 and basketInCenter:
             activeState = State.DRIVE_TO_BALL
 
         print("basket_dist = ", basket_dist)
-        if orangeArea < 132000 or basket_dist>377:
+        print("activeState = ", activeState)
+        if orangeArea < 100000: #or basket_dist>377:
             activeState = State.RUN_FROM_BORDER
             print("FLEEEEE!!!! ")
 
-        if not basketInCenter and ball_y >= 380:
+        if not basketInCenter and ball_y >= 360: #380:
             activeState = State.ROTATE_AROUND_BALL
 
-        if basketInCenter and ball_y >= 420:
+        if basketInCenter and ball_y >= 380: #420:
             activeState = State.GRAB_BALL
             grabBallStartTime = time.time()
 
-        #if orangeArea < 100000:
-        #    activeState = State.RUN_FROM_BORDER
-
     else:
-        if time.time() - grabBallStartTime > 2:
+        if time.time() - grabBallStartTime > 3:
             activeState = State.FIND_BALL
 
     if (activeState == State.FIND_BALL):
-        rotSpeed = -2.5
+        rotSpeed = -2
+        print("activeState = ", activeState)
         print("findBallStartTime = ", findBallStartTime)
-        if time.time() - findBallStartTime > 1:
-            ySpeed = 0.4
-            rotSpeed = -0.4    
+        if time.time() - findBallStartTime > 2:
+            if(orangeArea> 150000):
+                print("find ball directional move = ")
+                ySpeed = 1    
     elif (activeState == State.DRIVE_TO_BALL):
         rotSpeed = 1.5*(ball_x - 300) * 1 / 300
-        ySpeed = 1.5*0.5 * abs(430 - ball_y) / 430
+        ySpeed = 1.5*0.5 * abs(385 - ball_y) / 385 #abs(430 - ball_y) / 430
 
     elif (activeState == State.ROTATE_AROUND_BALL):
         if (basket_x == -1):
-            rotSpeed = 4 * 0.5 * basketPosOnRight               #rotate to the right if basket left from the right side of the screen
-            xSpeed = 4 * -0.1* basketPosOnRight
+            rotSpeed = 3 * 0.5 * basketPosOnRight               #rotate to the right if basket left from the right side of the screen
+            xSpeed = 3 * -0.1* basketPosOnRight
         else:
             rotSpeed = (basket_x - 300) * 0.5 / 300
             xSpeed =  (basket_x - 300) * -0.1 / 300
 
     elif (activeState == State.GRAB_BALL):
-            ySpeed = 0.05 #was 0.05
+            ySpeed = 0.1    #0.05
             rotSpeed = (basket_x - 300) * 0.2 / 300
             thrower_speed = calculate_thrower_speed(basket_dist)
 
     elif (activeState == State.RUN_FROM_BORDER):
         rotSpeed = -2 #-2.5
-
 
 
     return xSpeed, ySpeed, rotSpeed, angular_v, thrower_speed
