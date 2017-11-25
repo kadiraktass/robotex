@@ -77,6 +77,9 @@ try:
         basket_dist, basket_x, basket_corners, basket_ids = detect_aruco2.detect_basket(frame)
         basket_dist = detect_aruco2.gimme_running_average(basket_dist)
 
+        amount_of_carpet = detect_object.percentage_of_color(hsv, config.CARPET_LOWER, config.CARPET_UPPER)
+
+
         communication.update_comms()
         print("ball_y = ", ball_y1)
         m1,m2,m3,thrower_speed = movement.get_command(ball_x1, ball_y1,ball_radius1, basket_x, basket_dist)
@@ -92,6 +95,11 @@ try:
         elif (now - last_throw) >= 3:
             communication.set_thrower(0)
 
+
+
+        cv2.putText(frame, "CARPET: {}".format(int(amount_of_carpet)),
+                            (50, 80), cv2.FONT_HERSHEY_SIMPLEX,
+                            0.5, (255, 255, 255), 1)
 
         cv2.putText(frame, "dx: {}, dy: {}, radius: {}".format(int(ball_x1), int(ball_y1), int(ball_radius1)),
                         (50, 50), cv2.FONT_HERSHEY_SIMPLEX,

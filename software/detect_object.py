@@ -6,16 +6,19 @@ import imutils
 
 ## Ball has to be lower than 40px, or it is noise from outside.
 ## I do not want to ruin track(), therefore new  function.
-
 ballmask = np.zeros((450, 600), dtype=np.uint8)
 cv2.rectangle(ballmask, (0,40), (600, 450), (255), thickness = -1)
-def find_ball(frame, colorlower, colorupper):
+def find_ball(hsv, colorlower, colorupper):
     #i presume resized, HSV!!! frame here
-    if frame.shape[:2] != ballmask.shape[:2]:
-        raise "Resiizing error!"
-    ballframe = frame.copy()
-    ballframe = cv2.bitwise_and(ballframe, ballframe, mask = ballmask)
+    #if hsv.shape[:2] != ballmask.shape[:2]:
+    #    raise "Resiizing error!"
+    #ballframe = hsv.copy()
+    ballframe = cv2.bitwise_and(hsv, hsv, mask = ballmask)
     return track(ballframe, colorlower, colorupper)
+
+def percentage_of_carpet(hsv):
+
+
 
 
 def track(frame, colorlower, colorupper):
