@@ -119,7 +119,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
             activeState = State.RUN_FROM_BORDER
             print("FLEEEEE!!!! ")
 
-        if not basketInCenter and ball_y >= 380:
+        if not basketInCenter and ball_y >= 360: #380:
             activeState = State.ROTATE_AROUND_BALL
 
         if basketInCenter and ball_y >= 380: #420:
@@ -127,7 +127,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
             grabBallStartTime = time.time()
 
     else:
-        if time.time() - grabBallStartTime > 2:
+        if time.time() - grabBallStartTime > 3:
             activeState = State.FIND_BALL
 
     if (activeState == State.FIND_BALL):
@@ -151,7 +151,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
             xSpeed =  (basket_x - 300) * -0.1 / 300
 
     elif (activeState == State.GRAB_BALL):
-            ySpeed = 0.05 #was 0.05
+            ySpeed = 0.1    #0.05
             rotSpeed = (basket_x - 300) * 0.2 / 300
             thrower_speed = calculate_thrower_speed(basket_dist)
 
