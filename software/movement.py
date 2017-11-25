@@ -78,6 +78,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
     global activeState
     global grabBallStartTime
     global basketPosOnRight
+    global findBallStartTime
     angular_v = 0
     thrower_speed = 0
     xSpeed = 0
@@ -167,7 +168,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
                 xSpeed = -1
             else:
                 xSpeed = 0
-                
+
             if time.time() - findBallStartTime > 5:
                 activeState = FIND_BALL
 
