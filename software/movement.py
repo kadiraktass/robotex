@@ -26,6 +26,8 @@ activeState = State.FIND_BALL
 thrower_speed = 0
 basketPosOnRight = -1
 grabBallStartTime = time.time()
+findBallStartTime = time.time()
+
 
 
 wheelSpeedToMainboardUnits = 18.75 * 64 / (2 * math.pi * 0.035 * 60)
