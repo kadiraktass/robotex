@@ -19,8 +19,8 @@ def find_ball(hsv, colorlower, colorupper):
 def percentage_of_color(hsv, lower, upper):
     mask = cv2.inRange(hsv, lower, upper)
     count = np.count_nonzero( mask )
-    print ("COUNTOFCOLOR:" + str(count) + " SHAPE: " + str(hsv.shape))
-    return (count / (hsv.shape[0] * hsv.shape[1]) ) * 100.0
+    #print ("COUNTOFCOLOR:" + str(count) + " SHAPE: " + str(hsv.shape))
+    return float(count) / (hsv.shape[0] * hsv.shape[1])
 
 
 def track(frame, colorlower, colorupper):
