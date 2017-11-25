@@ -17,6 +17,7 @@ class  State(Enum):
     DRIVE_TO_BALL = 2
     ROTATE_AROUND_BALL = 3
     GRAB_BALL = 4
+    RUN_FROM_BORDER = 5
 
 activeState = State.FIND_BALL
 
@@ -34,9 +35,9 @@ wheelAngle3= 180 * math.pi / 180                   #rad
 wheelAngles = [wheelAngle1, wheelAngle2, wheelAngle3]
 
 
-def get_command(ball_x, ball_y, ball_radius, basket_x, basket_dist):
+def get_command(ball_x, ball_y, ball_radius, basket_x, basket_dist, orangeArea):
 
-    wheelLinearVelocity1, wheelLinearVelocity2, wheelLinearVelocity3, thrower_speed = calculate_wheelLinerVel(ball_x,ball_y, ball_radius, basket_x, basket_dist)
+    wheelLinearVelocity1, wheelLinearVelocity2, wheelLinearVelocity3, thrower_speed = calculate_wheelLinerVel(ball_x,ball_y, ball_radius, basket_x, basket_dist,orangeArea)
 
     wheelAngularSpeedMainboardUnits1 = wheelLinearVelocity1 * wheelSpeedToMainboardUnits
     wheelAngularSpeedMainboardUnits2 = wheelLinearVelocity2 * wheelSpeedToMainboardUnits
@@ -60,9 +61,9 @@ def calculate_speeds_from_angle(robotSpeed, robotDirectionAngle, robotAngularVel
 
     return wheelLinearVelocity1, wheelLinearVelocity2, wheelLinearVelocity3
 
-def calculate_wheelLinerVel(ball_x, ball_y, ball_radius, basket_x, basket_diag):
+def calculate_wheelLinerVel(ball_x, ball_y, ball_radius, basket_x, basket_diag,orangeArea):
 
-    xSpeed,ySpeed, rotSpeed, angular_v, thrower_speed = find_directions(ball_x,ball_y,  ball_radius, basket_x, basket_diag)
+    xSpeed,ySpeed, rotSpeed, angular_v, thrower_speed = find_directions(ball_x,ball_y,  ball_radius, basket_x, basket_diag,orangeArea)
 
     robotDirectionAngle = math.atan2(xSpeed, ySpeed)         #rad
     robotAngularVelocity = angular_v
@@ -72,7 +73,7 @@ def calculate_wheelLinerVel(ball_x, ball_y, ball_radius, basket_x, basket_diag):
     return wheelLinearVelocity1, wheelLinearVelocity2, wheelLinearVelocity3, thrower_speed
 
 
-def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist):
+def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeArea):
     global activeState
     global grabBallStartTime
     global basketPosOnRight
@@ -111,6 +112,9 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist):
         if basketInCenter and ball_y >= 420:
             activeState = State.GRAB_BALL
             grabBallStartTime = time.time()
+            
+        if orangeArea < 1500:
+            activeState = RUN_FROM_BORDER
 
     else:
         if time.time() - grabBallStartTime > 2:
@@ -135,5 +139,8 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist):
             ySpeed = 0.05 #was 0.05
             rotSpeed = (basket_x - 300) * 0.2 / 300
             thrower_speed = calculate_thrower_speed(basket_dist)
+            
+    elif (activeState == RUN_FROM_BORDER):
+        rotSpeed = -2.5
 
     return xSpeed, ySpeed, rotSpeed, angular_v, thrower_speed
