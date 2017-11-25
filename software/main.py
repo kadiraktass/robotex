@@ -62,15 +62,16 @@ try:
     while 1:
 
         (grabbed, frame) = camera.read()
-        print("grabbed = ",grabbed)
+        #print("grabbed = ",grabbed)
         frame = cv2.bitwise_and(frame, frame, mask = blinds)
         # resize the frame, blur it, and convert it to the HSV
         frame = imutils.resize(frame, width=600)
         # blurred = cv2.GaussianBlur(frame, (11, 11), 0)
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-        ball_x1, ball_y1, ball_radius1, ball_center1, ball_mask = detect_object.track(hsv, config.BALL_LOWER, config.BALL_UPPER)
-        cv2.circle(frame, ball_center1, 10, (0, 0, 255), -1)
+        ball_x1, ball_y1, ball_radius1, ball_center1, ball_mask = detect_object.find_ball(hsv, config.BALL_LOWER, config.BALL_UPPER)
+        if ball_x1 >= 0:
+            cv2.circle(frame, ball_center1, 10, (0, 0, 255), -1)
         cv2.imshow("mask", ball_mask)
 
         basket_dist, basket_x, basket_corners, basket_ids = detect_aruco2.detect_basket(frame)

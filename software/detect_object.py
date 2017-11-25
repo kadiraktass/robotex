@@ -4,6 +4,19 @@ import cv2
 import numpy as np
 import imutils
 
+## Ball has to be lower than 40px, or it is noise from outside.
+## I do not want to ruin track(), therefore new  function.
+
+ballmask = np.zeros((450, 600), dtype=np.uint8)
+cv2.rectangle(ballmask, (0,40), (600, 450), (255), thickness = -1)
+def find_ball(frame, colorlower, colorupper):
+    #i presume resized, HSV!!! frame here
+    if frame.shape[:2] != ballmask.shape[:2]:
+        raise "Resiizing error!"
+    ballframe = frame.copy()
+    ballframe = cv2.bitwise_and(ballframe, ballframe, mask = ballmask)
+    return track(ballframe, colorlower, colorupper)
+
 
 def track(frame, colorlower, colorupper):
     # i put rezising (which we probably do not need) and converting to HSV to main loop
@@ -45,3 +58,21 @@ def track(frame, colorlower, colorupper):
         radius = -1
         center = (-1, -1)
     return x, y, radius, center, mask
+
+
+if __name__ == "__main__":
+    import config
+    camera = cv2.VideoCapture(0)
+
+    while True:
+        (grabbed, frame) = camera.read()
+        frame = imutils.resize(frame, width=600)
+        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+        ball_x1, ball_y1, ball_radius1, ball_center1, ball_mask = find_ball(hsv, config.BALL_LOWER, config.BALL_UPPER)
+        cv2.circle(frame, ball_center1, 10, (0, 0, 255), -1)
+
+        cv2.imshow("ballmask", frame)
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
