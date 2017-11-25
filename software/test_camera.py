@@ -25,7 +25,9 @@ while True:
                         0.5, (255, 255, 255), 1)
 
     cv2.imshow("Frame", frame)
-    
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    cv2.imshow("HSV", hsv)
+
     key = cv2.waitKey(1) & 0xFF
     if key == ord("q"):
         break
