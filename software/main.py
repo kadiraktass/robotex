@@ -82,7 +82,7 @@ try:
 
         communication.update_comms()
         print("ball_y = ", ball_y1)
-        m1,m2,m3,thrower_speed = movement.get_command(ball_x1, ball_y1,ball_radius1, basket_x, basket_dist)
+        m1,m2,m3,thrower_speed = movement.get_command(ball_x1, ball_y1,ball_radius1, basket_x, basket_dist, amount_of_carpet)
         print("sent by the main: ",m1,m2,m3)
 
         communication.set_motors(m1,m2,m3)
