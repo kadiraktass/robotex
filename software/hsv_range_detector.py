@@ -150,6 +150,9 @@ def main():
         #print ("({0}, {1}, {2}) ({3}, {4}, {5})".format(v1_min, v2_min, v3_min,    v1_max, v2_max, v3_max))
 
         thresh = cv2.inRange(frame_to_thresh, (v1_min, v2_min, v3_min), (v1_max, v2_max, v3_max))
+        thresh = cv2.erode(thresh, None, iterations=2)
+        thresh = cv2.dilate(thresh, None, iterations=2)
+
 
         #if args['preview']:
         if False:
