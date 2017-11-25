@@ -165,8 +165,9 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
                 xSpeed = 1                                  #TODO: test for a better value
             elif(basket_x-300)<20 and not basketPosOnRight:
                 xSpeed = -1
-            else
+            else:
                 xSpeed = 0
+                
             if time.time() - findBallStartTime > 5:
                 activeState = FIND_BALL
 
