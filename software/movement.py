@@ -95,23 +95,19 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
     basketInCenter = abs(basket_x  - 300) <= 20
     seesBall = ball_x != -1
 
-    if activeState != State.FIND_BALL:
-        if (ball_x == -1):
-            activeState = State.FIND_BALL
-            findBallStartTime = time.time()
-    else:
-        if time.time() - findBallStartTime > 6:
-            findBallStartTime = time.time()
+        
 
     if activeState  != State.GRAB_BALL:
-        if (ball_x == -1):
-            activeState = activeState
+        if (ball_x == -1) and activeState != State.FIND_BALL:
+            activeState = State.FIND_BALL
+            findBallStartTime = time.time()
+        elif time.time() - findBallStartTime > 6:
+            findBallStartTime = time.time()
         else:
             #I'm trying a little jerk in another direction
             #if activeState == State.FIND_BALL: #Was searching for ball, did glimpse it
             #Nooo, It does find and aim for ball perfectly while it is closer.
             #Therefore problem lies in detecting the ball.
-
             activeState = State.DRIVE_TO_BALL
 
         if ball_x != -1 and basketInCenter:
@@ -130,7 +126,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
             grabBallStartTime = time.time()
 
     else:
-        if time.time() - grabBallStartTime > 3:
+        if time.time() - grabBallStartTime > 2:
             activeState = State.FIND_BALL
 
     if (activeState == State.FIND_BALL):
