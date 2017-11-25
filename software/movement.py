@@ -138,7 +138,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
     if (activeState == State.FIND_BALL):
         rotSpeed = -2.5
         print("findBallStartTime = ", findBallStartTime)
-        if time.time() - findBallStartTime > 1.4:
+        if time.time() - findBallStartTime > 1:
             ySpeed = 0
             rotSpeed = 0
     elif (activeState == State.DRIVE_TO_BALL):
