@@ -18,7 +18,6 @@ class  State(Enum):
     ROTATE_AROUND_BALL = 3
     GRAB_BALL = 4
     RUN_FROM_BORDER = 5
-    GO_TO_MID = 6
 
 activeState = State.FIND_BALL
 
@@ -97,12 +96,12 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
     seesBall = ball_x != -1
 
     if activeState != State.FIND_BALL:
-        if (ball_x == -1 and activeState != State.GO_TO_MID):
+        if (ball_x == -1):
             activeState = State.FIND_BALL
             findBallStartTime = time.time()
     else:
-        if time.time() - findBallStartTime > 2:
-            activeState = State.GO_TO_MID
+        if time.time() - findBallStartTime > 3:
+            findBallStartTime = time.time()
 
     if activeState  != State.GRAB_BALL:
         if (ball_x == -1):
@@ -138,6 +137,8 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
 
     if (activeState == State.FIND_BALL):
         rotSpeed = -2.5
+        if time.time() - findBallStartTime > 2:
+            ySpeed = 0.5
 
     elif (activeState == State.DRIVE_TO_BALL):
         rotSpeed = 1.5*(ball_x - 300) * 1 / 300
@@ -158,21 +159,6 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
 
     elif (activeState == State.RUN_FROM_BORDER):
         rotSpeed = -2.5
-
-    elif (activeState == State.GO_TO_MID):
-        if (basket_x == -1):
-            rotSpeed = -2.5 * basketPosOnRight               #rotate to the right if basket left from the right side of the screen
-        else:
-            rotSpeed = (basket_x - 300) * 0.5 / 300
-            if(basket_x-300)<20 and basketPosOnRight:                              #TODO: test for a better value
-                xSpeed = 1                                  #TODO: test for a better value
-            elif(basket_x-300)<20 and not basketPosOnRight:
-                xSpeed = -1
-            else:
-                xSpeed = 0
-
-            if time.time() - findBallStartTime > 3:
-                activeState = State.FIND_BALL
 
 
 
