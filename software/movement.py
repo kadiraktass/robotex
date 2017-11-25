@@ -92,15 +92,15 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
 
     basketInCenter = abs(basket_x  - 300) <= 20
     seesBall = ball_x != -1
-    
+
     if activeState != State.FIND_BALL:
-        if (ball_x == -1):
+        if (ball_x == -1 and activeState != State.GO_TO_MID):
             activeState = State.FIND_BALL
             findBallStartTime = time.time()
     else:
         if time.time() - findBallStartTime > 2:
             activeState = State.GO_TO_MID
-            
+
     if activeState  != State.GRAB_BALL:
         if (ball_x == -1):
             activeState = activeState
@@ -155,21 +155,21 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
 
     elif (activeState == State.RUN_FROM_BORDER):
         rotSpeed = -2.5
-    
+
     elif (activeState == GO_TO_MID):
         if (basket_x == -1):
             rotSpeed = -2.5 * basketPosOnRight               #rotate to the right if basket left from the right side of the screen
         else:
             rotSpeed = (basket_x - 300) * 0.5 / 300
-            if(basket-300)<20 and basketPosOnRight:                              #TODO: test for a better value
+            if(basket_x-300)<20 and basketPosOnRight:                              #TODO: test for a better value
                 xSpeed = 1                                  #TODO: test for a better value
-            elif(basket-300)<20 and not basketPosOnRight:
+            elif(basket_x-300)<20 and not basketPosOnRight:
                 xSpeed = -1
             else
                 xSpeed = 0
             if time.time() - findBallStartTime > 5:
                 activeState = FIND_BALL
-                
-                
+
+
 
     return xSpeed, ySpeed, rotSpeed, angular_v, thrower_speed
