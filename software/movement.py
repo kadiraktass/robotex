@@ -130,14 +130,14 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
             grabBallStartTime = time.time()
 
     else:
-        if time.time() - grabBallStartTime > 2:
+        if time.time() - grabBallStartTime > 3:
             activeState = State.FIND_BALL
 
     if (activeState == State.FIND_BALL):
         rotSpeed = -2
         print("activeState = ", activeState)
         print("findBallStartTime = ", findBallStartTime)
-        if time.time() - findBallStartTime > 1:
+        if time.time() - findBallStartTime > 2:
             if(orangeArea> 150000):
                 print("find ball directional move = ")
                 ySpeed = 1    
