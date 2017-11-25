@@ -141,7 +141,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
         print("activeState = ", activeState)
         print("findBallStartTime = ", findBallStartTime)
         if time.time() - findBallStartTime > 1:
-            if(orangeArea> 200000):
+            if(orangeArea> 150000):
                 print("find ball directional move = ")
                 ySpeed = 1    
     elif (activeState == State.DRIVE_TO_BALL):
