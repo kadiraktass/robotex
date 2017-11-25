@@ -121,7 +121,7 @@ def main():
     #        frame_to_thresh = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     #else:
     camera = cv2.VideoCapture(0)
-    camera.set(13, 0.4)
+    camera.set(13, 0.28) #was 0.4
     camera.set(14, 0.04)
 
     setup_trackbars(range_filter, colorvals, active)
@@ -150,8 +150,8 @@ def main():
         #print ("({0}, {1}, {2}) ({3}, {4}, {5})".format(v1_min, v2_min, v3_min,    v1_max, v2_max, v3_max))
 
         thresh = cv2.inRange(frame_to_thresh, (v1_min, v2_min, v3_min), (v1_max, v2_max, v3_max))
-        thresh = cv2.erode(thresh, None, iterations=2)
-        thresh = cv2.dilate(thresh, None, iterations=2)
+        #thresh = cv2.erode(thresh, None, iterations=2)
+        #thresh = cv2.dilate(thresh, None, iterations=2)
 
 
         #if args['preview']:

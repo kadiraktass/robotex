@@ -19,8 +19,8 @@ import argparse
 #which is written by hsv_range_detector.py
 
 camera = cv2.VideoCapture(0)
-camera.set(13, 0.40)
-camera.set(14, 0.04)
+camera.set(13, 0.28) #hue
+camera.set(14, 0.04) #exposure
 
 communication.send_soon("init")
 
