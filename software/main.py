@@ -58,6 +58,7 @@ print (detect_aruco2.TAMBOV)
 #print('PARAMS: FIELD=', FIELD_ID, ', ROBOT=', ROBOT_ID, ', BRAKES=', BRAKES_ON, ', TARGET=', TARGET_BASKET)
 #input()
 
+framestart = 0
 try:
     while 1:
 
@@ -86,7 +87,6 @@ try:
         print("sent by the main: ",m1,m2,m3)
 
         communication.set_motors(m1,m2,m3)
-
         now = time.time()
         communication.update_comms()
         if thrower_speed > 0:
@@ -94,6 +94,7 @@ try:
             last_throw = now
         elif (now - last_throw) >= 3:
             communication.set_thrower(0)
+        communication.update_comms()
 
 
 
@@ -101,12 +102,18 @@ try:
                             (50, 80), cv2.FONT_HERSHEY_SIMPLEX,
                             0.5, (255, 255, 255), 1)
 
+        fps = round(1.0 / (time.time() - framestart))
+        cv2.putText(frame, "FPS: {}".format( fps ),
+                            (50, 100), cv2.FONT_HERSHEY_SIMPLEX,
+                            0.5, (255, 255, 255), 1)
+
         cv2.putText(frame, "dx: {}, dy: {}, radius: {}".format(int(ball_x1), int(ball_y1), int(ball_radius1)),
                         (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
                         0.35, (0, 0, 255), 1)
 
-        communication.update_comms()
         cv2.imshow("Frame", frame)
+        framestart = time.time()
+
 
         key = cv2.waitKey(1) & 0xFF
         if key == ord("q"):
