@@ -138,6 +138,8 @@ def main():
             else:
                 frame_to_thresh = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
+        #image = cv2.blur(image, (10,10))
+
         if picked:
             print ("PICKED!")
             c = frame_to_thresh[picked[1]][picked[0]]
@@ -153,6 +155,34 @@ def main():
         #thresh = cv2.erode(thresh, None, iterations=2)
         #thresh = cv2.dilate(thresh, None, iterations=2)
 
+        #try to show what robot actually sees:
+        #TODO: needs unified place and actual algorithm. Possibly a way to fine tune eroding or choosing some other or...
+        if active == 'ball':
+            mask = cv2.erode(thresh, None, iterations=2)
+            mask = cv2.dilate(mask, None, iterations=2)
+            cnts = cv2.findContours(mask, cv2.RETR_EXTERNAL,
+                                    cv2.CHAIN_APPROX_SIMPLE)[-2]
+            for c in cnts:
+                ((x, y), radius) = cv2.minEnclosingCircle(c)
+                cv2.circle(image, (int(x), int(y)), int(radius),(0, 255, 255), 2)
+
+            if len(cnts) > 0:
+                c = max(cnts, key=cv2.contourArea)
+                M = cv2.moments(c)
+                center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"])) #why do we not use enclosingCircle's center?
+                cv2.circle(image, center, 10,(0, 0, 255), -1)
+
+        elif active == 'basket_blue' or active == 'basket_magenta':
+            mask = cv2.erode(thresh, None, iterations=3)
+            mask = cv2.dilate(mask, None, iterations=3)
+            cnts = cv2.findContours(mask, cv2.RETR_EXTERNAL,
+                            cv2.CHAIN_APPROX_SIMPLE)[-2]
+            if len(cnts) > 0:
+                c = max(cnts, key=cv2.contourArea)
+                cv2.drawContours(image, c, -1, (255, 255, 0), 1)
+            rect = cv2.boundingRect(c)
+            if rect[3] > 20:
+                cv2.rectangle(image,(rect[0], rect[1]), (rect[0]+rect[2], rect[1]+rect[3]), (255,255,0), 2)
 
         #if args['preview']:
         if False:
