@@ -135,6 +135,10 @@ def read_from_robot():
             parse_incoming_message( t )
     return True
 
+def sendack():
+    send_now( 'rf:a' + fid + rid + 'ACK------') #PING and personal commands must be answered
+    #time.sleep(.1)
+    print("ACK sent\n")
 
 # mainboard doesnt send much useful information
 # set failsade, send ack where appropriate
@@ -155,29 +159,32 @@ def parse_incoming_message ( message ):
 
             #else recognizable command
             if fid == config.FIELD_ID and rid in [config.ROBOT_ID, 'X']:
-                if rid == config.ROBOT_ID:
-                    send_now( 'rf:a' + fid + rid + 'ACK------') #PING and personal commands must be answered
-                    time.sleep(.1)
-                    print("ACK sent\n")
+                if com == 'PING' and rid == config.ROBOT_ID:
+                    sendack()
 
                 if com == 'START':
+                    #maybe less ack is good thing?
+                    if BRAKES_ON and rid == config.ROBOT_ID:
+                        sendack()
                     config.BRAKES_ON = False
                     pending_commands = []
-                    send_now( 'st:40' )
-                    time.sleep(.1)
-                    send_now( 'r0' )
-                    time.sleep(.1)
+                    #send_now( 'st:40' )
+                    #time.sleep(.1)
+                    #send_now( 'r0' )
+                    #time.sleep(.1)
                     print ("Houston, we have a liftoff!")
 
                 elif com == 'STOP':
+                    if not BRAKES_ON and rid == config.ROBOT_ID:
+                        sendack()
                     config.BRAKES_ON = True
                     pending_commands = []
                     send_now( 'sm:0:0:0' )
-                    time.sleep(.1)
+                    time.sleep(.05)
                     send_now ( 'st:0' )
-                    time.sleep(.1)
-                    send_now ( 'r1' ) #red led on
-                    time.sleep(.1)
+                    #time.sleep(.1)
+                    #send_now ( 'r1' ) #red led on
+                    #time.sleep(.1)
                     print ("BRAKES, BRAA-AAKES!!!!!")
 
     return True

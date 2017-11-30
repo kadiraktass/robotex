@@ -51,9 +51,9 @@ private:
     CircularBuffer2<char> buf;
 
     unsigned int receiveCounter;
-    char receiveBuffer[16];
+    char receiveBuffer[100];
 
-    char receivedMessage[16];
+    char receivedMessage[32];
 
     bool shortCommandsEnabled;
     unsigned int commandLength;
