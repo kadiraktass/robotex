@@ -6,8 +6,11 @@ import imutils
 
 ## Ball has to be lower than 40px, or it is noise from outside.
 ## I do not want to ruin track(), therefore new  function.
-ballmask = np.zeros((450, 600), dtype=np.uint8)
-cv2.rectangle(ballmask, (0,40), (600, 450), (255), thickness = -1)
+#ballmask = np.zeros((450, 600), dtype=np.uint8)
+#cv2.rectangle(ballmask, (0,40), (600, 450), (255), thickness = -1)
+ballmask = np.zeros((480, 640), dtype=np.uint8)
+cv2.rectangle(ballmask, (0,50), (640, 480), (255), thickness = -1)
+
 def find_ball(hsv, colorlower, colorupper):
     #i presume resized, HSV!!! frame here
     #if hsv.shape[:2] != ballmask.shape[:2]:
