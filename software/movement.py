@@ -93,7 +93,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
     elif basket_x>0:
         basketPosOnRight = -1
 
-    basketInCenter = abs(basket_x  - 320) <= 10
+    basketInCenter = abs(basket_x  - 320) <= 8
     seesBall = ball_x != -1
 
     print("basket_dist = ", basket_dist)
@@ -159,7 +159,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
             xSpeed = 3 * -0.1* basketPosOnRight
         else: #settle in position
             print("settle")
-            rotSpeed = (basket_x - 320) * 0.4 / 320
+            rotSpeed = (basket_x - 320) * 0.6 / 320
             xSpeed =  (ball_x - 320) * 0.8  / 320
             #xSpeed = max( xSpeed, 0.5)
             #xSpeed =  (basket_x - 320) * -0.11 / 320
