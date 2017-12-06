@@ -23,7 +23,7 @@ echo "--- start"
 git fetch --all
 git reset --hard origin/master
 
-
+uvcdynctrl -L cam-config.gpfl
 cd software
 python main.py --id=AZ --brakes=on --target=blue
 

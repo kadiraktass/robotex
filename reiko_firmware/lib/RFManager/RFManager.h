@@ -51,7 +51,7 @@ private:
     CircularBuffer2<char> buf;
 
     unsigned int receiveCounter;
-    char receiveBuffer[100];
+    char receiveBuffer[200];
 
     char receivedMessage[32];
 
