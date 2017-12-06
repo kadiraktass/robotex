@@ -183,17 +183,16 @@ def main():
                 cv2.circle(image, center, 10,(0, 0, 255), -1)
 
         elif active == 'basket_blue' or active == 'basket_magenta':
-            mask = cv2.erode(thresh, None, iterations=3)
+            mask = cv2.erode(thresh, None, iterations=2)
             mask = cv2.dilate(mask, None, iterations=3)
             cnts = cv2.findContours(mask, cv2.RETR_EXTERNAL,
                             cv2.CHAIN_APPROX_SIMPLE)[-2]
             if len(cnts) > 0:
                 c = max(cnts, key=cv2.contourArea)
                 cv2.drawContours(image, c, -1, (255, 255, 0), 1)
-
-            rect = cv2.boundingRect(c)
-            if rect[3] > 20:
-                cv2.rectangle(image,(rect[0], rect[1]), (rect[0]+rect[2], rect[1]+rect[3]), (255,255,0), 2)
+                rect = cv2.boundingRect(c)
+                if rect[3] > 20:
+                    cv2.rectangle(image,(rect[0], rect[1]), (rect[0]+rect[2], rect[1]+rect[3]), (255,255,0), 2)
 
         #if args['preview']:
         if False:
