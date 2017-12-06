@@ -115,6 +115,8 @@ try:
                         (10, 420), cv2.FONT_HERSHEY_SIMPLEX,
                         0.45, (0, 0, 255), 1)
 
+        cv2.line(frame, (320,100), (320,200), (0,0,255),1)
+
         cv2.imshow("Frame", frame)
         framestart = time.time()
 
