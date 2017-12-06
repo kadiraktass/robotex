@@ -121,10 +121,6 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
             findBallStartTime = time.time()
             activeState = State.FIND_BALL
         else:
-            #I'm trying a little jerk in another direction
-            #if activeState == State.FIND_BALL: #Was searching for ball, did glimpse it
-            #Nooo, It does find and aim for ball perfectly while it is closer.
-            #Therefore problem lies in detecting the ball.
             activeState = State.FIND_BALL
 
         #if seesBall and basketInCenter: #wut?
