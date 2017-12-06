@@ -47,7 +47,7 @@ _write_timeout=0.5
 _dsrtr=True
 _tscts=True
 ser = serial.Serial()
-
+lastthrow = 0
 
 def set_motors(m1, m2, m3):
     if not config.BRAKES_ON:
@@ -62,7 +62,10 @@ def set_thrower(sp):
 #    ser.write("st:"+ str(sp) + '\r\n')
     if not config.BRAKES_ON:
         t = 'st:{0}'.format(int(sp))
-        send_soon(t)
+        #send_soon(t)
+        if sp != lastthrow:
+            send_now(t)
+            lastthrow = sp
 
 
 #some things need immediate sending
@@ -72,7 +75,7 @@ def send_now( message ):
         ser.reset_output_buffer()
         ser.write('\n')
         ser.flushOutput()  #whatewer there was, it wasnt important anyway
-        sleep(.1)
+        #sleep(.01)
         print("FLUSHED, DOWN THE DRAIN")
 
 
