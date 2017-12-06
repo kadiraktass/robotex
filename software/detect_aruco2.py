@@ -198,8 +198,8 @@ if __name__ == '__main__':
 
     print( "We have OpenCV version " + cv2.__version__ )    #i have 3.3.0
     cap = cv2.VideoCapture(0)
-    cap.set(13, 0.40)
-    cap.set(14, 0.04)
+    #cap.set(13, 0.40)
+    #cap.set(14, 0.04)
 
     ret, frame = cap.read()
     frame = imutils.resize(frame, width=600) #DOOOH!!!! How it managed, i do not know.
