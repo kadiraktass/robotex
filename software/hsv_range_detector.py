@@ -140,7 +140,7 @@ def main():
 
         #does blur help in deflickering? Not really.
         #image = cv2.blur(image, (3,3)) #does not help
-        image = cv2.GaussianBlur(image,(5,5),0) #slightly better
+        image = cv2.GaussianBlur(image,(3,3),0) #slightly better
         #image = cv2.medianBlur(image, 5) #might help? But only a littleself.
         #image = cv2.fastNlMeansDenoisingColored(image,None,10,10,7,21) # - way too slow. But awesome.
         #Additionally, there is option to route vide stream through ffmpeg encoding, which also knows how to remove noise well
@@ -163,14 +163,12 @@ def main():
         #print ("({0}, {1}, {2}) ({3}, {4}, {5})".format(v1_min, v2_min, v3_min,    v1_max, v2_max, v3_max))
 
         thresh = cv2.inRange(frame_to_thresh, (v1_min, v2_min, v3_min), (v1_max, v2_max, v3_max))
-        #thresh = cv2.erode(thresh, None, iterations=2)
-        #thresh = cv2.dilate(thresh, None, iterations=2)
 
         #try to show what robot actually sees:
         #TODO: needs unified place and actual algorithm. Possibly a way to fine tune eroding or choosing some other or...
         if active == 'ball':
-            mask = cv2.erode(thresh, None, iterations=2)
-            mask = cv2.dilate(mask, None, iterations=2)
+            mask = cv2.erode(thresh, None, iterations=1)
+            mask = cv2.dilate(mask, None, iterations=1)
             cnts = cv2.findContours(mask, cv2.RETR_EXTERNAL,
                                     cv2.CHAIN_APPROX_SIMPLE)[-2]
             for c in cnts:
@@ -191,6 +189,7 @@ def main():
             if len(cnts) > 0:
                 c = max(cnts, key=cv2.contourArea)
                 cv2.drawContours(image, c, -1, (255, 255, 0), 1)
+
             rect = cv2.boundingRect(c)
             if rect[3] > 20:
                 cv2.rectangle(image,(rect[0], rect[1]), (rect[0]+rect[2], rect[1]+rect[3]), (255,255,0), 2)
