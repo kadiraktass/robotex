@@ -106,7 +106,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
             activeState = State.FIND_BALL
             findBallStartTime = time.time()
         #what is this for? timeout for crazy move.
-    elif time.time() - findBallStartTime > 3.5:
+        elif time.time() - findBallStartTime > 3.5:
             findBallStartTime = time.time()
             activeState = State.FIND_BALL
         else:
