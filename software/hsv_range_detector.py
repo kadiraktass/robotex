@@ -167,8 +167,9 @@ def main():
         #try to show what robot actually sees:
         #TODO: needs unified place and actual algorithm. Possibly a way to fine tune eroding or choosing some other or...
         if active == 'ball':
-            mask = cv2.erode(thresh, None, iterations=1)
-            mask = cv2.dilate(mask, None, iterations=1)
+            kernel = np.ones((3,3), np.uint8)
+            mask = cv2.erode(thresh, kernel, iterations=1)
+            mask = cv2.dilate(mask, kernel, iterations=1)
             cnts = cv2.findContours(mask, cv2.RETR_EXTERNAL,
                                     cv2.CHAIN_APPROX_SIMPLE)[-2]
             for c in cnts:
@@ -203,6 +204,7 @@ def main():
             cv2.putText(image, "(Press 's' for save; '1'..'4' to select what to configure)", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255,200,0) )
             cv2.imshow("Thresh", thresh)
             cv2.imshow("Original", image)
+            cv2.imshow("Mask", mask)
 
         key = cv2.waitKey(1) & 0xFF
         key = chr(key).lower()
