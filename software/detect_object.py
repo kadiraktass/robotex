@@ -30,8 +30,9 @@ def track(frame, colorlower, colorupper):
     # a series of dilations and erosions to remove any small
     # blobs left in the mask
     mask = cv2.inRange(frame, colorlower, colorupper)
-    mask = cv2.erode(mask, None, iterations=2)
-    mask = cv2.dilate(mask, None, iterations=2)
+    kernel = np.ones((3,3), np.uint8)
+    mask = cv2.erode(mask, kernel, iterations=1)
+    mask = cv2.dilate(mask, kernel, iterations=1)
 
 	# find contours in the mask and initialize the current
     # (x, y) center of the ball
