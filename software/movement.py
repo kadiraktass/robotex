@@ -141,12 +141,13 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
         if time.time() - findBallStartTime > 2.5:
             if(orangeArea> 150000):
                 print("find ball directional move = ")
-                ySpeed = 1
+                ySpeed = 0.8
                 #findBallStartTime = time.time()
 
     elif (activeState == State.DRIVE_TO_BALL):
         rotSpeed = 1.5*(ball_x - 320) * 1 / 320
-        ySpeed = 1.5*0.5 * abs(410 - ball_y) / 410 #abs(430 - ball_y) / 430
+        #ySpeed = 1.5*0.5 * abs(410 - ball_y) / 410 #abs(430 - ball_y) / 430
+        ySpeed = 2*0.5 * abs(410 - ball_y) / 410
 
     elif (activeState == State.ROTATE_AROUND_BALL):
         if (basket_x == -1): #rotate until basket is seen
