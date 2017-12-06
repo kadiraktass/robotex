@@ -12,7 +12,7 @@ import cv2
 import argparse
 from operator import xor
 import pickle
-
+import numpy as np
 
 def callback(value):
     pass
