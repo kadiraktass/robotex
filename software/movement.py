@@ -93,7 +93,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
     elif basket_x>0:
         basketPosOnRight = -1
 
-    basketInCenter = abs(basket_x  - 320) <= 20
+    basketInCenter = abs(basket_x  - 320) <= 10
     seesBall = ball_x != -1
 
 
@@ -164,7 +164,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
 
     elif (activeState == State.GRAB_BALL):
             ySpeed = 0.07    #0.05
-            rotSpeed = (basket_x - 320) * 0.2 / 320
+            rotSpeed = (basket_x - 320) * 0.3 / 320
             thrower_speed = calculate_thrower_speed(basket_dist)
 
     elif (activeState == State.RUN_FROM_BORDER):
