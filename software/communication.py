@@ -60,6 +60,7 @@ def set_thrower(sp):
 #    a = "st:"+ str(sp)
 #    print("thrower command=",a)
 #    ser.write("st:"+ str(sp) + '\r\n')
+    global lastthrow
     if not config.BRAKES_ON:
         t = 'st:{0}'.format(int(sp))
         #send_soon(t)
