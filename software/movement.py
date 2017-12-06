@@ -96,6 +96,11 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
     seesBall = ball_x != -1
 
 
+    #what causes oscillation between FIND_BALL and DRIVE_TO_BALL?
+    print("basket_dist = ", basket_dist)
+    print("activeState = ", activeState)
+    print("seesBall = ", seesBall)
+    print("findBallTime = ", (time.time() - findBallStartTime))
 
     if activeState  != State.GRAB_BALL:
         if not seesBall and activeState != State.FIND_BALL:
@@ -113,8 +118,6 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
         if seesBall and basketInCenter:
             activeState = State.DRIVE_TO_BALL
 
-        print("basket_dist = ", basket_dist)
-        print("activeState = ", activeState)
         if orangeArea < 100000: #or basket_dist>377:
             activeState = State.RUN_FROM_BORDER
             print("FLEEEEE!!!! ")
