@@ -96,11 +96,12 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
     basketInCenter = abs(basket_x  - 320) <= 10
     seesBall = ball_x != -1
 
-
     print("basket_dist = ", basket_dist)
+    print("basket_x = ", basket_x)
     print("activeState = ", activeState)
     print("seesBall = ", seesBall)
     print("findBallTime = ", (time.time() - findBallStartTime))
+
 
     if activeState  != State.GRAB_BALL:
         if activeState not in (State.FIND_BALL, State.RUN_FROM_BORDER) and not seesBall:
@@ -160,6 +161,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
             print("settle")
             rotSpeed = (basket_x - 320) * 0.4 / 320
             xSpeed =  (basket_x - 320) * -0.11 / 320
+            print ("rot, xsp", rotSpeed, xSpeed)
             #xSpeed =  (ball_x - 320) * -0.5 / 320
 
     elif (activeState == State.GRAB_BALL):
