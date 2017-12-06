@@ -117,7 +117,8 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
             #Therefore problem lies in detecting the ball.
             activeState = State.FIND_BALL
 
-        if seesBall and basketInCenter:
+        #if seesBall and basketInCenter: #wut?
+        if seesBall:
             activeState = State.DRIVE_TO_BALL
 
         if orangeArea < 100000: #or basket_dist>377:
