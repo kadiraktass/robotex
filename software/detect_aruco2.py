@@ -212,7 +212,7 @@ if __name__ == '__main__':
         # Capture frame-by-frame
         ret, frame = cap.read()
         frame = imutils.resize(frame, width=600) #DOOOH!!!! How it managed, i do not know.
-        #dohdohdohdohdohdohohojojojassd.cd.......saödä4#¤#"¤"#"%"#¤%¤#%...
+        #dohdohdohdohdohdohohojojojassd.cd.......sa
         #i dont even...
 
         if not ret: #can i ignore bad frames?
