@@ -140,9 +140,9 @@ def main():
 
         #does blur help in deflickering? Not really.
         #image = cv2.blur(image, (3,3)) #does not help
-        #image = cv2.GaussianBlur(image,(5,5),0) #slightly better
+        image = cv2.GaussianBlur(image,(5,5),0) #slightly better
         #image = cv2.medianBlur(image, 5) #might help? But only a littleself.
-        image = cv2.fastNlMeansDenoisingColored(image,None,10,10,7,21) # - way too slow
+        #image = cv2.fastNlMeansDenoisingColored(image,None,10,10,7,21) # - way too slow. But awesome.
         #Additionally, there is option to route vide stream through ffmpeg encoding, which also knows how to remove noise well
         #vlc "http://192.168.180.60:82/videostream.cgi?user=admin&pwd=" --sout "#transcode{vcodec=mp2v,vb=800,scale=1,acodec=mpga,ab=128,channels=2,samplerate=??44100}:duplicate{dst=rtp{sdp=rtsp://:8554/output.mpeg},dst=display}" --sout-keep
         #cap=cv2.VideoCapture("rtsp://:8554/output.mpeg")
