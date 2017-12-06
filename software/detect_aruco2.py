@@ -60,22 +60,26 @@ def gimme_running_average( current_dist ):
 #RESIZE!!!! Oh hell.
 lookup=[
 #(distance, throw),
-(  0, 999), #0 cannot happen
-( 48, 650), #edge of field, max speed, cannot reach anyway
+( 0, 999), #0 cannot happen
+(48, 650), #edge of field, max speed, cannot reach anyway
 (55, 560),
 (60, 520),
 (62, 494),
 (64, 480),
 (69, 454),
+(84, 380),
 (95, 336),
 (104, 313),
 (118, 287),
 (127, 270),
 (157, 243),
-(204, 224),
+(178, 226),
+(204, 218),
+(218, 215),
 (230, 216),
-(253, 221), #hoping for ball bounce
-(281, 263),
+(253, 221),#hoping for ball bounce
+(271, 238),
+(281, 267),
 (1000, 0)
 #etcetera, upto crazy numbers
 ]
