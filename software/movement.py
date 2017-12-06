@@ -143,15 +143,15 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
         ySpeed = 1.5*0.5 * abs(385 - ball_y) / 385 #abs(430 - ball_y) / 430
 
     elif (activeState == State.ROTATE_AROUND_BALL):
-        if (basket_x == -1):
-            rotSpeed = 3 * 0.5 * basketPosOnRight               #rotate to the right if basket left from the right side of the screen
+        if (basket_x == -1): #rotate until basket is seen
+            rotSpeed = 3 * 0.5 * basketPosOnRight   #rotate to the right if basket left from the right side of the screen
             xSpeed = 3 * -0.1* basketPosOnRight
         else: #settle in position
             rotSpeed = (basket_x - 300) * 0.5 / 300
-            xSpeed =  (basket_x - 300) * -0.11 / 300
+            xSpeed =  (ball_x - 300) * -0.11 / 300 #was basket
 
     elif (activeState == State.GRAB_BALL):
-            ySpeed = 0.08    #0.05
+            ySpeed = 0.07    #0.05
             rotSpeed = (basket_x - 300) * 0.2 / 300
             thrower_speed = calculate_thrower_speed(basket_dist)
 
