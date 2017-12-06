@@ -66,7 +66,7 @@ try:
         #print("grabbed = ",grabbed)
         frame = cv2.bitwise_and(frame, frame, mask = blinds)
         # resize the frame, blur it, and convert it to the HSV
-        frame = imutils.resize(frame, width=600)
+        #frame = imutils.resize(frame, width=600)
         # blurred = cv2.GaussianBlur(frame, (11, 11), 0)
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
