@@ -140,7 +140,7 @@ def main():
 
         #does blur help in deflickering? Not really.
         #image = cv2.blur(image, (3,3)) #does not help
-        image = cv2.GaussianBlur(image,(3,3),0) #slightly better
+        #image = cv2.GaussianBlur(image,(3,3),0) #slightly better
         #image = cv2.medianBlur(image, 5) #might help? But only a littleself.
         #image = cv2.fastNlMeansDenoisingColored(image,None,10,10,7,21) # - way too slow. But awesome.
         #Additionally, there is option to route vide stream through ffmpeg encoding, which also knows how to remove noise well
