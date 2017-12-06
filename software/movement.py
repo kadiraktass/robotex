@@ -1,6 +1,7 @@
 import numpy as np
 import time
 import math
+import random
 from enum import Enum
 
 from detect_aruco2 import calculate_thrower_speed
@@ -106,7 +107,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
             activeState = State.FIND_BALL
             findBallStartTime = time.time()
         #what is this for? timeout for crazy move. Crazymove should have its own state?!
-        elif time.time() - findBallStartTime > 3.5:
+        elif time.time() - findBallStartTime > 4:
             findBallStartTime = time.time()
             activeState = State.FIND_BALL
         else:
@@ -142,6 +143,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
             if(orangeArea> 150000):
                 print("find ball directional move = ")
                 ySpeed = 0.8
+                rotSpeed = -1*random.random() -1
                 #findBallStartTime = time.time()
 
     elif (activeState == State.DRIVE_TO_BALL):
