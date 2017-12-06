@@ -98,7 +98,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
 
 
     if activeState  != State.GRAB_BALL:
-        if (ball_x == -1) and activeState != State.FIND_BALL:
+        if not seesBall and activeState != State.FIND_BALL:
             activeState = State.FIND_BALL
             findBallStartTime = time.time()
         elif time.time() - findBallStartTime > 6:
@@ -110,7 +110,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
             #Therefore problem lies in detecting the ball.
             activeState = State.DRIVE_TO_BALL
 
-        if ball_x != -1 and basketInCenter:
+        if seesBall and basketInCenter:
             activeState = State.DRIVE_TO_BALL
 
         print("basket_dist = ", basket_dist)
@@ -119,14 +119,14 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
             activeState = State.RUN_FROM_BORDER
             print("FLEEEEE!!!! ")
 
-        if not basketInCenter and ball_y >= 360: #380:
+        if not basketInCenter and ball_y >= 400: #380:
             activeState = State.ROTATE_AROUND_BALL
 
-        if basketInCenter and ball_y >= 380: #420:
+        if basketInCenter and ball_y >= 400: #420:
             activeState = State.GRAB_BALL
             grabBallStartTime = time.time()
 
-    else:
+    else: #is grabbing
         if time.time() - grabBallStartTime > 3:
             activeState = State.FIND_BALL
 
