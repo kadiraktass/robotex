@@ -62,20 +62,19 @@ lookup=[
 #(distance, throw),
 (  0, 999), #0 cannot happen
 ( 48, 650), #edge of field, max speed, cannot reach anyway
-
-( 60, 520),
-
-( 62, 494),
-( 69, 464),
-
-( 95, 336),#
+(55, 560),
+(60, 520),
+(62, 494),
+(64, 480),
+(69, 454),
+(95, 336),
 (104, 313),
 (118, 287),
 (127, 270),
 (157, 243),
 (204, 224),
 (230, 216),
-(253, 221), #only straight, wall bounce
+(253, 221), #hoping for ball bounce
 (281, 263),
 (1000, 0)
 #etcetera, upto crazy numbers
