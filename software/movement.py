@@ -105,9 +105,10 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
         if not seesBall and activeState != State.FIND_BALL:
             activeState = State.FIND_BALL
             findBallStartTime = time.time()
-        #what is this for?
-        #elif time.time() - findBallStartTime > 6:
-        #    findBallStartTime = time.time()
+        #what is this for? timeout for crazy move.
+        elif time.time() - findBallStartTime > 3:
+            findBallStartTime = time.time()
+            activeState = State.FIND_BALL
         else:
             #I'm trying a little jerk in another direction
             #if activeState == State.FIND_BALL: #Was searching for ball, did glimpse it
@@ -141,8 +142,8 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
             if(orangeArea> 150000):
                 print("find ball directional move = ")
                 ySpeed = 1
-                findBallStartTime = time.time()
-                
+                #findBallStartTime = time.time()
+
     elif (activeState == State.DRIVE_TO_BALL):
         rotSpeed = 1.5*(ball_x - 320) * 1 / 320
         ySpeed = 1.5*0.5 * abs(410 - ball_y) / 410 #abs(430 - ball_y) / 430
