@@ -57,7 +57,7 @@ def track(frame, colorlower, colorupper):
         ((x, y), radius) = cv2.minEnclosingCircle(c)
         M = cv2.moments(c)
         #center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
-        center = (x, y)
+        center = (int(x), int(y))
 
 
         # only proceed ifd the radius meets a minimum size
