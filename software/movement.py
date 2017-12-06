@@ -46,12 +46,16 @@ def get_command(ball_x, ball_y, ball_radius, basket_x, basket_dist, orangeArea):
     wheelAngularSpeedMainboardUnits2 = wheelLinearVelocity2 * wheelSpeedToMainboardUnits
     wheelAngularSpeedMainboardUnits3 = wheelLinearVelocity3 * wheelSpeedToMainboardUnits
 
-    #too small of a speed does not make robot move...
-    wheelAngularSpeedMainboardUnits1 = 5 if 0 < wheelAngularSpeedMainboardUnits1 < 5 else wheelAngularSpeedMainboardUnits1
-    wheelAngularSpeedMainboardUnits2 = 5 if 0 < wheelAngularSpeedMainboardUnits2 < 5 else wheelAngularSpeedMainboardUnits2
-    wheelAngularSpeedMainboardUnits3 = 5 if 0 < wheelAngularSpeedMainboardUnits3 < 5 else wheelAngularSpeedMainboardUnits3
+    x1 = wheelAngularSpeedMainboardUnits1
+    x2 = wheelAngularSpeedMainboardUnits2
+    x3 = wheelAngularSpeedMainboardUnits3
 
-    return wheelAngularSpeedMainboardUnits1, wheelAngularSpeedMainboardUnits3, wheelAngularSpeedMainboardUnits2, thrower_speed
+    #too small of a speed does not make robot move...
+    x1 = math.copysign(5, x1) if abs(x1) < 5 else x1
+    x2 = math.copysign(5, x2) if abs(x2) < 5 else x2
+    x3 = math.copysign(5, x3) if abs(x3) < 5 else x3
+
+    return x1, x3, x2, thrower_speed
 
 def calculateWheelSpeed(robotSpeed, wheelAngle, robotDirectionAngle, robotAngularVelocity):
     return robotSpeed * math.cos(robotDirectionAngle - wheelAngle) + wheelDistanceFromCenter * robotAngularVelocity
