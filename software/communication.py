@@ -72,15 +72,18 @@ def set_thrower(sp):
 #some things need immediate sending
 def send_now( message ):
     #Hm, is different in some versions: outWaiting()
-    if ser.out_waiting > 0:
-        ser.reset_output_buffer()
-        ser.write('\n')
-        ser.flushOutput()  #whatewer there was, it wasnt important anyway
-        #sleep(.01)
-        print("FLUSHED, DOWN THE DRAIN")
+    #s = fcntl.ioctl(self.fd, TIOCOUTQ, TIOCM_zero_str)
+    #AttributeError: 'Serial' object has no attribute 'fd'
+    #if ser.out_waiting > 0:
+    #    ser.reset_output_buffer()
+    #    ser.write('\n')
+    #ser.flushOutput()  #whatewer there was, it wasnt important anyway
+    #sleep(.01)
+    #    print("FLUSHED, DOWN THE DRAIN")
 
 
     if ser.isOpen():
+        ser.flushOutput()
         print('SERIAL JUST SENT: ' + message + ', pending: ' + str(pending_commands))
         try:
             return ser.write( message + '\n')
