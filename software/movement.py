@@ -147,8 +147,10 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
             rotSpeed = 3 * 0.5 * basketPosOnRight   #rotate to the right if basket left from the right side of the screen
             xSpeed = 3 * -0.1* basketPosOnRight
         else: #settle in position
+            print("settle")
             rotSpeed = (basket_x - 300) * 0.5 / 300
-            xSpeed =  (basket_x - 300) * -0.11 / 300 #was basket
+            #xSpeed =  (basket_x - 300) * -0.11 / 300 #was basket
+            xSpeed =  (ball_x - 300) * -0.5 / 300
 
     elif (activeState == State.GRAB_BALL):
             ySpeed = 0.07    #0.05
