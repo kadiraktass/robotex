@@ -159,10 +159,13 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
             xSpeed = 3 * -0.1* basketPosOnRight
         else: #settle in position
             print("settle")
-            rotSpeed = (basket_x - 320) * 0.4 / 320
-            xSpeed =  (basket_x - 320) * -0.11 / 320
+            rotSpeed = (basket_x - 320) * 0.4 #/ 320
+            rotSpeed = max( rotSpeed, 0.5)
+            xSpeed =  (ball_x - 320) * -0.5 #/ 320
+            xSpeed = max( xSpeed, 0.5)
+            #xSpeed =  (basket_x - 320) * -0.11 / 320
             print ("rot, xsp", rotSpeed, xSpeed)
-            #xSpeed =  (ball_x - 320) * -0.5 / 320
+
 
     elif (activeState == State.GRAB_BALL):
             ySpeed = 0.07    #0.05
