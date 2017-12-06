@@ -112,7 +112,7 @@ try:
                         0.35, (0, 0, 255), 1)
 
         cv2.putText(frame, str( movement.activeState ),
-                        (20, 380), cv2.FONT_HERSHEY_SIMPLEX,
+                        (10, 400), cv2.FONT_HERSHEY_SIMPLEX,
                         0.45, (0, 0, 255), 1)
 
         cv2.imshow("Frame", frame)
