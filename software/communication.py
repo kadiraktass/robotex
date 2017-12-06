@@ -36,7 +36,7 @@ import sys
 last_command = ''
 pending_commands = []  #FIFO buffer. Add to the end, and pop from beginning.
 last_time = 0
-forced_delay = 50 #millis between sends
+forced_delay = 30 #millis between sends
 #does not help, still occasional buffer fill.
 
 
