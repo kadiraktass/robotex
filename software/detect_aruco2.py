@@ -61,25 +61,29 @@ def gimme_running_average( current_dist ):
 lookup=[
 #(distance, throw),
 ( 0, 999), #0 cannot happen
-(48, 650), #edge of field, max speed, cannot reach anyway
-(54, 544),
-(56, 510),
-(59, 477),
-(65, 442),
-(71, 400),
-(75, 370),
-(89, 342),
+
+(48, 650),	#edge of field, max speed, cannot reach anyway
+(54, 560),
+(56, 530),
+(59, 497),
+(61, 481),
+(65, 459),
+(71, 420),
+(78, 393),
+(89, 345),
 (104, 313),
 (118, 287),
 (127, 270),
-(157, 243),
+(131, 262),
+(157, 242),
 (178, 226),
 (204, 218),
 (218, 215),
 (230, 216),
-(253, 221),#hoping for ball bounce
+(253, 221),	#hoping for ball bounce
 (271, 238),
 (281, 267),
+
 (1000, 0)
 #etcetera, upto crazy numbers
 ]
