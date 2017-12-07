@@ -51,9 +51,9 @@ def get_command(ball_x, ball_y, ball_radius, basket_x, basket_dist, orangeArea):
     x3 = wheelAngularSpeedMainboardUnits3
 
     #too small of a speed does not make robot move...
-    x1 = math.copysign(3, x1) if abs(x1) < 3 else x1
-    x2 = math.copysign(3, x2) if abs(x2) < 3 else x2
-    x3 = math.copysign(3, x3) if abs(x3) < 3 else x3
+    x1 = math.copysign(2, x1) if abs(x1) < 2 else x1
+    x2 = math.copysign(2, x2) if abs(x2) < 2 else x2
+    x3 = math.copysign(2, x3) if abs(x3) < 2 else x3
 
     return x1, x3, x2, thrower_speed
 
