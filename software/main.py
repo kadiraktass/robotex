@@ -126,6 +126,9 @@ try:
             communication.send_now("sm:0:0:0")
             communication.send_now("st:0")
             break
+        elif key == ord('b'):
+            config.BRAKES_ON = False
+            print ("BRAKES OFF")
         elif key == ord('s'): # take a screenshot
             cv2.imwrite('screenshot.png', frame)
 
