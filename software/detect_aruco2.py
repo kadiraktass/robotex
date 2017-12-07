@@ -92,7 +92,7 @@ lookup=[
 # Look if something can be done about close-range-detection and throw
 def calculate_thrower_speed( dist ):
 
-    dist -= 5
+    dist -= 3
 
     print("tambov", TAMBOV)
     if dist < 0:
