@@ -129,17 +129,17 @@ try:
         elif key == ord('b'):
             config.BRAKES_ON = False
             print ("BRAKES OFF")
-        elif key == ord('s'): # take a screenshot
+        elif key == ord('p'): # take a screenshot
                 cv2.imwrite('screenshot.png', frame)
 
         elif key == ord('w') and config.BRAKES_ON:
-            communication.send_now('sm:10:0:-10')
-        elif key == ord('s') and config.BRAKES_ON:
             communication.send_now('sm:-10:0:10')
+        elif key == ord('s') and config.BRAKES_ON:
+            communication.send_now('sm:10:0:-10')
         elif key == ord('a') and config.BRAKES_ON:
-            communication.send_now('sm:5:5:5')
+            communication.send_now('sm:-10:-10:-10')
         elif key == ord('d') and config.BRAKES_ON:
-            communication.send_now('sm:-5:-5:-5')
+            communication.send_now('sm:10:10:10')
 
         elif key == 0xFF and config.BRAKES_ON:
             communication.send_soon('sm:0:0:0')
