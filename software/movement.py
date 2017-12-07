@@ -161,7 +161,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
     elif (activeState == State.ROTATE_AROUND_BALL):
         if (basket_x == -1): #rotate until basket is seen
             rotSpeed = 3 * 0.5 * basketPosOnRight   #rotate to the right if basket left from the right side of the screen
-            xSpeed = 3 * -0.14 * basketPosOnRight
+            xSpeed = 3 * -0.13 * basketPosOnRight
         else: #settle in position - ideally until exactly lined up
             print("settle")
             rotSpeed = (basket_x - 320) * 0.9 / 320
