@@ -134,14 +134,15 @@ try:
 
         elif key == ord('w') and config.BRAKES_ON:
             communication.send_now('sm:10:0:-10')
-        elif key == ord('w') and config.BRAKES_ON:
+        elif key == ord('s') and config.BRAKES_ON:
             communication.send_now('sm:-10:0:10')
-        elif key == ord('w') and config.BRAKES_ON:
+        elif key == ord('a') and config.BRAKES_ON:
             communication.send_now('sm:5:5:5')
-        elif key == ord('w') and config.BRAKES_ON:
+        elif key == ord('d') and config.BRAKES_ON:
             communication.send_now('sm:-5:-5:-5')
-        elif key != 0xFF and config.BRAKES_ON:
-            communication.send_now('sm:0:0:0')
+
+        elif key == 0xFF and config.BRAKES_ON:
+            communication.send_soon('sm:0:0:0')
 
 except KeyboardInterrupt:
     communication.send_now("sm:0:0:0")
