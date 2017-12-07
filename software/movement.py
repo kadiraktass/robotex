@@ -172,7 +172,7 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
 
 
     elif (activeState == State.GRAB_BALL):
-            ySpeed = 0.07    #0.05
+            ySpeed = 0.06    #0.05
             rotSpeed = (basket_x - 320) * 0.3 / 320
             thrower_speed = calculate_thrower_speed(basket_dist)
 
