@@ -171,7 +171,7 @@ def parse_incoming_message ( message ):
 
                 if com == 'START':
                     #maybe less ack is good thing?
-                    if BRAKES_ON and rid == config.ROBOT_ID:
+                    if config.BRAKES_ON and rid == config.ROBOT_ID:
                         sendack()
                     config.BRAKES_ON = False
                     pending_commands = []
@@ -182,7 +182,7 @@ def parse_incoming_message ( message ):
                     print ("Houston, we have a liftoff!")
 
                 elif com == 'STOP':
-                    if not BRAKES_ON and rid == config.ROBOT_ID:
+                    if not config.BRAKES_ON and rid == config.ROBOT_ID:
                         sendack()
                     config.BRAKES_ON = True
                     pending_commands = []
