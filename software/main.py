@@ -130,7 +130,18 @@ try:
             config.BRAKES_ON = False
             print ("BRAKES OFF")
         elif key == ord('s'): # take a screenshot
-            cv2.imwrite('screenshot.png', frame)
+                cv2.imwrite('screenshot.png', frame)
+
+        elif key == ord('w') and config.BRAKES_ON:
+            communication.send_now('sm:10:0:-10')
+        elif key == ord('w') and config.BRAKES_ON:
+            communication.send_now('sm:-10:0:10')
+        elif key == ord('w') and config.BRAKES_ON:
+            communication.send_now('sm:5:5:5')
+        elif key == ord('w') and config.BRAKES_ON:
+            communication.send_now('sm:-5:-5:-5')
+        elif key != 0xFF and config.BRAKES_ON:
+            communication.send_now('sm:0:0:0')
 
 except KeyboardInterrupt:
     communication.send_now("sm:0:0:0")
