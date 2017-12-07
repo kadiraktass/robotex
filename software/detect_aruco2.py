@@ -81,7 +81,7 @@ lookup=[
 (218, 215),
 (230, 216),
 (253, 221),	#hoping for ball bounce
-(271, 238),
+(271, 250),
 (281, 300),
 (1000, 0)
 #etcetera, upto crazy numbers
