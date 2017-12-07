@@ -143,7 +143,7 @@ def read_from_robot():
     return True
 
 def sendack():
-    send_now( 'rf:a' + fid + rid + 'ACK------') #PING and personal commands must be answered
+    send_now( 'rf:a' + config.FIELD_ID + config.ROBOT_ID + 'ACK------') #PING and personal commands must be answered
     #time.sleep(.1)
     print("ACK sent\n")
 
