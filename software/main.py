@@ -135,13 +135,13 @@ try:
                 cv2.imwrite('screenshot.png', frame)
 
         elif key == ord('w') and config.BRAKES_ON:
-            communication.send_now('sm:-10:0:10')
+            communication.send_now('sm:-20:0:20')
         elif key == ord('s') and config.BRAKES_ON:
-            communication.send_now('sm:10:0:-10')
+            communication.send_now('sm:20:0:-20')
         elif key == ord('a') and config.BRAKES_ON:
-            communication.send_now('sm:-10:-10:-10')
+            communication.send_now('sm:-20:-20:-20')
         elif key == ord('d') and config.BRAKES_ON:
-            communication.send_now('sm:10:10:10')
+            communication.send_now('sm:20:20:20')
 
         elif key == 0xFF and config.BRAKES_ON:
             communication.send_soon('sm:0:0:0')

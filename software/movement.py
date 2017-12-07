@@ -37,7 +37,6 @@ wheelAngle2 = 60 * math.pi / 180                    #rad
 wheelAngle3= 180 * math.pi / 180                   #rad
 wheelAngles = [wheelAngle1, wheelAngle2, wheelAngle3]
 
-findBallStartTime = time.time()
 
 def get_command(ball_x, ball_y, ball_radius, basket_x, basket_dist, orangeArea):
 
@@ -116,9 +115,9 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
     if activeState  != State.GRAB_BALL:
         if activeState not in (State.FIND_BALL, State.RUN_FROM_BORDER) and not seesBall:
             activeState = State.FIND_BALL
-            #findBallStartTime = time.time()
+            findBallStartTime = time.time()
         #what is this for? timeout for crazy move. Crazymove should have its own state?!
-        elif time.time() - findBallStartTime > 50:
+        elif time.time() - findBallStartTime > 4:
             findBallStartTime = time.time()
             activeState = State.FIND_BALL
         else:
@@ -142,32 +141,18 @@ def find_directions(ball_x, ball_y, ball_radius, basket_x, basket_dist,orangeAre
     else: #is grabbing
         if time.time() - grabBallStartTime > 3:
             activeState = State.FIND_BALL
-            findBallStartTime = time.time()
 
     if (activeState == State.FIND_BALL):
-        rotSpeed = -1
+        rotSpeed = -2
         print("activeState = ", activeState)
         print("findBallStartTime = ", findBallStartTime)
-        if 15>time.time() - findBallStartTime > 10:
-            rotSpeed = (basket_x - 320) * 1 / 320
-            if(basket_x>250 and basket_x<350 and basket_dist<130):
-                ySpeed = 1.5
-            else:
-                ySpeed = 0
-            #if(orangeArea> 150000):
-                #print("find ball directional move = ")
-                #ySpeed = 0.8
-                #rotSpeed = -1*random.random() -1
+        if time.time() - findBallStartTime > 2.5:
+            if(orangeArea> 150000):
+                print("find ball directional move = ")
+                ySpeed = 0.8
+                rotSpeed = -1*random.random() -1
                 #findBallStartTime = time.time()
-        elif 30>time.time() - findBallStartTime > 25:
-            rotSpeed = (basket_x - 320) * 1 / 320
-            if(basket_x>250 and basket_x<350 and basket_dist >110):
-                ySpeed = -1.5
-            else:
-                ySpeed = 0
-        elif time.time() - findBallStartTime > 40:
-            rotSpeed = -1*random.random() -1
-            ySpeed = 1.5
+
     elif (activeState == State.DRIVE_TO_BALL):
         rotSpeed = 1.5*(ball_x - 320) * 1 / 320
         #ySpeed = 1.5*0.5 * abs(410 - ball_y) / 410 #abs(430 - ball_y) / 430
