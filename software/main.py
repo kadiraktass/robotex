@@ -100,12 +100,12 @@ try:
 
         cv2.putText(frame, "CARPET: {}".format(int(amount_of_carpet)),
                             (50, 80), cv2.FONT_HERSHEY_SIMPLEX,
-                            0.5, (255, 255, 255), 1)
+                            0.5, (0, 0, 255), 1)
 
         fps = round(1.0 / (time.time() - framestart))
         cv2.putText(frame, "FPS: {}".format( fps ),
                             (50, 100), cv2.FONT_HERSHEY_SIMPLEX,
-                            0.5, (255, 255, 255), 1)
+                            0.5, (0, 0, 255), 1)
 
         cv2.putText(frame, "dx: {}, dy: {}, radius: {}".format(int(ball_x1), int(ball_y1), int(ball_radius1)),
                         (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
